@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+<style>
+#red_background{
+      background: #FCE2A8;
+      border-radius: 5px;
+      margin-top: 7px;
+      margin-left: 7px;
+      /*margin-left: 7px;*/
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      /*font-size: 12pt;*/
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 400px;
+    }
+    </style>
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+      <div class="row">
+        <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+            <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+          </center>
+        </div>
+        <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></div></center>
+        <!-- Optional: clear the XS cols if their content doesn't match in height -->
+        <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><div id="gemnum"><%=@@gems[session[:tester]]%></div>
+        </center>
+        </div>
+      </div>
+
+      <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
+
+
+ <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7">
+
+  <!-- <h1>Records</h1> -->
+
+    <b><center><font size="5pt">Rankings</font></center></b>
+  </br>
+  </br>
+<font size="3pt">
+
+  <%@sortedLevelArray.reverse_each do |name,level|%>
+
+      <div class="col-xs-0 col-sm-1"></div>
+      <div class="col-xs-5 col-sm-5"><b><%=name%></b></div>
+      <div class="col-xs-4 col-sm-4">Level <b><%=level%></b></div>
+</br>
+      <div class="col-xs-0 col-sm-1"></div>
+      <div class="col-xs-5 col-sm-5"></div>
+      <div class="col-xs-6 col-sm-6"><font color="#33CC66"><%=@@wins[name]%> wins</font><font color="#CC3366"> <%=@@losses[name]%> losses</font></div> 
+
+   </br></br>
+  <%end%>
+
+</font>
+
+</br></br>
+      <form class="form-horizontal" role="form" action="home" method="post">
+    <center><button type="submit" class="btn btn-info btn-block">Home</button></center>
+  </form>
+
+
+<!-- red_background -->
+</div>
+</div>
+</div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

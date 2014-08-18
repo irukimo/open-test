@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/RadarChart.js"></script>
+    <script src="js/WTPentagon.js"></script>
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+
+  </head>
+
+   <script type="text/JavaScript">
+    //<![CDATA[
+    //global variables
+
+    priceOfUnlock = 5;
+    function questionObj(option0btnid, option1btnid, formid,toPutTextID){
+       this.option0btn = document.getElementById(option0btnid);
+       this.option1btn = document.getElementById(option1btnid);
+       this.nextform = document.forms[formid];
+       this.toPutText = document.getElementById(toPutTextID);
+       var obj = this;
+       obj.option0btn.onclick = function(){obj.btnClicked(0);}
+       obj.option1btn.onclick = function(){obj.btnClicked(1);}
+    }
+    questionObj.prototype.btnClicked = function(optionNum){
+       var obj = this;
+
+       obj.option0btn.disabled = true;
+       obj.option1btn.disabled = true;
+
+       var newtxt = document.createElement('span');
+       newtxt.style.color = "#33ad89";
+       newtxt.style.fontSize="20pt";
+       var txt = "太棒了！比的真妙！";
+       newtxt.appendChild(document.createTextNode(txt));
+       obj.toPutText.appendChild(newtxt);
+       if (optionNum == 0){
+          obj.option0btn.style.background='#FFA500';
+       }else{
+          obj.option1btn.style.background='#FFA500';
+       }
+      
+       setTimeout(obj.submitForm,1000);
+
+    }
+    questionObj.prototype.submitForm = function(){
+       var obj = this;
+       obj.nextform.submit();
+    }
+    //]]>
+    </script>
+
+
+  <style>
+      #red_background{
+      background: #FCE2A8;
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 12pt;
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 440px;
+      padding-left: 10px;
+    }
+
+    .my-container{
+          max-width: 623px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: rgba(255,255,255,.0);
+          border: 1px dashed rgba(0,0,0,.4);
+          padding-left: 0px;
+          padding-right: 0px;
+
+      }
+  </style>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+  <!-- <h1>Records</h1> -->
+ <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7" onclick="nextpage()">
+
+    <b><font color=#585858 size="5pt">在玩遊戲的同時，你朋友的性向分析也因為你的選擇而起了變化！</font></b>
+  </br>
+
+
+
+
+<div class="container my-container">
+
+ <div class="col-xs-12 col-sm-12"><font size="5pt">
+  <div id="questionid">小叮噹的性向分析：</div>
+</div>
+
+      <div id="body1">
+       <div id="chart1" ></div>
+    </div>
+
+ <script type="text/JavaScript">
+    //<![CDATA[
+    // overall pentagon
+      var firstPentagon = [
+              [
+              {axis:"感情",value:0.56},
+              {axis:"事業",value:0.8},
+              {axis:"社交",value:0.4}
+              ],[
+              {axis:"感情",value:0.56},
+              {axis:"事業",value:0.8},
+              {axis:"社交",value:0.7}
+              ]
+            ];
+      var oldColor1 = "#7a93df";
+      var newColor1 = "#df7acf";
+      new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
+
+  </script>
+
+
+</div><!-- /.my-container -->
+
+
+  <form id="nextform" role="form" action="wtcoin" method="get">
+        <button class="btn btn-info btn-lg btn-block" type="submit" name="name" value="Iru">下一步</button>
+  </form>
+
+
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

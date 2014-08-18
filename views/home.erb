@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/RadarChart.js"></script>
+    <script src="js/WTPentagon.js"></script>
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+ 
+
+    <script type="text/JavaScript">
+    //<![CDATA[
+    //global variables
+
+    priceOfUnlock = 5;
+    function UnlockBtn(btnParentId, btnId, index, coinId, author,tester){
+       this.btnParent = document.getElementById(btnParentId);
+       this.btn = document.getElementById(btnId);
+       this.coinLabel = document.getElementById(coinId);
+       this.recordIndex = index;
+       this.author = author;
+       this.tester = tester;
+       var obj = this;
+       this.btn.onclick = function(){obj.btnClicked();}    
+    }
+    UnlockBtn.prototype.btnClicked = function(){
+       var obj = this;
+       var coinsNum = parseInt(obj.coinLabel.innerHTML);
+       console.log(obj.coinLabel.innerHTML)
+       console.log(coinsNum)
+       if(coinsNum < priceOfUnlock){
+           window.alert("sorry, not enough coins...");
+           return;
+       }
+       obj.coinLabel.innerHTML = (coinsNum - priceOfUnlock).toString();
+       obj.btnParent.removeChild(obj.btn);
+       var authorTextNode = document.createTextNode(obj.author);
+       obj.btnParent.appendChild(authorTextNode);
+       //send request
+       var myXHR = new XMLHttpRequest();
+       //myXHR.open("GET", "/unlock");
+       myXHR.open("POST", "/unlock" + "?tester=" + obj.tester + "&unlockID=" + obj.recordIndex);
+       myXHR.onreadystatechange = function() {
+           if (this.readyState != 4) {
+              return;
+           }
+           if (this.status == 200) {
+              return;
+           } else {
+             console.log("error occurred!");
+           }
+       }
+       myXHR.send();
+    }
+    //]]>
+    </script>
+
+    <style>
+        .my-first-container [class^="col-"] {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          margin-bottom: 30px;
+          background-color: rgba(255,255,255,.0);
+          border: 1px dashed rgba(0,0,0,.4);
+
+          .my-inner {
+            padding: 5px;
+            background-color: rgba(255,255,255,.0);
+            border: 1px dashed rgba(0,0,0,.4);
+  }
+      }
+     .my-container [class^="col-"] {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: rgba(255,255,255,.0);
+          border: 1px dashed rgba(0,0,0,.4);
+
+          .my-inner {
+            padding: 5px;
+            background-color: rgba(255,255,255,.0);
+            border: 1px dashed rgba(0,0,0,.4);
+  }
+      }
+
+      #playpanel{
+        background-color: #f6d0d0;
+        background-image:url('/img/play.png');
+        background-size: 123px 100px;
+        background-repeat: no-repeat;
+        background-position:center; 
+        font-family: 'Open Sans', sans-serif;
+      }
+      #guesspanel{
+        background-color: #9bf1bd;
+        background-image:url('/img/guess.png');
+        background-size: 123px 100px; 
+        background-repeat: no-repeat;
+        background-position:center;  
+      }
+      #viewpanel{
+        background-color: #caecfa; 
+        background-image:url('/img/view.png');
+        background-size: 123px 100px; 
+        background-repeat: no-repeat;
+        background-position:center; 
+      }
+      #choose-section{
+        padding-left: 7px;
+        padding-top: 5px;
+        min-width: 316px;
+      }
+    #red_background{
+      background: #ffe7e7;
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 20pt;
+      min-width: 300px;
+      max-width: 653px;
+      min-height: 240px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    #green_background{
+      /*background-image:url('/img/play.png');*/
+      /*background-size: 123px 100px; */
+      background: #9bf1bd;
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      max-width: 147px;
+      min-height: 95px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    #blue_background{
+      background: #caecfa;
+      /*background-image:url('/img/guess.png');*/
+      /*background-size: 123px 100px; */
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      max-width: 147px;
+      min-height: 95px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    #yellow_background{
+      background: #fcf6b9;
+      /*background-image:url('/img/guess.png');*/
+      /*background-size: 123px 100px; */
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      min-width: 300px;
+      max-width: 653px;
+      min-height: 110px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 20px;
+    }
+
+    </style>
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+     <script type="text/JavaScript">
+    //<![CDATA[
+        var medalClicked=function(){
+          var myform = document.forms["rankingsform"];
+          myform.submit();
+        }
+        var coinClicked=function(){
+          alert("Coin is the main currency of this game.\nCoin can be used to buy information, shuffle or bet.");
+          return;
+        }
+
+        //]]>
+    </script>
+
+    <form id="nextform" role="form" action="refill" method="post">   
+           <input type="hidden" name="tester" value="<%=session[:tester]%>"> 
+    </form>
+    <form id="rankingsform" class="form-horizontal" role="form" action="rankings" method="post">
+    </form>
+    <form id="playform" class="form-horizontal" role="form" action="play" method="post">
+       <input type="hidden" name="uuid" value=""> 
+    </form>
+
+  <div class="row">
+    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>Level <%=@@level[session[:tester]]%> </center></div>
+    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    <div id="medal_display" class="col-xs-2 col-sm-2" onclick="medalClicked()"><center>
+        <img src="/img/medal.png" alt="Smiley face" width="25" height="25">
+      </center>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7">
+  <img src="/img/user.png" alt="Smiley face" width="45" height="45"> <font color="#727272">林久禾</font>
+
+    <div id="body1">
+       <div id="chart1" ></div>
+    </div>
+
+     <script type="text/JavaScript">
+        //<![CDATA[
+        // overall pentagon
+          var firstPentagon = [
+                  [
+                  {axis:"感情",value:0.56},
+                  {axis:"事業",value:0.8},
+                  {axis:"社交",value:0.4}
+                  ],[
+                  {axis:"感情",value:0.56},
+                  {axis:"事業",value:0.8},
+                  {axis:"社交",value:0.7}
+                  ]
+                ];
+          var oldColor1 = "#7a93df";
+          var newColor1 = "#df7acf";
+          new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
+
+      </script>
+
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="green_background" class="col-xs-11 col-md-3">
+    </br>
+        <b><center><font size="5pt" color="#1a754b">比一下</font></center></b>  
+    </div>
+    <div id="blue_background" class="col-xs-11 col-md-3">
+          </br>
+        <b><center><font size="5pt" color="#1c5979">猜一下</font></center></b>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="yellow_background" class="col-xs-11 col-md-7">
+      <b>小明</b>剛剛比了<b>小白</b>跟<b>小黃</b>
+    </br><font color="#ffa302"><font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>去猜</b></font>
+
+    </div>
+  </div>
+
+</div>
+
+
+     <script type="text/JavaScript">
+    //<![CDATA[
+       var level_element = document.getElementById("level_display");
+       var progress = <%=@@progress[session[:tester]]%>;
+       var whitewidth = 100 - progress;
+       var imageText = (("linear-gradient(to left, #FFFFFF ").concat(whitewidth.toString())).concat("%,#f4d1ec 0%)")
+       level_display.style.backgroundImage = imageText;
+
+      function guessButton(btnid, coins){
+        var obj = this;
+        obj.btnelement = document.getElementById(btnid);
+        obj.coins = parseInt(coins);
+        obj.btnelement.onclick = function(){obj.btnClicked();}    
+      }
+
+      guessButton.prototype.btnClicked = function(){
+        var obj = this;
+        if(obj.coins < 50){
+          alert("Not enough coins to play GUESS...");
+          return;
+        }
+        var myform = document.forms["guessform"];
+        myform.submit();
+      }
+
+        //]]>
+    </script>
+
+  <!-- <h1>Records</h1> -->
+
+      <div class="container marketing">
+<div class="row">
+
+<div id="choose-section" class="col-xs-16 col-sm-7">
+  <div class="panel-group" id="accordion">
+
+
+  <div id="playpanel" class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+
+          <div class="collapsetitle">
+            <font size="5pt"><center>Play</center></font>
+            <center>What do you think about your friends?</center>
+          </div>
+          <div class="collapsesub"><center>Earn up to <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> 850</center></div>
+          <div class="collapsesub"><center>Spend  <img src="/img/energy.png" alt="Smiley face" width="22" height="22">to play</center></div>
+
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
+        <form class="form-horizontal" role="form" action="choose_categ" method="post">
+              <center><button id="play_btn" type="submit" class="btn btn-danger btn-block">Play!</button></center>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- <div class="panel panel-success"> -->
+    <div id="guesspanel" class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+
+          <div class="collapsetitle">
+            <font size="5pt"><center>Guess</center></font>
+            <center>Guess what others think!</center></div>
+          <div class="collapsesub"><center>Spend <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> 50 to play</center></div>
+          <div class="collapsesub"><center>Earn up to <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> 300</center></div>
+
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <form id="guessform" class="form-horizontal" role="form" action="choose_guess_categ" method="post">
+        </form>
+              <center><button id="guess_btn" class="btn btn-success btn-block">Play!</button></center>
+              <script type="text/JavaScript">
+              //<![CDATA[
+              new guessButton("guess_btn","<%=@@coins[session[:tester]]%>"); 
+              //]]>
+              </script>
+      </div>
+    </div>
+  </div>
+
+
+
+<div id="viewpanel" class="panel">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+
+          <div class="collapsetitle">
+            <font size="5pt"><center>View</center></font>
+            <center>See what others think about you!</center></div>
+          <div class="collapsesub"><center>Spend  <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> to unlock an author</center></div>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        <form class="form-horizontal" role="form" action="view_my_report" method="post">
+              <center><button type="submit" class="btn btn-info btn-block">Go</button></center>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+</div>
+</div>
+
+<!-- Button trigger modal -->
+<button id="messagebtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        
+        <% #question, bet(Integer), correctness(BOOL)
+          @notifications.each do |notif| 
+            if notif[2]
+        %>
+            <div>
+              Someone guessed <b><%=notif[0]%></b> correctly! 
+              <font color="#49d781"><img src="/img/coin.png" alt="Smiley face" width="22" height="22"> 
+                <font size="3">+</font><%=notif[1]%>
+              </font>
+            </div>
+          <%else%>
+            <div>
+              Someone guessed <b><%=notif[0]%></b> wrong... 
+              <font color="#d32020"><img src="/img/coin.png" alt="Smiley face" width="22" height="22"> 
+                <font size="3">+</font>0
+              </font>
+            </div>
+          <%end%>
+        <%end%>
+
+        <form class="form-horizontal" role="form" action="view_my_report" method="post">
+              <center><button type="submit" class="btn btn-info btn-block" name="toguess" value="true">See who guessed you correctly or wrong</button></center>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script type="text/javascript">
+  //<![CDATA[
+    var msgbtn = document.getElementById("messagebtn");
+    msgbtn.style.visibility='hidden';
+    if(<%=@notifications.count%> > 0){
+      setTimeout(function(){clickbtn()},0);
+    }
+    function clickbtn(){
+      msgbtn.click()
+    }
+
+
+
+    energy = <%=@@energy_left[session[:tester]]%>
+    cycle = 480;
+    secs_left = Math.floor(cycle - <%=Time.now - @@last_time_modified[session[:tester]]%>);
+    console.log(secs_left)
+    if(secs_left < 0){
+       secs_left = 0;
+    }
+  
+    if(energy < 5){
+       setInterval(function(){update_energy("energy_bar","time_display","play_btn")},1000);
+       if(energy == 0){
+           var btn_container = document.getElementById("play_btn");
+           btn_container.disabled = true;
+           btn_container.innerHTML = "Gotta have energy to play...";
+       }
+       var time_container = document.getElementById("time_display");
+       time_container.innerHTML = get_min_sec(secs_left);
+    }
+    function update_energy(containerID,timeID,playbtnID){
+
+
+      if(energy < 5){
+        //console.log("here")
+        //console.log(energy)
+        //console.log(secs_left)
+        var container =  document.getElementById(containerID);
+        var time_container = document.getElementById(timeID);
+        var btn_container = document.getElementById(playbtnID);
+        //console.log(time_container)
+        //console.log(container)
+        if(secs_left == 0){
+           energy = energy + 1;
+           btn_container.disabled = false;
+           btn_container.innerHTML = "Play!";
+           container.innerHTML = energy;
+           secs_left = cycle;
+        } else{
+           secs_left = secs_left -1;
+        }
+        if(energy == 5){
+            time_container.innerHTML = "00:00";
+        }else{
+            time_container.innerHTML = get_min_sec(secs_left);
+        }
+        if(energy == 0){
+           btn_container.disabled = true;
+           btn_container.innerHTML = "Gotta have energy to play...";
+        }
+      }
+    }  
+    function get_min_sec(secs){
+      var min = Math.floor(secs/60);
+      var sec = secs%60;
+      if(sec < 10){
+        return "0".concat((min.toString()).concat(":0")).concat(sec.toString());
+      }else{
+        return "0".concat((min.toString()).concat(":")).concat(sec.toString());
+      }
+    }
+  //]]>
+  </script>
+   <% @@record.reverse_each do |record| %>
+    <% index = @@record.index(record)%>
+    <p class="buffer"></p>
+        <b><%if record[0] == session[:tester]%>
+              You
+           <%else%> 
+              <%if @@unlocked[session[:tester]] &&  @@unlocked[session[:tester]].include?(index.to_s) %>
+                 <%=record[0]%>
+              <% else%>
+                 <%divID = "authorDiv" + index.to_s%>
+                 <%btnID = "authorBtn" + index.to_s%>
+                 <div class="inline_form" id=<%=divID%>>
+                    <button id=<%=btnID%> >Unlock</button>
+                 </div>
+                 <script type="text/JavaScript">
+                 //<![CDATA[
+                    console.log("here")
+                    new UnlockBtn("<%=divID%>", "<%=btnID%>", "<%=index.to_s%>", "coinId", "<%=record[0]%>","<%=session[:tester]%>"); 
+                 //]]>
+                 </script>
+              <%end%>
+           <%end%></b> 
+        chose <b><%=record[2]%></b> over <b> 
+             <% if record[2] == record[3]%>
+                 <%=record[4]%>
+             <% else %>
+                 <%=record[3]%>
+             <% end %></b> in the question of <b><%=record[1]%></b>
+             
+             <b><font color="#4CC552" size=4> 
+             <%if @@record_asks[index]%>
+                 <%=@@record_asks[index]%> asked
+             <%end%>
+             </font></b>
+             <p></p>
+            <form class="inline_form" role="form" action="why" method="post">
+             <%if record[0] != session[:tester]%>
+              <form class="inline_form" role="form" action="why" method="post">
+ 	       <% if @@people_asks[session[:tester]] &&  @@people_asks[session[:tester]].include?(index.to_s) %>
+                      <button disabled="disabled">asked</button>
+               <% else%>
+                      <button type="submit" name="index" value=<%=index%> >ask why?</button>
+               <% end%>
+               </form>
+               <form class="inline_form" role="form" action="edit_comment" method="post">
+                   <button type="submit" name="index" value=<%=index%> >Comment!</button>
+               </form>
+             <%else%>
+               <form class="inline_form" role="form" action="why" method="post">
+                 <button type="submit" name="index" value=<%=index%> >Edit Reason</button>
+               </form>
+             <%end%>
+    
+      <%if @@record_comments[index]%>
+         <%@@record_comments[index].each do |comment|%>
+             <p>          <font color="orange">Reason:</font> <%=comment%> </p>
+         <%end%>
+      <%end%>
+      <%if @@others_comments[index]%>
+         <%@@others_comments[index].each do |comment|%>
+             <p>          <font color="blue"><%=comment[0]%>:</font> <%=comment[1]%> </p>
+         <%end%>
+      <%end%>
+   <% end %>
+      
+
+      <!-- FOOTER -->
+
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

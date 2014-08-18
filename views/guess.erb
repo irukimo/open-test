@@ -1,0 +1,127 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>Compare Friends</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+    <script type="text/JavaScript">
+    //<![CDATA[
+    //global variables
+
+    priceOfUnlock = 5;
+    function questionObj(option0btnid, option1btnid, answer, formid, toPutTextID){
+       this.option0btn = document.getElementById(option0btnid);
+       this.option1btn = document.getElementById(option1btnid);
+       this.nextform = document.forms[formid];
+       this.toPutText = document.getElementById(toPutTextID);
+       this.answer = answer;
+       var obj = this;
+       obj.option0btn.onclick = function(){obj.btnClicked(0);}
+       obj.option1btn.onclick = function(){obj.btnClicked(1);}
+    }
+    questionObj.prototype.btnClicked = function(optionNum){
+       var obj = this;
+       obj.option0Name = obj.option0btn.innerHTML;
+       obj.option1Name = obj.option1btn.innerHTML;
+
+       if(optionNum == 0){
+          obj.chosenName = obj.option0Name;
+       }else{
+          obj.chosenName = obj.option1Name;
+       }
+       obj.option0btn.disabled = true;
+       obj.option1btn.disabled = true;
+
+       if(obj.chosenName == obj.answer){
+           obj.nextform.correctness.value = "true";
+
+           var newtxt = document.createElement('span');
+           newtxt.style.color = "#FFA500";
+           newtxt.style.fontSize="15pt";
+           var txt = "Congrats! You got it right!";
+           newtxt.appendChild(document.createTextNode(txt));
+           obj.toPutText.appendChild(newtxt);
+           if (optionNum == 0){
+              obj.option0btn.style.background='#FFA500';
+           }else{
+              obj.option1btn.style.background='#FFA500';
+           }
+       }else{
+           obj.nextform.correctness.value = "false";
+           
+           var newtxt = document.createElement('span');
+           newtxt.style.color = 'blue';
+           newtxt.style.fontSize="15pt";
+           var txt = "Oops.. you got it wrong...";
+           newtxt.appendChild(document.createTextNode(txt));
+           obj.toPutText.appendChild(newtxt);
+           if (optionNum == 0){
+              obj.option0btn.style.background='blue';
+           }else{
+              obj.option1btn.style.background='blue';
+           }
+       }
+      
+       setTimeout(obj.submitForm,1000);
+
+    }
+    questionObj.prototype.submitForm = function(){
+       var obj = this;
+       obj.nextform.submit();
+    }
+    //]]>
+    </script>
+  </head>
+  <body>
+    <center>
+    <div style="height:10px;"></div>
+    <div id="heart" class="pull-right">
+        <img src="/img/heart.jpg" alt="Smiley face" width='20' height='16'> x <%=@player.blood%>
+      </div>
+      <div style="height:90px;"></div>
+      <font size="4pt" >Who do you think <b><%=@quiz["player"]%></b> chose in this question?</font>
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12"><font size="4pt" color="0000CD"><%=@quiz["question"]%></font></div>
+        </div><!-- /.row -->
+        </br>
+        <div class="row">
+          <form id="nextform" role="form" action="play" method="post">   
+            <input type="hidden" name="correctness" value=""> 
+            <div class="col-xs-6 col-md-6">
+              <p><button id="option0btn" class="btn btn-info btn-lg btn-block"><%=@quiz["option0"]%></button></p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p><button id="option1btn" class="btn btn-info btn-lg btn-block"><%=@quiz["option1"]%></button></p>
+            </div>
+          </form>
+        </div><!-- /.row -->
+        <div id="toPutText"></div>
+      </div>
+    </center>
+    <script type="text/JavaScript">
+      //<![CDATA[
+        new questionObj("option0btn", "option1btn", "<%=@quiz['answer']%>","nextform","toPutText"); 
+      //]]>
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

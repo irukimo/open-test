@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+      <div class="row">
+        <h2>Who do you want to share the question with? <small>It's only between you two!</small></h2>
+        <form class="form-horizontal" role="form" action="share" method="post">
+        <div class="form-group">
+          <label for="thought">Tell her or him your thought or feeling!</label>
+          <input type="text" class="form-control" id="thought" name="thought" placeholder="Your thought or feeling">
+        </div>
+          <% counter = 0 
+            @@names.each do |name| 
+              if (name == session[:tester]) or 
+                 (@@phone_number[name] == nil)
+                next 
+              end
+              counter += 1
+          %>
+            <p>
+              <button type="submit" class="btn btn-primary btn-lg btn-block" name="name" value= "<%=name %>"><%=name %></button>
+            </p>
+          <% end 
+            if counter == 0
+          %>
+            <p class="lead">Ooops! No one else set his phone number yet. ;(</p>
+          <% end %>
+
+
+        </form>
+      </div><!-- /.row -->
+
+    <div class="text-center">
+     <form class="form-horizontal" role="form" action="start" method="post">
+      
+        <button type="submit" class="btn btn-info btn-lg">Go Back!</button>
+      
+    </form>
+    </div>
+
+      <!-- FOOTER -->
+      <footer>
+        <p>&copy; 2014 Orrzs Inc.</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

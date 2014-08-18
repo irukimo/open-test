@@ -1,0 +1,195 @@
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+    <style>
+    .coins_font{
+      color: #FFA500;
+      font-size: 20pt;
+      display : inline-block;
+    }
+    </style>
+
+     <script type="text/JavaScript">
+    //<![CDATA[
+    //global variables
+
+    priceOfUnlock = 5;
+    function questionObj(option0btnid, option1btnid, option0vote, option1vote,hardid,dontlikeid,nextbtnid,formid,toPutTextID){
+       this.option0btn = document.getElementById(option0btnid);
+       this.option1btn = document.getElementById(option1btnid);
+       this.option0vote = option0vote;
+       this.option1vote = option1vote;
+       this.hardbtn = document.getElementById(hardid);
+       this.dontlikebtn = document.getElementById(dontlikeid);
+       this.nextbtn = document.getElementById(nextbtnid);
+       this.nextform = document.forms[formid];
+       this.nextbtn.style.visibility="hidden";
+       this.toPutText = document.getElementById(toPutTextID);
+       var obj = this;
+       obj.option0btn.onclick = function(){obj.btnClicked(0);}
+       obj.option1btn.onclick = function(){obj.btnClicked(1);}
+       obj.nextbtn.onclick = function(){obj.nextClicked();}
+    }
+    questionObj.prototype.btnClicked = function(optionNum){
+       var obj = this;
+       obj.option0Name = obj.option0btn.innerHTML;
+       obj.option1Name = obj.option1btn.innerHTML;
+       var option_0_vote_int = parseInt(obj.option0vote);
+       var option_1_vote_int = parseInt(obj.option1vote);
+
+       if(optionNum == 0){
+          obj.chosenName = obj.option0Name;
+          option_0_vote_int = option_0_vote_int + 1;
+          obj.option0btn.style.background='#FFA500';
+       }else{
+          obj.chosenName = obj.option1Name;
+          option_1_vote_int = option_1_vote_int + 1;
+       }
+       obj.option0btn.disabled = true;
+       obj.option1btn.disabled = true;
+       obj.hardbtn.disabled = true;
+       obj.dontlikebtn.disabled = true;
+       obj.option0btn.innerHTML = ((obj.option0Name).concat(" #ppl voted: ")).concat(option_0_vote_int.toString());
+       obj.option1btn.innerHTML = ((obj.option1Name).concat(" #ppl voted: ")).concat(option_1_vote_int.toString());
+       this.nextbtn.style.visibility="visible";
+
+      
+       if(optionNum == 0){
+          if(option_0_vote_int >= option_1_vote_int){
+            var coinsWon = (option_0_vote_int-option_1_vote_int)*5;
+            if(coinsWon <= 0){
+               var text = "Congrats!! You won 3 coins!";
+            } else{
+              var text = (((((("Congrats!! You won (").concat(option_0_vote_int.toString())).concat(" - ")).concat(option_1_vote_int.toString())).concat(") x 5 = ")).concat(coinsWon)).concat(" coins!");
+            }
+            var textNode = document.createTextNode(text);
+            obj.toPutText.appendChild(textNode);
+          }
+       } else{
+          if(option_0_vote_int <= option_1_vote_int){
+            var coinsWon = (option_1_vote_int-option_0_vote_int)*5;
+            if(coinsWon <= 0){
+               var text = "Congrats!! You won 3 coins!";
+            } else{
+               var text = (((((("Congrats!! You won (").concat(option_1_vote_int.toString())).concat(" - ")).concat(option_0_vote_int.toString())).concat(") x 5 = ")).concat(coinsWon)).concat(" coins!");
+            }
+            var textNode = document.createTextNode(text);
+            obj.toPutText.appendChild(textNode);
+          }
+       }
+
+
+    }
+    questionObj.prototype.nextClicked = function(){
+       var obj = this;
+       obj.nextform.chosenName.value = obj.chosenName;
+       obj.nextform.submit();
+    }
+    //]]>
+    </script>
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container">
+
+      <div class="row">
+        
+        <p class="bg-success"><h3><%= @current_question %></h3></p>
+        
+        <form id="nextform" role="form" action="next" method="post">   
+          <input type="hidden" name="chosenName" value="">   
+          <div class="col-xs-6 col-md-6">
+            <p><button id="option0btn" class="btn btn-primary btn-lg btn-block" ><%=@current_options[0] %></button></p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+              <p><button id="option1btn" class="btn btn-primary btn-lg btn-block" ><%=@current_options[1] %></button></p>
+          </div>
+
+      </div><!-- /.row -->
+      <div class="row">
+        <div class="col-xs-6 col-md-6">
+            <p><button id="hard" type="submit" class="btn btn-primary btn-lg btn-block" name="name" value= "Hard to answer">Hard to answer</button></p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+              <p><button id="dontlike" type="submit" class="btn btn-primary btn-lg btn-block" name="name" value="I don't like the question">I don't like the question</button></p>
+          </div>
+      </div>
+      <center><div id="toPutText" class="coins_font"></div>
+      <center><button id="nextbtn" class="btn btn-primary btn-lg btn-block">Next</button></center>
+      <script type="text/JavaScript">
+                 //<![CDATA[
+                    new questionObj("option0btn", "option1btn", "<%= @option_0_vote.to_s%>", "<%= @option_1_vote.to_s%>","hard","dontlike","nextbtn","nextform","toPutText"); 
+                 //]]>
+      </script>
+    </form>
+<br>
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <form role="form" action="scores" method="post">
+          <center><button class="btn btn-info btn-lg" type="submit">Check scores</button></center>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <form role="form" action="sharing_history" method="get">
+          <center><button class="btn btn-info btn-lg" type="submit">Check sharing!</button></center>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <form role="form" action="who_to_share" method="post">
+          <center><button class="btn btn-info btn-lg" type="submit">Ask others!</button></center>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <form role="form" action="lobby" method="get">
+          <center><button class="btn btn-info btn-lg" type="submit">Game Lobby</button></center>
+        </form>
+      </div>
+    </div>
+  <br>
+      <!-- FOOTER -->
+      <footer>
+    <!--    <p>If you are not <%=session[:tester]%>, please go back to <a href="/">home</a> and choose your name.</p>-->
+        <p>&copy; 2014 Orrzs Inc.</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

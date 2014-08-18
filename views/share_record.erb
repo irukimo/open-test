@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+  <h1>Shares</h1>
+
+  <table class="table">
+    <tr><th>Question</th><th>Option 1</th><th>Option 2</th><th>Asker</th><th>Time of Asking</th><th>Asker thought</th><th>Receiver</th><th>Time of replying</th><th>Receiver thought</th><th>Answer</th></tr>
+    <% @@sharing_queue.each_value do |share| %>
+      <tr><td><%=share[:question]%></td><td><%=share[:options][0]%></td><td><%=share[:options][1]%></td><td><%=share[:asker]%></td><td><%=share[:time_of_asking]%></td><td><%=share[:asker_thought]%></td><td><%=share[:receiver]%></td><td><%=share[:time_of_replying]%></td><td><%=share[:receiver_thought]%></td><td><%=share[:answer]%></td></tr>
+    <% end %>
+  </table>
+      
+
+      <!-- FOOTER -->
+      <footer>
+        
+        <p>&copy; 2014 Orrzs Inc.</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

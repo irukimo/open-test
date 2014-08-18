@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+
+    <style type="text/css">
+    #timesleftbig{
+      padding-left: 5pt;
+      color: #737373;
+      font-size: 12pt;
+    }
+    #shufflebtn, #timesleft{
+      display: inline-block;
+    }
+    #timesleft{
+      font-size: 15pt;
+    }
+    #coinicon{
+      display: inline-block;
+    }
+
+    #red_background{
+      background: #cdf8de;
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 12pt;
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 400px;
+    }
+
+    #pbtn, #rbtn, #sbtn, #fbtn{
+      min-height: 60px;
+      font-size: 15pt;
+      background-color: #474747;
+      color: #FFFFFF;
+      text-align: left;
+    }
+    </style>
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+  <!-- <h1>Records</h1> -->
+
+   <div class="row">
+    <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+      </center>
+    </div>
+    <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><div id="gemnum"><%=@@gems[session[:tester]]%></div>
+    </center>
+    </div>
+  </div>
+        <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
+
+  <!-- <h1>Records</h1> -->
+
+ <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7">
+
+</br>
+          <center><font size="5pt">Select a category</font></center>
+          </br>
+          <form id="people_form" class="form-horizontal" role="form" action="choose_guess_people" method="post">
+
+            <button type="submit" id="pbtn" class="btn btn-block" name="categ" value="P">
+            <div class="col-xs-2 col-md-4"></div>
+            <div class="col-xs-4 col-md-4">
+            <img src="/img/professional.png" alt="Smiley face" width="44" height="44"> Professional
+            </div>
+            </button>
+            <button type="submit" id="rbtn" class="btn btn-block" name="categ" value="R">
+            <div class="col-xs-2 col-md-4"></div>
+            <div class="col-xs-4 col-md-4"><img src="/img/relationship.png" alt="Smiley face" width="44" height="44"> Relationship
+            </div>
+            </button>
+            <button type="submit" id="sbtn" class="btn btn-block" name="categ" value="S">
+            <div class="col-xs-2 col-md-4"></div>
+            <div class="col-xs-4 col-md-4"><img src="/img/social.png" alt="Smiley face" width="44" height="44"> Social
+            </div>
+            </button>
+            <button type="submit" id="fbtn" class="btn btn-block" name="categ" value="F">
+            <div class="col-xs-2 col-md-4"></div>
+            <div class="col-xs-4 col-md-4"><img src="/img/justforfun.png" alt="Smiley face" width="44" height="44"> Just for fun
+            </div>
+            </button>
+
+          </form>
+
+
+
+    </div>
+</div>
+
+
+
+
+     
+      <!-- FOOTER -->
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

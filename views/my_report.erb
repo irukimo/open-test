@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Badger</title>
+
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/RadarChart.js"></script>
+    <script src="js/Pentagon.js"></script>
+        <style type="text/css">
+      .my-container [class^="col-"] {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: rgba(255,255,255,.0);
+          border: 1px dashed rgba(0,0,0,.4);
+
+          .my-inner {
+            padding: 5px;
+            background-color: rgba(255,255,255,.0);
+            border: 1px dashed rgba(0,0,0,.4);
+  }
+      }
+      #coinicon{
+         display:inline-block;
+      }
+          #red_background{
+      background: #FFFFFF;
+      border-radius: 5px;
+      margin-top: 7px;
+      margin-left: 7px;
+      /*margin-left: 7px;*/
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      /*font-size: 12pt;*/
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 400px;
+    }
+    </style>
+
+    <script type="text/JavaScript">
+    //<![CDATA[
+    //global variables
+
+    priceOfUnlock = 300;
+    function UnlockBtn(btnParentId, btnId, uuid, index, coinId, author,tester){
+       this.btnParent = document.getElementById(btnParentId);
+       this.btn = document.getElementById(btnId);
+       this.coinLabel = document.getElementById(coinId);
+       this.recordUUID = uuid;
+       this.recordIndex = index;
+       this.author = author;
+       this.tester = tester;
+       var obj = this;
+       this.btn.onclick = function(){obj.btnClicked();}    
+    }
+    UnlockBtn.prototype.btnClicked = function(){
+       var obj = this;
+       var coinsNum = parseInt(obj.coinLabel.innerHTML);
+       console.log(obj.coinLabel.innerHTML)
+       console.log(coinsNum)
+       if(coinsNum < priceOfUnlock){
+           window.alert("sorry, not enough coins...");
+           return;
+       }
+       obj.coinLabel.innerHTML = (coinsNum - priceOfUnlock).toString();
+       obj.btnParent.removeChild(obj.btn);
+       var authorTextNode = document.createTextNode(obj.author);
+       obj.btnParent.appendChild(authorTextNode);
+       //send request
+       var myXHR = new XMLHttpRequest();
+       //myXHR.open("GET", "/unlock");
+       myXHR.open("POST", "/unlock" + "?tester=" + obj.tester + "&uuid=" + obj.recordUUID + "&index=" + obj.recordIndex);
+       myXHR.onreadystatechange = function() {
+           if (this.readyState != 4) {
+              return;
+           }
+           if (this.status == 200) {
+              return;
+           } else {
+             console.log("error occurred!");
+           }
+       }
+       myXHR.send();
+    }
+
+    // Unlock guesser
+    // new UnlockGuesserBtn("guessBtnId", "quiz['uuid']","coinicon"); 
+    priceOfUnlockGuesser = 100;
+    function UnlockGuesserBtn(btnId ,uuid, coinId, modalId){
+       this.coinLabel = document.getElementById(coinId);
+       this.btn = document.getElementById(btnId);
+       this.uuid = uuid;
+       this.modalId = modalId;
+       var obj = this;
+       this.btn.onclick = function(){obj.btnClicked();}    
+    }
+
+    UnlockGuesserBtn.prototype.btnClicked = function(){
+       var obj = this;
+       var coinsNum = parseInt(obj.coinLabel.innerHTML);
+       console.log(obj.coinLabel.innerHTML)
+       console.log(coinsNum)
+       if(coinsNum < priceOfUnlockGuesser){
+           window.alert("sorry, not enough coins...");
+           return;
+       }
+       $("#" + this.modalId).modal('show');
+       obj.coinLabel.innerHTML = (coinsNum - priceOfUnlockGuesser).toString();
+       
+       
+       //send request
+       var myXHR = new XMLHttpRequest();
+       myXHR.open("POST", "/unlockGuesser" + "?uuid=" + obj.uuid);
+       myXHR.onreadystatechange = function() {
+           if (this.readyState != 4) {
+              return;
+           }
+           if (this.status == 200) {
+              return;
+           } else {
+             console.log("error occurred!");
+           }
+       }
+       myXHR.send();
+    }
+    //]]>
+    </script>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+  <div class="container marketing">
+
+  <div class="row">
+    <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+      </center>
+    </div>
+    <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><div id="gemnum"><%=@@gems[session[:tester]]%></div>
+    </center>
+    </div>
+  </div>
+
+  <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+  </form>
+   <script type="text/JavaScript">
+    //<![CDATA[
+    function backtohome(){
+      var homeform = document.forms["homeform"];
+      homeform.submit();
+    }
+       //]]>
+    </script>
+
+
+  <!-- </div> -->
+
+  <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7">
+
+
+  <!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist" id="myTab">
+  <li class="active"><a href="#spiderweb" role="tab" data-toggle="tab">Profile</a></li>
+  <li><a href="#author" role="tab" data-toggle="tab">Chose you</a></li>
+  <li><a href="#guesser" role="tab" data-toggle="tab">Get you</a></li>
+</ul>
+
+
+
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="spiderweb">
+    <center><b><font size="20pt" color="#bcbcbc">Overall</font></b></center>
+    <div id="body1">
+       <div id="chart1" ></div>
+    </div>
+    <!-- Relationship -->
+    <center><b><font size="15pt" color="#bcbcbc">Relationship</font></b></center>
+    <div id="body2">
+       <div id="chart2" ></div>
+    </div>
+    <!-- Professional -->
+    <center><b><font size="15pt" color="#bcbcbc">Professional</font></b></center>
+    <div id="body3">
+       <div id="chart3" ></div>
+    </div>
+    <!-- Social -->
+    <center><b><font size="15pt" color="#bcbcbc">Social</font></b></center>
+    <div id="body4">
+       <div id="chart4" ></div>
+    </div>
+ 
+    <script type="text/JavaScript">
+    //<![CDATA[
+    // overall pentagon
+      var firstPentagon = [
+              [
+              {axis:"Relationship",value:<%=@@score_buffer[@name]["old"]["R"]%>},
+              {axis:"Professional",value:<%=@@score_buffer[@name]["old"]["P"]%>},
+              {axis:"Social",value:<%=@@score_buffer[@name]["old"]["S"]%>}
+              ],[
+              {axis:"Relationship",value:<%=@@score_buffer[@name]["new"]["R"]%>},
+              {axis:"Professional",value:<%=@@score_buffer[@name]["new"]["P"]%>},
+              {axis:"Social",value:<%=@@score_buffer[@name]["new"]["S"]%>}
+              ]
+            ];
+      var oldColor1 = "#7a93df";
+      var newColor1 = "#df7acf";
+      new Pentagon(firstPentagon, '<%=@time_difference%>',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
+
+      // relationship pentagon
+        <% R_dims = @@score_buffer[@name]["new"]["detail"]["R"].keys 
+           last_dim = R_dims.last%>
+        var secondPentagon = [
+              [
+              <% R_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["old"]["detail"]["R"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ],[
+              <% R_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["new"]["detail"]["R"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ]
+              
+            ];
+        var oldColor2 = "#fcff28";
+        var newColor2 = "#96df7a";
+        new Pentagon(secondPentagon, '<%=@time_difference%>',oldColor2,newColor2,"body2","chart2","#body2","#chart2");
+
+        // Professional Pentagon
+        //var Pdimensions = ["Excel", "Manage", "Communicate","Dare","Adapt"];
+        <% P_dims = @@score_buffer[@name]["new"]["detail"]["P"].keys 
+           last_dim = P_dims.last%>
+        var thirdPentagon = [
+              [
+              <% P_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["old"]["detail"]["P"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ],[
+              <% P_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["new"]["detail"]["P"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ]
+            ];
+        var oldColor3 = "#2dffc1";
+        var newColor3 = "#ff8a90";
+        new Pentagon(thirdPentagon, '<%=@time_difference%>',oldColor3,newColor3,"body3","chart3","#body3","#chart3");
+
+        //social pentagon
+        //var Sdimensions = ["Communication", "Charisma", "Adaptability","Proactive"];
+        <% S_dims = @@score_buffer[@name]["new"]["detail"]["S"].keys 
+           last_dim = S_dims.last%>
+        var fourthPentagon = [
+              [
+              <% S_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["old"]["detail"]["S"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ],[
+              <% S_dims.each do |dim|%>
+              {axis:"<%=dim%>",value:<%=@@score_buffer[@name]["new"]["detail"]["S"][dim]%>}
+              <%=(last_dim == dim)? "":","%>
+              <%end%>
+              ]
+            ];
+        var oldColor4 = "#ffa939";
+        var newColor4 = "#d180ff";
+        new Pentagon(fourthPentagon, '<%=@time_difference%>',oldColor4,newColor4,"body4","chart4","#body4","#chart4");
+        //]]>
+    </script>
+  </div>
+  <div class="tab-pane" id="author">
+    
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+
+    <div class="col-xs-12 col-sm-12"  style="background-color: #66CCFF;" >
+      <center><font color="white" size="3pt">Spend <img src="/img/coin.png" width="17" height="17"> 300 to unlock an author</font></center>
+    </div>
+
+    <div class="col-xs-12 col-sm-12" style="background-color: #66CCFF;">
+    </div>
+</br></br>
+
+<div class="container-marketing">
+
+  <%@my_questions.each do |question|%>
+    <%index_array = Array.new%>
+    <%index_array << question[0].to_s%>
+    <%index_array << question[1].to_s%>
+    <%quiz = question[3]%>
+    <%found = @@unlocked_uuid_index[session[:tester]] && @@unlocked_uuid_index[session[:tester]].include?(index_array)%>
+    <div class="container my-container">
+      <font color="orange" size="5pt">
+        <span class="glyphicon glyphicon-user"></span>
+        <%if found%>
+           <%=question[2]%>
+        <%else%>
+           <%divID = "authorDiv" + index_array[0].to_s + index_array[1].to_s%>
+           <%btnID = "authorBtn" + index_array[0].to_s + index_array[1].to_s%>
+           <div class="inline_form" id=<%=divID%> >
+                    <button id=<%=btnID%> class="btn btn-warning">Unlock</button>
+           </div>
+           <script type="text/JavaScript">
+                 //<![CDATA[
+                    console.log("here")
+                    new UnlockBtn("<%=divID%>", "<%=btnID%>", "<%=index_array[0].to_s%>", "<%=index_array[1].to_s%>","coinicon", "<%=question[2]%>","<%=session[:tester]%>"); 
+                 //]]>
+           </script>
+        <%end%>
+      </font>
+      <!-- question row -->
+      <div class="row">
+        <div class="col-xs-12 col-sm-6"><center><%=quiz["question"]%></center></div>
+      </div>
+      <!-- answer row -->
+      <div class="row">
+        <div class="col-xs-6 col-sm-3"><center>
+          <%if quiz["option0"] == quiz["answer"]%>
+             <span class="glyphicon glyphicon-ok"></span>
+             <font>
+          <%else%>
+             <font color="#CCCCCC">
+          <%end%>
+          <%if quiz["option0"] == session[:tester]%>
+             You
+          <%else%>
+             <%=quiz["option0"]%>
+          <%end%>
+          </font>
+          </center>
+        </div>
+        <div class="col-xs-6 col-sm-3"><center>
+          <%if quiz["option1"] == quiz["answer"]%>
+             <span class="glyphicon glyphicon-ok"></span>
+             <font>
+          <%else%>
+             <font color="#CCCCCC">
+          <%end%>
+          <%if quiz["option1"] == session[:tester]%>
+             You
+          <%else%>
+             <%=quiz["option1"]%>
+          <%end%>
+          </font>
+          </center>
+        </div>
+      </div>
+    </div>
+    <br>
+  <%end%>
+  </div>
+  </div>
+  <div class="tab-pane" id="guesser">
+    <div class="container-marketing">
+      
+      <div class="col-xs-12 col-sm-12"  style="background-color: #66CCFF;" >
+      <center><font color="white" size="3pt">See who guessed your answer correctly for <img src="/img/coin.png" width="22" height="22"> 100!</font></center>
+    </div>
+      <br>
+      <br>
+      <%
+      #   question = {"right"=> Array.new, 
+                 #    "wrong"=> Array.new, 
+                 #    "quiz"=> quiz
+                 #   }
+      @guesser_questions.each do |question|%>
+        <%quiz  = question["quiz"]%>
+        <%if quiz["option0"] == quiz["answer"]
+            leftGuesser  = question['right']
+            rightGuesser = question['wrong']
+          else
+            leftGuesser  = question['wrong']
+            rightGuesser = question['right']
+          end
+          %>
+
+        <div class="container my-container">
+          
+          <div class="row">
+            <div class="col-xs-12 col-sm-6"><center><%=quiz["question"]%></center></div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-sm-3">
+              <center>
+              <%if quiz["option0"] == quiz["answer"]%>
+                 <span class="glyphicon glyphicon-ok"></span>
+                 <font>
+              <%else%>
+                 <font color="#CCCCCC">
+              <%end%>
+              <%if quiz["option0"] == session[:tester]%>
+                 You
+              <%else%>
+                 <%=quiz["option0"]%>
+              <%end%>
+              </font>
+              </center>
+            </div>
+            <div class="col-xs-6 col-sm-3">
+              <center>
+              <%if quiz["option1"] == quiz["answer"]%>
+                 <span class="glyphicon glyphicon-ok"></span>
+                 <font>
+              <%else%>
+                 <font color="#CCCCCC">
+              <%end%>
+              <%if quiz["option1"] == session[:tester]%>
+                 You
+              <%else%>
+                 <%=quiz["option1"]%>
+              <%end%>
+              </font>
+              </center>
+            </div>
+          </div>
+          <!-- unlock buttons row-->
+          <div class="row"> 
+            <!-- unlock buttons left cell-->
+            <div class="col-xs-6 col-sm-3">
+              <center>
+                <%if leftGuesser.count == 0%>
+                <button class="btn btn-warning" disabled="disabled">Unlock</button>
+                  0 <span class="glyphicon glyphicon-user"></span>
+                <%else%>
+                  <% guessBtnId = "guessLeftBtn" + quiz["uuid"]%>
+                  <% guessModalId = "guessLeftModal" + quiz["uuid"]%>
+                  <button id="<%=guessBtnId%>" class="btn btn-warning" data-toggle="modal">Unlock</button>
+                    <%=leftGuesser.count%>
+                   <span class="glyphicon glyphicon-user"></span>
+                  <script type="text/JavaScript">
+                      //<![CDATA[
+                        //btnId, uuid, coinId
+                        new UnlockGuesserBtn("<%=guessBtnId%>", "<%=quiz['uuid']%>","coinicon", "<%=guessModalId%>"); 
+                      //]]>
+                  </script>
+                  
+                  <div class="modal fade" id="<%=guessModalId%>" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                      <div class="modal-content">
+                        <br>
+                        <br>
+                        <p class="lead">
+                          <b>People who guessed your answer correctly</b>
+                          <hr>
+                          <%=leftGuesser.join(", ")%>
+                        </p>
+                        <br>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                <%end%>
+              </center>
+            </div>
+            <!-- unlock buttons right cell-->
+            <div class="col-xs-6 col-sm-3">
+              <center>
+                <%if rightGuesser.count == 0%>
+                  <button class="btn btn-warning" disabled="disabled">Unlock</button>
+                  0 <span class="glyphicon glyphicon-user"></span>
+                <%else%>
+                  <% guessBtnId = "guessRightBtn" + quiz["uuid"]%>
+                  <% guessModalId = "guessRightModal" + quiz["uuid"]%>
+                  <button id="<%=guessBtnId%>" class="btn btn-warning" data-toggle="modal">Unlock</button> 
+                    <%=rightGuesser.count%>
+                   <span class="glyphicon glyphicon-user"></span>
+                  <script type="text/JavaScript">
+                      //<![CDATA[
+                        //btnId, uuid, coinId
+                        new UnlockGuesserBtn("<%=guessBtnId%>", "<%=quiz['uuid']%>","coinicon", "<%=guessModalId%>"); 
+                      //]]>
+                  </script>
+                  
+                  <div class="modal fade" id="<%=guessModalId%>" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                      <div class="modal-content">
+
+                        <br>
+                        <br>
+                        <p class="lead">
+                          <b>People who guessed your answer correctly</b>
+                          <hr>
+                          <br>
+                          <%=rightGuesser.join(", ")%>
+                        </p>
+                        <br>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                <%end%>
+              </center>
+              
+            </div>
+          </div>
+        </div>
+        <br>
+      <%end%>
+  
+    </div>
+  </div>
+
+    <form id="people_form" class="form-horizontal" role="form" action="home" method="post">
+
+      <center><button type="submit" class="btn btn-info btn-block">Home</button></center>
+    </form>
+
+<!-- red background end -->
+</div>
+</div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<!-- container marketing -->
+<script type="text/javascript">
+if("<%=@toguess%>"){
+  setTimeout(function(){$('#myTab a:last').tab('show')},0);
+}
+</script>
+
+<!-- </br>
+    <form class="form-horizontal" role="form" action="home" method="post">
+      <center><button type="submit" class="btn btn-success btn-block">OK</button></center>
+    </form> -->
+
+      <!-- FOOTER -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>

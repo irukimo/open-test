@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CF 2.0</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+  <h1>Score of <%=@name%></h1>
+  <% unless @contributors.empty? %>
+    <p class="lead"><strong><%=@contributors.join(', ')%></strong> chose you before. </p>
+    <br>
+  <% end %>
+  <% @p_score.each do |item|
+    index  = item[0]
+    number = item[1]
+    if number == 0 
+      next
+    elsif number == 1 %>
+      <p class="lead"><%=number%> person chose you in <strong><%=@@questions[index]%></strong></p>
+    <% else %>
+    <p class="lead"><%=number%> people chose you in <strong><%=@@questions[index]%></strong></p>
+    <% end  %>
+    
+  
+  
+  <% end %>
+  
+    
+  <div class="text-center">
+    <form class="form-horizontal" role="form" action="start" method="post">
+      
+      <button type="submit" class="btn btn-info btn-lg">Go Back!</button>
+    </form>
+  </div>
+      <!-- FOOTER -->
+      <footer>
+        <p>&copy; 2014 Orrzs Inc.</p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>
