@@ -1,6 +1,6 @@
 # CF 4.0
 ### 
-PORT = 7013
+PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
 require "addressable/uri"
@@ -14,7 +14,7 @@ require 'time'
 
 require './librarian.rb'
 
-IP = "0.0.0.0"
+IP = "192.168.1.124"
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
@@ -92,14 +92,7 @@ def initialize_record
 
   @@tester_progress = Array.new(@@names.count, -1)
   @@phone_number = Hash.new
-  # @@sharing_queue = Hash.new
 
-  #Iru
-  # @@people_asks = Hash.new
-  # @@record_comments = Hash.new
-  # @@record_asks = Hash.new
-  # @@asking_queue = Hash.new
-  # @@last_played = Hash.new
   @@questions_left = Hash.new
   @@energy_left = Hash.new
   @@started_playing = Hash.new
@@ -108,10 +101,7 @@ def initialize_record
   @@coins = Hash.new
   @@unlocked = Hash.new
   @@others_comments = Hash.new
-  # @@bundle_played = Hash.new
 
-  #cf70
-  # @@generated_bundles = Hash.new
   @@level = Hash.new
   @@progress = Hash.new
   @@gems = Hash.new
@@ -234,6 +224,12 @@ def add_new_player
   end
 end
 
+post '/selectedFriendNames' do
+  selectedFriendNames = params["data"]
+  puts selectedFriendNames
+
+  
+end
 
 route :get, :post, '/home' do
   if params["name"]
@@ -1090,7 +1086,6 @@ get '/css/*.*' do |path, ext|
   send_file 'css/' + path + '.' + ext
 end
 
-
 get '/fonts/*.*' do |path, ext|
   send_file 'fonts/' + path + '.' + ext
 end
@@ -1103,6 +1098,9 @@ get '/img/*.*' do |path, ext|
   send_file 'img/' + path + '.' + ext
 end
 
+get '*.*' do |path, ext|
+  send_file path + '.' + ext
+end
 
 
 # post '/who_to_share' do
