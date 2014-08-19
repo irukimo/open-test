@@ -216,7 +216,7 @@
           myform.submit();
         }
         var coinClicked=function(){
-          alert("Coin is the main currency of this game.\nCoin can be used to buy information, shuffle or bet.");
+          alert("在玩遊戲中會得到金幣！\n可以用金幣來看朋友的性向分析哦！");
           return;
         }
 
@@ -257,29 +257,19 @@
 
      <script type="text/JavaScript">
         //<![CDATA[
+
           var firstPentagon = [
               [
-              {axis:"感情",value:0.3},
-              {axis:"事業",value:0.5},
-              {axis:"社交",value:0.7}
+              {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
+              {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
+              {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
               ],[
-              {axis:"感情",value:0.5},
-              {axis:"事業",value:0.6},
-              {axis:"社交",value:0.1}
+              {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
+              {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
+              {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
               ]
           ];
-
-          // var firstPentagon = [
-          //     [
-          //     {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
-          //     {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
-          //     {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
-          //     ],[
-          //     {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
-          //     {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
-          //     {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
-          //     ]
-          // ];
+          
           var oldColor1 = "#2dffc1";
           var newColor1 = "#ff8a90";
           new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
