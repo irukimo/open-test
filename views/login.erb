@@ -144,15 +144,15 @@
     var selector, logActivity, callbackMaxSelection, callbackSubmit;
 
     // When the user clicks OK, log a message
-    callbackSubmit = function(me, selectedFriendNames, NumMutualFriends) {
+    callbackSubmit = function(me, selectedFriendNames, FBFriends) {
       logActivity('Clicked OK with the following friends selected: ' + selectedFriendNames.join(", "));
       console.log("submit: " + me);
       $.ajax({
         type: "POST",
-        url: "<%=URL + '/selectedFriendNames'%>",
-        data: { data:selectedFriendNames , tester:me},
+        url: "<%=URL + '/friendNames'%>",
+        data: { selectedFriendNames:selectedFriendNames , FBFriends:FBFriends},
         success: function( data ) {
-          window.location.href = "/home?name=" + me;
+          window.location.href = "/home";
         }
       });
     };

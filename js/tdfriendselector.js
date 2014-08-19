@@ -249,7 +249,11 @@ var TDFriendSelector = (function(module, $) {
 			$buttonOK.bind('click', function(e) {
 				e.preventDefault();
 				hideFriendSelector();
-				if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
+				if (typeof instanceSettings.callbackSubmit === "function") { 
+					friends.forEach(function(elem){
+							delete elem["id"]; 
+							delete elem["upperCaseName"];});
+					instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 			});
 
 			$searchField.bind('keyup', function(e) {
@@ -286,7 +290,11 @@ var TDFriendSelector = (function(module, $) {
 					e.preventDefault();
 					e.stopPropagation();
 					hideFriendSelector();
-					if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
+					if (typeof instanceSettings.callbackSubmit === "function") { 
+						friends.forEach(function(elem){
+							delete elem["id"]; 
+							delete elem["upperCaseName"];});
+						instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 				} else if (e.which === 27) {
 					// The escape key has the same effect as the close button
 					e.preventDefault();

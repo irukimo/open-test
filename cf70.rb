@@ -130,7 +130,7 @@ def self.initialize_record
   @@librarian = Librarian.new(@@names)
 
   @@friends = Hash.new
-
+  @@FB_friends = Hash.new
 end
 
 def self.initialize_independent_urls
@@ -170,6 +170,7 @@ def self.initilize_variables
     @@unlock_someone[name] = Array.new
     @@logged_in[name] = Array.new
     @@friends[name] = Array.new
+    @@FB_friends[name] = Array.new
   end
 end
 
@@ -224,16 +225,22 @@ def add_new_player
     if @@unlock_someone[name] == nil then @@unlock_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
     if @@friends[name] == nil then @@friends[name] = Array.new end
+    if @@FB_friends[name] == nil then @@FB_friends[name] = Array.new end
     @@librarian.add_player name
   end
 end
 
-post '/selectedFriendNames' do
-  selectedFriendNames = params["data"]
+post '/friendNames' do
+  selected_friend_names = params["selectedFriendNames"]
+  FB_friends = params["FBFriends"]
   tester = session[:tester]
   puts "in selectedFriendNames, tester: " + tester
-  @@friends[tester] += selectedFriendNames
-  @@names += selectedFriendNames
+  
+  @@friends[tester]    += selected_friend_names
+  # FB_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
+  @@FB_friends[tester]  = FB_friends.values
+  
+  @@names += selected_friend_names
 end
 
 route :get, :post, '/home' do
@@ -244,7 +251,11 @@ route :get, :post, '/home' do
     add_new_player
     session[:tester] = params["name"]
 
+  elsif params["name"] == nil and session[:tester] == nil
+    puts "**ERROR**: Wrong entry point"
+    redirect to('/'), 307
   end
+
   if @@started_playing[session[:tester]] == nil
     set_interval(REFILL, session[:tester])
     @@started_playing[session[:tester]] = TRUE
@@ -280,7 +291,7 @@ post '/hasLoggedIn' do
   tester = params["name"]
   session[:tester] = tester
   @@names << params["name"] unless @@names.include? params["name"]
-    
+
   add_new_player
 
   if @@logged_in[tester] == nil or @@logged_in[tester].count == 0
