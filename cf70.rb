@@ -1,7 +1,8 @@
-# CF 4.0
-### 
+#!/usr/bin/env ruby
+# encoding: utf-8
 PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
+
 
 require "addressable/uri"
 require 'sinatra'
@@ -23,6 +24,7 @@ TIME_DIFFERENCE_LOWER_BOUND = 5 * 60 # secs
 INITIAL_COINS = 1000
 PLAY_MAX_BET = 250
 GUESS_MAX_BET = 100
+TITLE="麻吉大學"
 
 set :bind, '0.0.0.0'
 set :port, PORT
@@ -1120,6 +1122,10 @@ end
 
 get '/img/*.*' do |path, ext|
   send_file 'img/' + path + '.' + ext
+end
+
+get '/html/*.*' do |path, ext|
+  send_file 'html/' + path + '.' + ext
 end
 
 get '*.*' do |path, ext|

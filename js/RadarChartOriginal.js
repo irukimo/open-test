@@ -32,9 +32,8 @@ var RadarChart = {
    factor: 0.9,
    //dunno what for
    factorLegend: .65,
-
    levels: 3,
-   maxValue: 1,
+   maxValue: 0,
    //dont change
    radians: 2 * Math.PI,
    opacityArea: 0.5,
@@ -98,7 +97,7 @@ var RadarChart = {
      .attr("transform", "translate(" + (cfg.w/2-levelFactor) + ", " + (cfg.h/2-levelFactor) + ")");
   }
 
-  // Text indicating at what % each level is
+  //Text indicating at what % each level is
   // for(var j=0; j<cfg.levels; j++){
   //   var levelFactor = cfg.factor*radius*((j+1)/cfg.levels);
   //   g.selectAll(".levels")

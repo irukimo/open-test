@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0">
     <meta name="description" content="">
     <meta name="author" content="">
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/RadarChart.js"></script>
     <script src="js/WTPentagon.js"></script>
 
-    <title>CF 2.0</title>
+    <title><%=TITLE%></title>
 
     <!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
@@ -259,15 +259,27 @@
         //<![CDATA[
           var firstPentagon = [
               [
-              {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
-              {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
-              {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
+              {axis:"感情",value:0.3},
+              {axis:"事業",value:0.5},
+              {axis:"社交",value:0.7}
               ],[
-              {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
-              {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
-              {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
+              {axis:"感情",value:0.5},
+              {axis:"事業",value:0.6},
+              {axis:"社交",value:0.1}
               ]
           ];
+
+          // var firstPentagon = [
+          //     [
+          //     {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
+          //     {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
+          //     {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
+          //     ],[
+          //     {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
+          //     {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
+          //     {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
+          //     ]
+          // ];
           var oldColor1 = "#2dffc1";
           var newColor1 = "#ff8a90";
           new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
@@ -334,7 +346,7 @@
             // blue_background_element = document.getElementById("green_background");
             // red_background_element = document.getElementById("red_background");
             // yellow_background_element = document.getElementById("yellow_background");
-            red_background.style.height="400px";
+            red_background.style.height="390px";
             red_background.style.width="700px";
             green_background.style.width="323px";
             blue_background.style.width="323px";

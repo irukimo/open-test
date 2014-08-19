@@ -13,8 +13,8 @@
         }else{
             chartelement = document.getElementById(chartID);
             chartelement.style.paddingLeft = "20px";
-            w = 400;
-            h = 400;
+            w = 350;
+            h = 350;
             isIphone = false;
         }
 
@@ -43,8 +43,10 @@
         var mycfg = {
           w: w,
           h: h,
-          maxValue: 0.6,
-          levels: 6,
+          // maxValue: 0.6,
+          // levels: 6,
+          maxValue: 1,
+          levels: 3,
           ExtraWidthX: 300,
           //cannot be more than 300
           svgWidth:(isIphone)? 300: 630,
@@ -53,7 +55,7 @@
           //how faraway are the legends to the graph
           factorLegend: (isIphone)?.65:.85,
           //xoffset of whole diagram
-          TranslateX: (isIphone)?60:85,
+          TranslateX: (isIphone)?65:120,
         }
 
         //Call function to draw the Radar chart
