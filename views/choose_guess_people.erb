@@ -40,12 +40,20 @@
       margin-left: 7px;
       padding-top: 5px;
       padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      font-size: 12pt;
+      padding-left: 10px;
+      padding-right: 10px;
       min-width: 306px;
       max-width: 653px;
       min-height: 400px;
+    }
+
+    .guessbtn{
+      background: #9bcd8a;
+      font-size: 12pt;
+    }
+
+    .guessbtn:hover{
+      color: #424242;
     }
     </style>
 
@@ -129,14 +137,13 @@
                   <%bundle_array = @@librarian.get_parcels_by_categ(name, @categ)%>
                   <%next if bundle_array==nil %>
                   <div>
-                    <center>Guess what <%=name%> thinks about... </center>
                   <%bundle_array.each do |bundle|%>
                     <%next if @@librarian.has_played?(session[:tester], bundle[0])%>
                     <%quiz_array = bundle[1]%>
                     <%puts "quiz_array[0]"%>
                     <%puts quiz_array[0][:option0]%>
                       <%btnid = "button" + bundle[0]%>
-                      <center><button id="<%=btnid%>" class="btn btn-success btn-block" name="uuid" value="<%=bundle[0]%>" ><%=quiz_array[0]["option0"]%> vs <%=quiz_array[0]["option1"]%></button></center>
+                      <center><button id="<%=btnid%>" class="btn btn-block guessbtn" name="uuid" value="<%=bundle[0]%>" >猜<%=name%>如何比較</br><%=quiz_array[0]["option0"]%> vs <%=quiz_array[0]["option1"]%></button></center>
                     <script type="text/javascript">
                       //<![CDATA[
                          new guessButton("<%=btnid%>","<%=bundle[0]%>","<%=@@coins[session[:tester]]%>");
@@ -147,15 +154,11 @@
               <%end%>
 
               <form class="form-horizontal" role="form" action="choose_guess_categ" method="post">
-              <div class="col-xs-6 col-sm-6">
-                <center><button type="submit" class="btn btn-primary btn-block">Back</button></center>
+              <div class="col-xs-12 col-sm-12">
+                <center><button type="submit" class="btn btn-info btn-block">上一頁</button></center>
               </div>
               </form>
-              <form class="form-horizontal" role="form" action="home" method="post">
-              <div class="col-xs-6 col-sm-6">
-                <center><button type="submit" class="btn btn-info btn-block">Home</button></center>
-              </div>
-              </form>
+
 
       </div>
   </div>

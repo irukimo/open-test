@@ -29,7 +29,6 @@
           background-color: rgba(255,255,255,.0);
           border: 1px dashed rgba(0,0,0,.4);
           max-width: 600px;
-          margin-left:0px;
       }
       #buffer {
           min-height: 30px;
@@ -54,9 +53,9 @@
       border-width: 0px;
     }
 
-    #whoquestion{
+/*    #whoquestion{
       padding-left: 5px;
-    }
+    }*/
 
     input[type='range']::-webkit-slider-thumb {
         /*-webkit-appearance: none;*/
@@ -259,13 +258,18 @@
         </div>
 
     </br></br>
-      <div id="whoquestion"><font size="4pt" >Who do you think <b><%=session[:guesswhom]%></b> chose in this question?</font></div>
+      
       
         <div class="container my-container">
-         <div class="row">
-             <div class="col-xs-12 col-sm-12"><center><font size="4pt" color="0000CD"><%=@question%></font></div>
-         </div>
-          </br>
+            <div id="whoquestion" class="col-xs-12 col-sm-12"><font size="5pt" color="#5a76cd">
+              <div id="questionid"><b>你猜<%=session[:guesswhom]%>選了誰？</b></div></font>
+            </div>
+
+             <div class="col-xs-12 col-sm-12"><font size="5pt">
+              <div id="questionid">Q：<%=@question%></div>
+            </div>
+          </br></br></br></br>
+
          <div class="row">
            <form id="nextform" role="form" action="play" method="post">   
            <input type="hidden" name="correct" value=""> 

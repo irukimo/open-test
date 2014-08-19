@@ -23,7 +23,7 @@
             .range([oldColor,newColor,"#333"]);
 
         //Legend titles
-        var LegendOptions = [time_difference,'New'];
+        var LegendOptions = [time_difference,'最新'];
 
         //Data
         var d = DimensionArray;

@@ -29,18 +29,18 @@ set :port, PORT
 
 enable :sessions
 
-def set_interval(delay, name)
-  @@last_time_modified[name] = Time.now
-  @@threads[name] = Thread.new do
-    loop do
-      sleep delay
-      if @@energy_left[name] < ENERGY_CAPACITY
-         @@energy_left[name] = @@energy_left[name] + 1
-         @@last_time_modified[name] = Time.now
-      end
-    end
-  end
-end
+# def set_interval(delay, name)
+#   @@last_time_modified[name] = Time.now
+#   @@threads[name] = Thread.new do
+#     loop do
+#       sleep delay
+#       if @@energy_left[name] < ENERGY_CAPACITY
+#          @@energy_left[name] = @@energy_left[name] + 1
+#          @@last_time_modified[name] = Time.now
+#       end
+#     end
+#   end
+# end
 
 def self.import_questions
   
@@ -94,7 +94,7 @@ def self.initialize_record
   @@phone_number = Hash.new
 
   @@questions_left = Hash.new
-  @@energy_left = Hash.new
+  # @@energy_left = Hash.new
   @@started_playing = Hash.new
   @@threads = Hash.new
   @@last_time_modified = Hash.new
@@ -157,7 +157,7 @@ def self.initilize_variables
   @@names.each do |name|
     @@coins[name] = INITIAL_COINS
     @@level[name] = 1
-    @@energy_left[name] = ENERGY_CAPACITY
+    # @@energy_left[name] = ENERGY_CAPACITY
     @@progress[name] = 0
     @@gems[name] = 0
     @@wins[name] = 0
@@ -212,7 +212,7 @@ def add_new_player
   @@names.each do |name|
     if @@coins[name] == nil then @@coins[name] = INITIAL_COINS end
     if @@level[name] == nil then @@level[name] = 1 end
-    if @@energy_left[name] == nil then @@energy_left[name] = ENERGY_CAPACITY end
+    # if @@energy_left[name] == nil then @@energy_left[name] = ENERGY_CAPACITY end
     if @@progress[name] == nil then @@progress[name] = 0 end
     if @@gems[name] == nil then @@gems[name] = 0 end
     if @@wins[name] == nil then @@wins[name] = 0 end
@@ -257,7 +257,7 @@ route :get, :post, '/home' do
   end
 
   if @@started_playing[session[:tester]] == nil
-    set_interval(REFILL, session[:tester])
+    # set_interval(REFILL, session[:tester])
     @@started_playing[session[:tester]] = TRUE
   end
   @@logged_in[session[:tester]] << Time.now
@@ -339,7 +339,7 @@ post '/welcome' do
     end
   end
   if @@started_playing[session[:tester]] == nil
-     set_interval(REFILL, session[:tester])
+     # set_interval(REFILL, session[:tester])
      @@started_playing[session[:tester]] = TRUE
   end
   @@logged_in[session[:tester]] << Time.now
@@ -355,13 +355,14 @@ post '/choose_people' do
   tester = session[:tester]
   @@play_answer[tester] << Time.now
 
-  if @@energy_left[tester] > 0
-     @@energy_left[tester] = @@energy_left[tester] - 1
-     if @@energy_left[tester] == 4
-        Thread.kill(@@threads[tester])
-        set_interval(REFILL, tester)
-     end
-  end
+
+  # if @@energy_left[session[:tester]] > 0
+  #    @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
+  #    if @@energy_left[session[:tester]] == 4
+  #       Thread.kill(@@threads[session[:tester]])
+  #       set_interval(REFILL, session[:tester])
+  #    end
+  # end
 
   @initial_first, @initial_second = @@friends[tester].sample(2)
    
@@ -518,7 +519,7 @@ post '/finish_choose' do
 end
 
 post '/level_up' do
-  @@energy_left[session[:tester]] = ENERGY_CAPACITY
+  # @@energy_left[session[:tester]] = ENERGY_CAPACITY
   xp_to_add = session[:xp_to_add]
   @@level[session[:tester]] += 1
   xp_needed = get_XP_needed(session[:tester])
@@ -532,7 +533,7 @@ post '/refill' do
   @@use_gems[session[:tester]] << Time.now
 
   session[:tester] = params[:tester]
-  @@energy_left[session[:tester]] = ENERGY_CAPACITY
+  # @@energy_left[session[:tester]] = ENERGY_CAPACITY
   @@gems[session[:tester]] = @@gems[session[:tester]] - 1
   redirect to('/home'), 307
 end
@@ -830,13 +831,13 @@ route :get, :post, '/rankings' do
 end
 
 post '/start' do
-  if @@energy_left[session[:tester]] > 0
-     @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
-     if @@energy_left[session[:tester]] == 4
-        Thread.kill(@@threads[session[:tester]])
-        set_interval(REFILL, session[:tester])
-     end
-  end
+  # if @@energy_left[session[:tester]] > 0
+  #    @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
+  #    if @@energy_left[session[:tester]] == 4
+  #       Thread.kill(@@threads[session[:tester]])
+  #       set_interval(REFILL, session[:tester])
+  #    end
+  # end
   @@questions_left[session[:tester]] = 5
   @current_tester = session[:tester]
   #if @@questions_left[session[:tester]] == nil
