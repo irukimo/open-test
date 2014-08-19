@@ -124,7 +124,7 @@
         min-width: 316px;
       }
     #red_background{
-      background: #ffe7e7;
+      background: #ffe5f8;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -136,14 +136,14 @@
       font-size: 20pt;
       min-width: 300px;
       max-width: 653px;
-      min-height: 240px;
+      min-height: 270px;
       padding-left: 10px;
       padding-right: 10px;
     }
     #green_background{
       /*background-image:url('/img/play.png');*/
       /*background-size: 123px 100px; */
-      background: #9bf1bd;
+      background: #d2ffea;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -152,8 +152,8 @@
       padding-bottom: 5px;
       padding-left: 0px;
       padding-right: 0px;
-      max-width: 147px;
-      min-height: 95px;
+      width: 147px;
+      height: 85px;
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -169,8 +169,8 @@
       padding-bottom: 5px;
       padding-left: 0px;
       padding-right: 0px;
-      max-width: 147px;
-      min-height: 95px;
+      width: 147px;
+      height: 85px;
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -232,7 +232,7 @@
     </form>
 
   <div class="row">
-    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>Level <%=@@level[session[:tester]]%> </center></div>
+    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級 <%=@@level[session[:tester]]%> </center></div>
     <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
     <div id="medal_display" class="col-xs-2 col-sm-2" onclick="medalClicked()"><center>
@@ -243,10 +243,15 @@
 
   <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
-  <img src="/img/user.png" alt="Smiley face" width="45" height="45"> <font color="#727272">林久禾</font>
+  <img src="/img/user.png" alt="Smiley face" width="40" height="40"> <font color="#727272"><%=session[:tester]%></font>
+
+
 
     <div id="body1">
        <div id="chart1" ></div>
+    </div>
+    <div align="right">
+        <font color="#40288e" size="5pt" onclick="goreport()" onmouseover="" style="cursor: pointer;"><font size="3pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>更多</b></font>
     </div>
 
      <script type="text/JavaScript">
@@ -263,8 +268,8 @@
                   {axis:"社交",value:0.7}
                   ]
                 ];
-          var oldColor1 = "#7a93df";
-          var newColor1 = "#df7acf";
+          var oldColor1 = "#2dffc1";
+          var newColor1 = "#ff8a90";
           new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
 
       </script>
@@ -274,11 +279,11 @@
   </div>
 
   <div class="row">
-    <div id="green_background" class="col-xs-11 col-md-3">
+    <div id="green_background" class="col-xs-11 col-md-3" onclick="gocompare()" onmouseover="" style="cursor: pointer;">
     </br>
         <b><center><font size="5pt" color="#1a754b">比一下</font></center></b>  
     </div>
-    <div id="blue_background" class="col-xs-11 col-md-3">
+    <div id="blue_background" class="col-xs-11 col-md-3" onclick="goguess()" onmouseover="" style="cursor: pointer;">
           </br>
         <b><center><font size="5pt" color="#1c5979">猜一下</font></center></b>
     </div>
@@ -287,16 +292,56 @@
   <div class="row">
     <div id="yellow_background" class="col-xs-11 col-md-7">
       <b>小明</b>剛剛比了<b>小白</b>跟<b>小黃</b>
-    </br><font color="#ffa302"><font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>去猜</b></font>
+    </br><font color="#ffa302" onmouseover="" style="cursor: pointer;"><font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>去猜</b></font>
 
     </div>
   </div>
 
 </div>
 
+        <form id="compareform" class="form-horizontal" role="form" action="choose_categ" method="post">
+        </form>
+
+        <form id="guessform" class="form-horizontal" role="form" action="choose_guess_categ" method="post">
+        </form>
+
+        <form id="reportform" class="form-horizontal" role="form" action="view_my_report" method="post">
+        </form>
+
 
      <script type="text/JavaScript">
     //<![CDATA[
+        function gocompare(){
+            compareform = document.forms["compareform"];
+            compareform.submit();
+        }
+        function goguess(){
+            guessform = document.forms["guessform"];
+            guessform.submit();
+        }
+        function goreport(){
+            reportform = document.forms["reportform"];
+            reportform.submit();
+        }
+
+
+
+        var isIphone;
+        if( screen.width <= 480 ) {
+            // chartelement = document.getElementById(chartID);
+        }else{
+            // green_background_element = document.getElementById("green_background");
+            // blue_background_element = document.getElementById("green_background");
+            // red_background_element = document.getElementById("red_background");
+            // yellow_background_element = document.getElementById("yellow_background");
+            red_background.style.height="400px";
+            red_background.style.width="700px";
+            green_background.style.width="323px";
+            blue_background.style.width="323px";
+            yellow_background.style.width="700px";
+            medal_display.style.width="151px";
+        }
+
        var level_element = document.getElementById("level_display");
        var progress = <%=@@progress[session[:tester]]%>;
        var whitewidth = 100 - progress;

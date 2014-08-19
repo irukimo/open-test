@@ -34,7 +34,7 @@
     }
 
     #red_background{
-      background: #d2ffea;
+      background: #ffe5f8;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -49,12 +49,22 @@
       min-height: 400px;
     }
 
-    #pbtn, #rbtn, #sbtn, #fbtn{
+    .btn-block{
       min-height: 60px;
       font-size: 15pt;
       background-color: #474747;
       color: #FFFFFF;
       text-align: left;
+    }
+
+    .btn-block:hover {
+      color: #FFFFFF;
+
+    }
+
+    .btn-block:active {
+      color: #FFFFFF;
+
     }
     </style>
 
@@ -94,6 +104,25 @@
           var homeform = document.forms["homeform"];
           homeform.submit();
         }
+
+        function viewOthersButton(btnid, coins){
+          var obj = this;
+          obj.btnelement = document.getElementById(btnid);
+          obj.clickedname = btnid;
+          obj.coins = parseInt(coins);
+          obj.btnelement.onclick = function(){obj.btnClicked();}    
+        }
+
+        viewOthersButton.prototype.btnClicked = function(){
+          var obj = this;
+          if(obj.coins < 200){
+            alert("抱歉...你的金幣不夠...");
+            return;
+          }
+          var myform = document.forms["reportform"];
+          myform.clickedname.value = obj.clickedname;
+          myform.submit();
+        }
            //]]>
         </script>
 
@@ -103,32 +132,28 @@
     <div id="red_background" class="col-xs-11 col-md-7">
 
 </br>
-            <b><center><font size="5pt">請選擇一個分類</font></center></b>
+            <center><font size="5pt"><b>請選一個朋友</b></font></center>
           </br>
-          <form id="people_form" class="form-horizontal" role="form" action="choose_people" method="post">
-            <button type="submit" id="pbtn" class="btn btn-block" name="categ" value="P">
-            <div class="col-xs-2 col-md-4"></div>
-            <div class="col-xs-4 col-md-4">
-            <img src="/img/professional.png" alt="Smiley face" width="44" height="44"> 專業
-            </div>
-            </button>
-            <button type="submit" id="rbtn" class="btn btn-block" name="categ" value="R">
-            <div class="col-xs-2 col-md-4"></div>
-            <div class="col-xs-4 col-md-4"><img src="/img/relationship.png" alt="Smiley face" width="44" height="44"> 感情
-            </div>
-            </button>
-            <button type="submit" id="sbtn" class="btn btn-block" name="categ" value="S">
-            <div class="col-xs-2 col-md-4"></div>
-            <div class="col-xs-4 col-md-4"><img src="/img/social.png" alt="Smiley face" width="44" height="44"> 社交
-            </div>
-            </button>
-            <button type="submit" id="fbtn" class="btn btn-block" name="categ" value="F">
-            <div class="col-xs-2 col-md-4"></div>
-            <div class="col-xs-4 col-md-4"><img src="/img/justforfun.png" alt="Smiley face" width="44" height="44"> 好玩
-            </div>
-            </button>
-
+          <form id="reportform" class="form-horizontal" role="form" action="view_others_report" method="post">
+            <input type="hidden" name="clickedname" value=""> 
           </form>
+            <%@@names.each do |name|%> 
+              <%next if name == session[:tester]%>
+              <div class="col-xs-12 col-md-12">     
+                <button type="submit" id="<%=name%>" class="btn btn-block">
+                <div class="col-xs-1 col-md-4"></div>
+                <div class="col-xs-4 col-md-4">
+                <img src="/img/userwhite.png" alt="Smiley face" width="44" height="44"> 
+                   <%=name%>
+                </div>
+                </button>
+                <script type="text/JavaScript">
+                  //<![CDATA[
+                  new viewOthersButton("<%=name%>","<%=@@coins[session[:tester]]%>"); 
+                  //]]>
+                </script>
+              </div>
+            <%end%>
 
 
 

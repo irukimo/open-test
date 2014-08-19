@@ -35,7 +35,7 @@
           min-height: 30px;
       }
       #red_background{
-      background: #cdf8de;
+      background: #caecfa;
       border-radius: 5px;
       margin-top: 7px;
       margin-left: 7px;
@@ -114,15 +114,16 @@
        if(obj.chosenName == obj.answer){
            var newicon = document.createElement('span');
            newicon.className = "glyphicon glyphicon-ok";
-           newicon.style.color = "#00FF00";
+           newicon.style.color = "#23b319";
            newicon.style.fontSize="18pt";
            obj.icon.appendChild(newicon);
            obj.nextform.correct.value = "true";
 
            var newtxt = document.createElement('span');
-           newtxt.style.color = "#FFA500";
+           newtxt.style.color = "#23b319";
            newtxt.style.fontSize="15pt";
-           var txt = "Congrats! You won! Your bet has doubled!";
+           newtxt.style.fontWeight="bold";
+           var txt = "答對了！您真內行！";
            newtxt.appendChild(document.createTextNode(txt));
            obj.toPutText.appendChild(newtxt);
            if (optionNum == 0){
@@ -141,7 +142,8 @@
            var newtxt = document.createElement('span');
            newtxt.style.color = 'blue';
            newtxt.style.fontSize="15pt";
-           var txt = "Oops.. you guessed wrong...";
+           newtxt.style.fontWeight="bold";
+           var txt = "噢...答錯了...";
            newtxt.appendChild(document.createTextNode(txt));
            obj.toPutText.appendChild(newtxt);
            if (optionNum == 0){
@@ -173,12 +175,12 @@
     <div class="container">
               <div class="row">
     <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
-        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+        <span class="glyphicon glyphicon-home"></span> 主選單
       </center>
     </div>
     <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><div id="gemnum"><%=@@gems[session[:tester]]%></div>
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/medal.png" alt="Smiley face" width="25" height="25">
     </center>
           <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
       </form>
@@ -231,7 +233,7 @@
         <div id="icon1" class="col-xs-2 col-md-1">
           <%if session[:correct_history].count > 0%>
              <%if session[:correct_history][0] == "true"%>
-                <font color="#00FF00" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
              <%else%>
                 <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
              <%end%>
@@ -240,7 +242,7 @@
         <div id="icon2" class="col-xs-2 col-md-1">       
           <%if session[:correct_history].count > 1%>
              <%if session[:correct_history][1]  == "true"%>
-                <font color="#00FF00" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
              <%else%>
                 <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
              <%end%>
@@ -249,7 +251,7 @@
         <div id="icon3" class="col-xs-2 col-md-1">          
           <%if session[:correct_history].count > 2%>
              <%if session[:correct_history][2]  == "true"%>
-                <font color="#00FF00" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
              <%else%>
                 <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
              <%end%>
@@ -276,13 +278,13 @@
           </div>
          </div><!-- /.row -->
 
-        <center>
+        <!-- <center>
         <font color="#4169e3" size="3pt">Your bet <img src="/img/chip.png" alt="Smiley face" width="22" height="22"> <span id="range">0</span></font>
         <button id="messagebtn" class="btn" data-toggle="modal" data-target="#myModal">
                   <img src="/img/question.png" alt="Smiley face" width="25" height="25">
               </button>
               <input id="rangeid" type="range" min="0" max="<%=session[:bettingleft]%>" value="0" step="10" onchange="showValue(this.value,<%=session[:bettingleft]%>)" />
-        </center>
+        </center> -->
       </div>
 
 

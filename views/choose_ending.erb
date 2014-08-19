@@ -20,7 +20,7 @@
   </head>
   <style>
   #red_background{
-      background: #FCE2A8;
+      background: #d2ffea;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -49,23 +49,34 @@
 
 
     <div class="row">
-      <div id="player_name" class="col-xs-5 col-sm-3"><center>
-          <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+      <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+          <span class="glyphicon glyphicon-home"></span> 主選單
         </center>
       </div>
       <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
       <!-- Optional: clear the XS cols if their content doesn't match in height -->
-      <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><%=@@gems[session[:tester]]%></center></div>
+      <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center>
+          <img src="/img/medal.png" alt="Smiley face" width="25" height="25">
+      </center></div>
     </div>
     <!-- <h1>Records</h1> -->
-
+  <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+  </form>
+   <script type="text/JavaScript">
+    //<![CDATA[
+    function backtohome(){
+      var homeform = document.forms["homeform"];
+      homeform.submit();
+    }
+       //]]>
+    </script>
 
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
-
-              <b><center><font size="5pt">Congratulations!</br> You have earned</font></center></b>
+</br>
+              <b><center><font size="5pt">恭喜！</br>你得到了</font></center></b>
             </br>
-              <center><font size="4pt"> <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> 100</font></center>
+              <center><font size="4pt"> <img src="/img/coin.png" alt="Smiley face" width="45" height="45"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> 100</font></center>
             </br>
                 <!-- <div class="col-xs-4 col-sm-5"><center>Level <%=@@level[session[:tester]]%></center></div>
                 <div class="col-xs-8 col-sm-6"> 

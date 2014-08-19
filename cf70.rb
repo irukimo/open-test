@@ -395,6 +395,36 @@ get '/wtcoin' do
   erb :wtcoin
 end
 
+get '/view_others_choose_people' do
+  erb :view_others_choose_people
+end
+
+post '/view_others_report' do 
+  @@coins[session[:tester]] -= 200
+  @clickedname = params[:clickedname]
+  # begin
+    view_report(@clickedname)
+    @name = @clickedname
+    erb :my_report
+  # rescue
+  #   @guesser_questions = Array.new
+  #   @my_questions = Array.new
+  #   erb :my_report_exception
+  # end 
+end
+
+route :get, :post, '/view_my_report' do
+  begin
+    view_report(session[:tester])
+    @name = session[:tester]
+    erb :my_report
+  rescue
+    @guesser_questions = Array.new
+    @my_questions = Array.new
+    erb :my_report_exception
+  end 
+end
+
 post '/choose_answer' do
 
   if session[:choose] == nil
@@ -463,14 +493,14 @@ end
 
 post '/choose_ending' do
   @@coins[session[:tester]] = @@coins[session[:tester]] + 100
-
+  addupXP(100, session[:tester])
   erb :choose_ending
 end
 
 post '/finish_choose' do
-  # if session[:xp_to_add]
-  #   redirect to('/level_up'), 307
-  # end
+  if session[:xp_to_add]
+    redirect to('/level_up'), 307
+  end
   redirect to('/home'), 307
 end
 
@@ -481,7 +511,7 @@ post '/level_up' do
   xp_needed = get_XP_needed(session[:tester])
   @@progress[session[:tester]] = (100*(xp_to_add.to_f/xp_needed.to_f)).floor
   @@gems[session[:tester]] =  @@gems[session[:tester]] + 1
-  clear_session
+  @@coins[session[:tester]] += 200
   erb :level_up
 end
 
@@ -535,11 +565,10 @@ def sec_to_units seconds
   end
 end
 
-route :get, :post, '/view_my_report' do
-  begin
-    @@view_report[session[:tester]] << Time.now
+def view_report(name)
+    @@view_report[name] << Time.now
 
-    @my_questions = @@librarian.get_questions_of(session[:tester])
+    @my_questions = @@librarian.get_questions_of(name)
 
     @my_questions.shuffle!
 
@@ -564,26 +593,24 @@ route :get, :post, '/view_my_report' do
                     #  {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx},
                     #  {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}]]
 
-    @name = session[:tester]
-
-    if @@score_buffer[@name] == nil
-      @@score_buffer[@name] = Hash.new
-      @@score_buffer[@name]["old"] = {"S"=>0.5, "P"=>0.5, "R"=>0.5, "time"=>Time.now, 
+    if @@score_buffer[name] == nil
+      @@score_buffer[name] = Hash.new
+      @@score_buffer[name]["old"] = {"S"=>0.5, "P"=>0.5, "R"=>0.5, "time"=>Time.now, 
                                           "detail"=> {"S"=>Hash.new, "P"=>Hash.new, "R"=>Hash.new}
                                          }
-      @@score_buffer[@name]["new"] = {"S"=>0.5, "P"=>0.5, "R"=>0.5, "time"=>Time.now, 
+      @@score_buffer[name]["new"] = {"S"=>0.5, "P"=>0.5, "R"=>0.5, "time"=>Time.now, 
                                           "detail"=> {"S"=>Hash.new, "P"=>Hash.new, "R"=>Hash.new}
                                          }
       CATEGORIES.each do |categ, dims|
         dims.each do |dim|
-          @@score_buffer[@name]["old"]["detail"][categ][dim] = 0.5
-          @@score_buffer[@name]["new"]["detail"][categ][dim] = 0.5
+          @@score_buffer[name]["old"]["detail"][categ][dim] = 0.5
+          @@score_buffer[name]["new"]["detail"][categ][dim] = 0.5
         end                              
       end
     end
 
     # for resuming the server
-    @@score_buffer[@name].each do |key, version|
+    @@score_buffer[name].each do |key, version|
       if version["time"].class == String
         version["time"] = Time.parse(version["time"])
       end
@@ -593,7 +620,7 @@ route :get, :post, '/view_my_report' do
                "detail" => {"S"=>Hash.new, "P"=>Hash.new, "R"=>Hash.new}
               }
     
-    relevants = @@librarian.get_relevant_quizzes(@name)
+    relevants = @@librarian.get_relevant_quizzes(name)
 
     CATEGORIES.each do |categ, dims|
       dims.each do |dim|
@@ -611,8 +638,8 @@ route :get, :post, '/view_my_report' do
       dim       = @@categories[quiz["question"]]["dim"]
       # att       = @@categories[quiz["question"]]["att"]
 
-      another_option = (quiz["option1"] == @name) ? quiz["option0"] : quiz["option1"]
-      if quiz["answer"] == @name      
+      another_option = (quiz["option1"] == name) ? quiz["option0"] : quiz["option1"]
+      if quiz["answer"] == name      
         @scores[category] += value
         @scores["detail"][category][dim] += value  
 
@@ -630,44 +657,39 @@ route :get, :post, '/view_my_report' do
     # puts "score after"
     # puts @scores.inspect
 
-    time_diff_w_old = @scores["time"] - @@score_buffer[@name]["old"]["time"]
-    time_diff_w_new = @scores["time"] - @@score_buffer[@name]["new"]["time"]
+    time_diff_w_old = @scores["time"] - @@score_buffer[name]["old"]["time"]
+    time_diff_w_new = @scores["time"] - @@score_buffer[name]["new"]["time"]
 
     # First rule: Never too old
     if time_diff_w_old > TIME_DIFFERENCE_UPPER_BOUND
-      @@score_buffer[@name]["old"] = @@score_buffer[@name]["new"]
+      @@score_buffer[name]["old"] = @@score_buffer[name]["new"]
     # Second rule: Never too new
     elsif time_diff_w_new < TIME_DIFFERENCE_LOWER_BOUND
 
     else
       # Third rule: The one with larger difference stays
-      diff_w_old = (@scores["S"] - @@score_buffer[@name]["old"]["S"]).abs + 
-                   (@scores["P"] - @@score_buffer[@name]["old"]["P"]).abs + 
-                   (@scores["R"] - @@score_buffer[@name]["old"]["R"]).abs
+      diff_w_old = (@scores["S"] - @@score_buffer[name]["old"]["S"]).abs + 
+                   (@scores["P"] - @@score_buffer[name]["old"]["P"]).abs + 
+                   (@scores["R"] - @@score_buffer[name]["old"]["R"]).abs
 
-      diff_w_new = (@scores["S"] - @@score_buffer[@name]["new"]["S"]).abs + 
-                   (@scores["P"] - @@score_buffer[@name]["new"]["P"]).abs + 
-                   (@scores["R"] - @@score_buffer[@name]["new"]["R"]).abs
+      diff_w_new = (@scores["S"] - @@score_buffer[name]["new"]["S"]).abs + 
+                   (@scores["P"] - @@score_buffer[name]["new"]["P"]).abs + 
+                   (@scores["R"] - @@score_buffer[name]["new"]["R"]).abs
 
       if diff_w_new > diff_w_old
-        @@score_buffer[@name]["old"] = @@score_buffer[@name]["new"]
+        @@score_buffer[name]["old"] = @@score_buffer[name]["new"]
       end
     end
-    @@score_buffer[@name]["new"] = @scores
+    @@score_buffer[name]["new"] = @scores
 
-    @time_difference = sec_to_units(@@score_buffer[@name]["new"]["time"] - @@score_buffer[@name]["old"]["time"])
+    @time_difference = sec_to_units(@@score_buffer[name]["new"]["time"] - @@score_buffer[name]["old"]["time"])
     
-    @contributors = collect_contributors(@name)
+    @contributors = collect_contributors(name)
 
-    @guesser_questions = @@librarian.get_guesser_questions(@name)
-    erb :my_report
-
-  rescue
-    @guesser_questions = Array.new
-    @my_questions = Array.new
-    erb :my_report_exception
-  end 
+    @guesser_questions = @@librarian.get_guesser_questions(name)
 end
+
+
 
 post '/choose_guess_categ' do
   erb :choose_guess_categ

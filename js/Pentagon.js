@@ -53,7 +53,7 @@
           //how faraway are the legends to the graph
           factorLegend: (isIphone)?.65:.85,
           //xoffset of whole diagram
-          TranslateX: (isIphone)?75:85,
+          TranslateX: (isIphone)?60:85,
         }
 
         //Call function to draw the Radar chart

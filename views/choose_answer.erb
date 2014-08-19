@@ -59,12 +59,12 @@
     }
 
     #messagebtn{
-      background: #f8e4e5;
+      background: #9bf1bd;
       border-width: 0px;
     }
 
     #red_background{
-      background: #f8e4e5;
+      background: #d2ffea;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -170,12 +170,13 @@
 
    <div class="row">
     <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
-        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+        <span class="glyphicon glyphicon-home"></span> 主選單
       </center>
     </div>
     <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><%=@@gems[session[:tester]]%>
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center>
+      <img src="/img/medal.png" alt="Smiley face" width="25" height="25">
     </center>
     </div>
     <form id="homeform" class="form-horizontal" role="form" action="home" method="post" visibility="hidden"></form>
@@ -195,10 +196,11 @@
   <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
 
-     <div class="col-xs-7 col-sm-8">
-     <center><button class="btn btn-warning" id="shufflebtn"><span class="glyphicon glyphicon-random"></span> Shuffle Question <img src="/img/coin.png" alt="Smiley face" width="22" height="22">30</button></font> 
+    <div class="col-xs-7 col-sm-7"></div>
+     <div class="col-xs-7 col-sm-5">
+     <center><button class="btn btn-warning" id="shufflebtn"><span class="glyphicon glyphicon-random"></span> 換一個問題<img src="/img/coin.png" alt="Smiley face" width="22" height="22">30</button></font> 
 
-      <div id="timesleftbig"><div id="timesleft">3</div> times left</div>
+      <div id="timesleftbig">還有<div id="timesleft">3</div>次</div>
     </div>
                   
      </center>
@@ -209,23 +211,23 @@
               <div class="col-xs-3 col-md-4"></div>
               <div class="col-xs-2 col-md-1">
                 <%if session[:choose] == 1%>
-                   <b><font size="5pt" color="#fffc00" >1</font></b>
+                   <b><font size="5pt" color="#FFCC33" >1</font></b>
                 <%else%>
-                   <font size="5pt" color="#FFFFFF" >1</font>
+                   <font size="5pt" color="#A8A8A8" >1</font>
                 <%end%>
               </div>
               <div class="col-xs-2 col-md-1">
                 <%if session[:choose] == 2%>
-                   <b><font size="5pt" color="#fffc00" >2</font></b>
+                   <b><font size="5pt" color="#FFCC33" >2</font></b>
                 <%else%>
-                   <font size="5pt" color="#FFFFFF" >2</font>
+                   <font size="5pt" color="#A8A8A8" >2</font>
                 <%end%>
               </div>        
               <div class="col-xs-2 col-md-1">
                 <%if session[:choose] == 3%>
-                   <b><font size="5pt" color="#fffc00" >3</font></b>
+                   <b><font size="5pt" color="#FFCC33" >3</font></b>
                 <%else%>
-                   <font size="5pt" color="#FFFFFF" >3</font>
+                   <font size="5pt" color="#A8A8A8" >3</font>
                 <%end%>
               </div>
 </br></br>
@@ -240,22 +242,22 @@
                   <input type="hidden" name="betting" value="0"> 
                 </br></br></br>
                  <div class="col-xs-6 col-md-6">
-                  <p><button type="submit" id="option0btn" class="btn btn-info btn-lg btn-block" name="answer" value="<%=session[:option0]%>"><%=session[:option0]%></button></p>
+                  <p><button type="submit" id="option0btn" class="btn btn-success btn-lg btn-block" name="answer" value="<%=session[:option0]%>"><%=session[:option0]%></button></p>
                  </div>
                  <div class="col-xs-6 col-md-6">
-                    <p><button type="submit" id="option1btn" class="btn btn-info btn-lg btn-block" name="answer" value="<%=session[:option1]%>"><%=session[:option1]%></button></p>
+                    <p><button type="submit" id="option1btn" class="btn btn-success btn-lg btn-block" name="answer" value="<%=session[:option1]%>"><%=session[:option1]%></button></p>
                 </div>
               <center>
                     </form>
               </br>
                 
-              <font color="#4169e3" size="3pt">
+<!--               <font color="#4169e3" size="3pt">
               Your bet <img src="/img/chip.png" alt="Smiley face" width="22" height="22"> <span id="range">0</span>
               <button id="messagebtn" class="btn" data-toggle="modal" data-target="#myModal">
                   <img src="/img/question.png" alt="Smiley face" width="25" height="25">
               </button>
               <input id="rangeid" type="range" min="0" max="<%=session[:bettingleft]%>" value="0" step="10" onchange="showValue(this.value,<%=session[:bettingleft]%>)" />
-            </font>
+            </font> -->
             
               
     </div>

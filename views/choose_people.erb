@@ -27,14 +27,14 @@
       display: inline-block;
     }
     #timesleft{
-      font-size: 15pt;
+      font-size: 13pt;
     }
     #coinicon{
       display: inline-block;
     }
 
     #red_background{
-      background: #f8e4e5;
+      background: #d2ffea;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -67,12 +67,12 @@
 
    <div class="row">
     <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
-        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+        <span class="glyphicon glyphicon-home"></span> 主選單
       </center>
     </div>
     <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/gem.png" alt="Smiley face" width="25" height="25"><div id="gemnum"><%=@@gems[session[:tester]]%></div>
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/medal.png" alt="Smiley face" width="25" height="25">
     </center>
     </div>
   </div>
@@ -93,15 +93,15 @@
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
 
-
-            <b><center><font size="5pt">Comparing...</font></center></b>
+</br>
+            <b><center><font size="5pt">請比較...</font></center></b>
           </br>
             <center><font size="5pt"><div id="option0"><%=@initial_first%></div></font></center>
             <center><font size="3pt" color="gray">vs</font></center>
             <center><font size="5pt"><div id="option1"><%=@initial_second%></div></font></center>
           </br>
             <center><button id="shufflebtn" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-random"></span>      <img src="/img/coin.png" alt="Smiley face" width="22" height="22">30</button>    
-              <div id="timesleftbig"><div id="timesleft">3</div> times left</div>
+              <div id="timesleftbig">還有<div id="timesleft">3</div>次</div>
             </center>
             
               </br></br></br></br>

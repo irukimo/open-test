@@ -21,7 +21,7 @@
   </head>
   <style>
       #red_background{
-      background: #FCE2A8;
+      background: #caecfa;
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -48,8 +48,8 @@
     <div class="container marketing">
 
     <div class="row">
-    <div id="player_name" class="col-xs-5 col-sm-3"><center>
-        <img src="/img/user.png" alt="Smiley face" width="25" height="25">       <%=session[:tester]%>
+    <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+        <span class="glyphicon glyphicon-home"></span> 主選單
       </center>
     </div>
     <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
@@ -58,6 +58,16 @@
     </center>
     </div>
   </div>
+        <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
   <!-- <h1>Records</h1> -->
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
@@ -67,11 +77,11 @@
             </br>
 
 
-                <b><center><font size="5pt"><%if @correct%>Congrats! You win!<%else%>You lose...<%end%></font></center></b>
+                <b><center><font size="5pt"><%if @correct%>恭喜！贏了！！<%else%>輸了...<%end%></font></center></b>
               </br>
-                <center><font size="4pt" color="gray">You got <%=@win%> questions correct..</font></center>
+                <center><font size="4pt" color="gray">答對了<%=@win%>題</font></center>
               </br>
-                <center><font size="5pt"> <img src="/img/coin.png" alt="Smiley face" width="22" height="22"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> <%=@reward%></font></center>
+                <center><font size="5pt"> <img src="/img/coin.png" alt="Smiley face" width="45" height="45"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> <%=@reward%></font></center>
               </br>
                 <div class="row">
                   <div class="col-xs-3 col-sm-4"><center>Level <%=@@level[session[:tester]]%></center></div>

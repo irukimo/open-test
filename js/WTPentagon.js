@@ -48,12 +48,12 @@
           ExtraWidthX: 300,
           //cannot be more than 300
           svgWidth:(isIphone)? 300: 630,
-          svgHeight:(isIphone)? 200: 300,
+          svgHeight:(isIphone)? 174: 290,
           color:colorscale,
           //how faraway are the legends to the graph
           factorLegend: (isIphone)?.65:.85,
           //xoffset of whole diagram
-          TranslateX: (isIphone)?60:85,
+          TranslateX: (isIphone)?60:120,
         }
 
         //Call function to draw the Radar chart
