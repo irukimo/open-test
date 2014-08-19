@@ -251,7 +251,6 @@ var TDFriendSelector = (function(module, $) {
 				hideFriendSelector();
 				if (typeof instanceSettings.callbackSubmit === "function") { 
 					friends.forEach(function(elem){
-							delete elem["id"]; 
 							delete elem["upperCaseName"];});
 					instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 			});
@@ -492,7 +491,10 @@ var TDFriendSelector = (function(module, $) {
       var barrier = new CallbackBarrier();
        console.log(input);
 			for (var i in input) {
-				if (i > 2) continue;
+				if (i > 100) {
+					input[i].closeness = 200000;
+					continue;
+				}
 				(function(i) {
 					friendID = input[i].id;
 					barrier.setBarrier();

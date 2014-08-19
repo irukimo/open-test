@@ -1,12 +1,13 @@
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>Compare Friends</title>
+    <title>CF 2.0</title>
 
     <!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
@@ -15,16 +16,82 @@
     <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
-    <script type="text/JavaScript">
+
+    <style>
+    .coins_font{
+      color: #FFA500;
+      font-size: 20pt;
+      display : inline-block;
+    }
+    .my-container{
+          padding-top: 10px;
+          padding-bottom: 10px;
+          background-color: rgba(255,255,255,.0);
+          border: 1px dashed rgba(0,0,0,.4);
+          max-width: 600px;
+      }
+      #buffer {
+          min-height: 30px;
+      }
+      #red_background{
+      background: #caecfa;
+      border-radius: 5px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 12pt;
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 400px;
+    }
+    
+    #messagebtn{
+      background: #cdf8de;
+      border-width: 0px;
+    }
+
+/*    #whoquestion{
+      padding-left: 5px;
+    }*/
+
+    input[type='range']::-webkit-slider-thumb {
+        /*-webkit-appearance: none;*/
+        width: 33px;
+        height: 33px;
+        -webkit-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0, #fefefe),
+            color-stop(0.49, #dddddd),
+            color-stop(0.51, #d1d1d1),
+            color-stop(1, #a1a1a1)
+        );
+        background-repeat: no-repeat;
+        background-position: 50%;
+    }
+
+    #bettingleftid{
+      display: inline-block;
+    }
+    </style>
+
+     <script type="text/JavaScript">
     //<![CDATA[
     //global variables
 
     priceOfUnlock = 5;
-    function questionObj(option0btnid, option1btnid, answer, formid, toPutTextID){
+    function questionObj(option0btnid, option1btnid, answer,formid,toPutTextID,iconID){
        this.option0btn = document.getElementById(option0btnid);
        this.option1btn = document.getElementById(option1btnid);
        this.nextform = document.forms[formid];
        this.toPutText = document.getElementById(toPutTextID);
+       this.icon = document.getElementById(iconID);
        this.answer = answer;
        var obj = this;
        obj.option0btn.onclick = function(){obj.btnClicked(0);}
@@ -44,12 +111,18 @@
        obj.option1btn.disabled = true;
 
        if(obj.chosenName == obj.answer){
-           obj.nextform.correctness.value = "true";
+           var newicon = document.createElement('span');
+           newicon.className = "glyphicon glyphicon-ok";
+           newicon.style.color = "#23b319";
+           newicon.style.fontSize="18pt";
+           obj.icon.appendChild(newicon);
+           obj.nextform.correct.value = "true";
 
            var newtxt = document.createElement('span');
-           newtxt.style.color = "#FFA500";
+           newtxt.style.color = "#23b319";
            newtxt.style.fontSize="15pt";
-           var txt = "Congrats! You got it right!";
+           newtxt.style.fontWeight="bold";
+           var txt = "答對了！您真內行！";
            newtxt.appendChild(document.createTextNode(txt));
            obj.toPutText.appendChild(newtxt);
            if (optionNum == 0){
@@ -58,12 +131,18 @@
               obj.option1btn.style.background='#FFA500';
            }
        }else{
-           obj.nextform.correctness.value = "false";
-           
+           obj.nextform.correct.value = "false";
+           var newicon = document.createElement('span');
+           newicon.className = "glyphicon glyphicon-remove";
+           newicon.style.color = "#FF0000";
+           newicon.style.fontSize="18pt";
+           obj.icon.appendChild(newicon);
+
            var newtxt = document.createElement('span');
            newtxt.style.color = 'blue';
            newtxt.style.fontSize="15pt";
-           var txt = "Oops.. you got it wrong...";
+           newtxt.style.fontWeight="bold";
+           var txt = "噢...答錯了...";
            newtxt.appendChild(document.createTextNode(txt));
            obj.toPutText.appendChild(newtxt);
            if (optionNum == 0){
@@ -82,40 +161,177 @@
     }
     //]]>
     </script>
+
   </head>
+<!-- NAVBAR
+================================================== -->
   <body>
-    <center>
-    <div style="height:10px;"></div>
-    <div id="heart" class="pull-right">
-        <img src="/img/heart.jpg" alt="Smiley face" width='20' height='16'> x <%=@player.blood%>
-      </div>
-      <div style="height:90px;"></div>
-      <font size="4pt" >Who do you think <b><%=@quiz["player"]%></b> chose in this question?</font>
-      
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12"><font size="4pt" color="0000CD"><%=@quiz["question"]%></font></div>
-        </div><!-- /.row -->
-        </br>
-        <div class="row">
-          <form id="nextform" role="form" action="play" method="post">   
-            <input type="hidden" name="correctness" value=""> 
-            <div class="col-xs-6 col-md-6">
-              <p><button id="option0btn" class="btn btn-info btn-lg btn-block"><%=@quiz["option0"]%></button></p>
-            </div>
-            <div class="col-xs-6 col-md-6">
-              <p><button id="option1btn" class="btn btn-info btn-lg btn-block"><%=@quiz["option1"]%></button></p>
-            </div>
-          </form>
-        </div><!-- /.row -->
-        <div id="toPutText"></div>
-      </div>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+    <div class="container">
+              <div class="row">
+    <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
+        <span class="glyphicon glyphicon-home"></span> 主選單
+      </center>
+    </div>
+    <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/medal.png" alt="Smiley face" width="25" height="25">
     </center>
-    <script type="text/JavaScript">
-      //<![CDATA[
-        new questionObj("option0btn", "option1btn", "<%=@quiz['answer']%>","nextform","toPutText"); 
-      //]]>
-    </script>
+          <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
+    </div>
+  </div>
+
+
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
+
+
+  <!-- <h1>Records</h1> -->
+ <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7">
+
+                  
+      <center>
+        <div class="col-xs-3 col-md-4"></div>
+        <div class="col-xs-2 col-md-1">
+          <%if session[:round] == 1%>
+             <b><font size="5pt" color="#FFCC33" >1</font></b>
+          <%else%>
+             <font size="5pt" color="#A8A8A8" >1</font>
+          <%end%>
+        </div>
+        <div class="col-xs-2 col-md-1">
+          <%if session[:round] == 2%>
+             <b><font size="5pt" color="#FFCC33" >2</font></b>
+          <%else%>
+             <font size="5pt" color="#A8A8A8" >2</font>
+          <%end%>
+        </div>        
+        <div class="col-xs-2 col-md-1">
+          <%if session[:round] == 3%>
+             <b><font size="5pt" color="#FFCC33" >3</font></b>
+          <%else%>
+             <font size="5pt" color="#A8A8A8" >3</font>
+          <%end%>
+        </div>
+            
+      </center>
+</br></br>
+        <div id="buffer" class="col-xs-3 col-md-4"></div>
+        <div id="icon1" class="col-xs-2 col-md-1">
+          <%if session[:correct_history].count > 0%>
+             <%if session[:correct_history][0] == "true"%>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+             <%else%>
+                <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
+             <%end%>
+          <%end%>
+        </div>
+        <div id="icon2" class="col-xs-2 col-md-1">       
+          <%if session[:correct_history].count > 1%>
+             <%if session[:correct_history][1]  == "true"%>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+             <%else%>
+                <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
+             <%end%>
+          <%end%>
+        </div>        
+        <div id="icon3" class="col-xs-2 col-md-1">          
+          <%if session[:correct_history].count > 2%>
+             <%if session[:correct_history][2]  == "true"%>
+                <font color="#23b319" size="5pt"><span class="glyphicon glyphicon-ok"></span></font>
+             <%else%>
+                <font color="#FF0000" size="5pt"><span class="glyphicon glyphicon-remove"></span></font>
+             <%end%>
+          <%end%>
+        </div>
+
+    </br></br>
+      
+      
+        <div class="container my-container">
+            <div id="whoquestion" class="col-xs-12 col-sm-12"><font size="5pt" color="#5a76cd">
+              <div id="questionid"><b>你猜<%=session[:guesswhom]%>選了誰？</b></div></font>
+            </div>
+
+             <div class="col-xs-12 col-sm-12"><font size="5pt">
+              <div id="questionid">Q：<%=@question%></div>
+            </div>
+          </br></br></br></br>
+
+         <div class="row">
+           <form id="nextform" role="form" action="guess" method="post">   
+           <input type="hidden" name="correct" value=""> 
+           <input type="hidden" name="betting" value="">     
+           <div class="col-xs-6 col-md-6">
+            <p><button id="option0btn" class="btn btn-info btn-lg btn-block" ><%=@option0%></button></p>
+           </div>
+           <div class="col-xs-6 col-md-6">
+              <p><button id="option1btn" class="btn btn-info btn-lg btn-block" ><%=@option1%></button></p>
+          </div>
+         </div><!-- /.row -->
+
+        <!-- <center>
+        <font color="#4169e3" size="3pt">Your bet <img src="/img/chip.png" alt="Smiley face" width="22" height="22"> <span id="range">0</span></font>
+        <button id="messagebtn" class="btn" data-toggle="modal" data-target="#myModal">
+                  <img src="/img/question.png" alt="Smiley face" width="25" height="25">
+              </button>
+              <input id="rangeid" type="range" min="0" max="<%=session[:bettingleft]%>" value="0" step="10" onchange="showValue(this.value,<%=session[:bettingleft]%>)" />
+        </center> -->
+      </div>
+
+
+        <center><div id="toPutText"></div></center>
+        
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        
+        <font size="4pt" color="#767676">Place your bet on this question if you know the answer!</br></br>
+        You will receive <b>2x</b> of your bet if you correctly guessed <b><%=session[:guesswhom]%></b>'s opinion!</font>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+      <script type="text/JavaScript">
+                 //<![CDATA[
+                    function showValue(newValue, bettingleft)
+                    {
+                      var bettingleft = parseInt(bettingleft);
+                      document.getElementById("range").innerHTML=newValue;
+                      var myform = document.forms["nextform"];
+                      myform.betting.value = newValue;
+                    }
+                    new questionObj("option0btn", "option1btn", "<%=@answer%>","nextform","toPutText","<%='icon' + session[:round].to_s%>"); 
+                 //]]>
+      </script>
+    </form>
+
+
+</div>
+</div>
+
+    </div><!-- /.container -->
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

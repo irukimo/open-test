@@ -141,7 +141,11 @@ class Librarian
   end
 
   def get_parcels_by_categ name, categ
-    return @bundles[name].select{|parcel| parcel[2] == categ}
+    if @bundles[name] == nil
+      return nil 
+    else
+      return @bundles[name].select{|parcel| parcel[2] == categ}
+    end
   end
 
   def get_parcels name

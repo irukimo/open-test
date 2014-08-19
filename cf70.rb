@@ -15,6 +15,8 @@ require 'time'
 
 require './librarian.rb'
 
+# CH or EN
+LANG = "CH"
 IP = "192.168.1.124"
 GAME_CYCLE = 600
 REFILL = 480
@@ -243,6 +245,7 @@ post '/friendNames' do
   @@FB_friends[tester]  = FB_friends.values
   
   @@names += selected_friend_names
+  add_new_player
 end
 
 route :get, :post, '/home' do
@@ -576,11 +579,24 @@ def sec_to_units seconds
   hh, mm = mm.divmod(60)
   dd, hh = hh.divmod(24)
   if dd > 0 
-    return "%d days, %d hours ago" % [dd, hh]
+    if LANG == "CH" 
+      return "%d天又%d小時前" % [dd, hh]
+    else
+      return "%d days, %d hours ago" % [dd, hh]
+    end
+    
   elsif hh > 0
-    return "%d hours, %d mins ago" % [hh, mm]  
+    if LANG == "CH"
+      return "%d小時又%d分鐘前" % [dd, hh]
+    else
+      return "%d hours, %d mins ago" % [hh, mm]  
+    end
   else
-    return "%d mins ago" % [mm]  
+    if LANG == "CH"
+      return "%d分鐘前" % [mm]  
+    else
+      return "%d mins ago" % [mm]  
+    end
   end
 end
 
@@ -715,11 +731,43 @@ post '/choose_guess_categ' do
 end
 
 post '/choose_guess_people' do
+  tester = session[:tester]
   @categ = params[:categ]
+
+  @bundle_array = Array.new
+
+  ### this may as well be refactored into Librarian
+  # first priority: friends
+  @@friends[tester].each do |frd_name|
+    next if (tmp = @@librarian.get_parcels_by_categ(frd_name, @categ)) == nil
+    tmp.each{|parcel| parcel[3] = frd_name}
+    @bundle_array += tmp
+  end
+
+  # second priority: Facebook friends that are players
+  if @bundle_array.count == 0
+    @@FB_friends[tester].each do |fb_frd_name|
+      next if (tmp = @@librarian.get_parcels_by_categ(fb_frd_name, @categ)) == nil
+      tmp.each{|parcel| parcel[3] = fb_frd_name}
+      @bundle_array += tmp
+    end
+  end
+
+  # third priority: any player
+  if @bundle_array.count == 0
+    @@names.each do |player_name|
+      next if tester == player_name
+      next if (tmp = @@librarian.get_parcels_by_categ(player_name, @categ)) == nil
+      tmp.each{|parcel| parcel[3] = player_name}
+      @bundle_array += tmp
+    end
+  end
+
+  @bundle_array.shuffle
   erb :choose_guess_people
 end
 
-post '/play' do
+post '/guess' do
   @@play_others[session[:tester]] << Time.now
 
   if session[:round] == nil
@@ -757,7 +805,7 @@ post '/play' do
   @option1 = session[:bundle][session[:round]-1]["option1"]
   @answer = session[:bundle][session[:round]-1]["answer"]
   session[:bettingleft] = (@@coins[session[:tester]] < GUESS_MAX_BET)? @@coins[session[:tester]] : GUESS_MAX_BET
-  erb :play
+  erb :guess
 end
 
 post '/result' do
@@ -829,7 +877,12 @@ route :get, :post, '/rankings' do
 
   # @sortedLevelArray = @@level.sort_by {|key,value| value}
   tester = session[:tester]
-  tmp = @@level.select{|key, value| @@friends[tester].include? key}
+  # tmp = @@level.select{|key, value| @@friends[tester].include? key}
+  puts @@level
+  puts @@names
+  FB_friend_names = @@FB_friends[tester].map{|elem| elem["name"]}
+  tmp = @@level.select{|key, value| FB_friend_names.include? key}
+  puts tmp
   @sortedLevelArray = tmp.sort_by {|key,value| value}
   clear_session
   erb :rankings
