@@ -266,6 +266,9 @@ route :get, :post, '/home' do
   @notifications = @@librarian.get_notification session[:tester]
 
   clear_session
+
+  view_report(session[:tester])
+  @name = session[:tester]
   erb :home
 end
 

@@ -257,18 +257,17 @@
 
      <script type="text/JavaScript">
         //<![CDATA[
-        // overall pentagon
           var firstPentagon = [
-                  [
-                  {axis:"感情",value:0.56},
-                  {axis:"事業",value:0.8},
-                  {axis:"社交",value:0.4}
-                  ],[
-                  {axis:"感情",value:0.56},
-                  {axis:"事業",value:0.8},
-                  {axis:"社交",value:0.7}
-                  ]
-                ];
+              [
+              {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
+              {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
+              {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
+              ],[
+              {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
+              {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
+              {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
+              ]
+          ];
           var oldColor1 = "#2dffc1";
           var newColor1 = "#ff8a90";
           new Pentagon(firstPentagon, '5小時前',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
