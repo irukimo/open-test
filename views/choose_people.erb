@@ -70,6 +70,7 @@
         <span class="glyphicon glyphicon-home"></span> 主選單
       </center>
     </div>
+    
     <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
     <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/medal.png" alt="Smiley face" width="25" height="25">
@@ -128,10 +129,10 @@
                     myform.option0.value = option0ele.innerHTML;
                     myform.option1.value = option1ele.innerHTML;
                     var player = "<%=session[:tester]%>";
-                    var myNames = [<%= @@names.map { |some_id| '"' + some_id.to_s + '"' }.join(", ") %>];
+                    var friendNames = [<%= @@friends[session[:tester]].map { |name| '"' + name + '"' }.join(", ") %>];
                     var costPerShuffle = 30;
 
-                    console.log(myNames[0]);
+                    console.log(friendNames[0]);
                     shufflebtn.onclick = function(){
                         var coinsNum = parseInt(coinele.innerHTML);
                         if(coinsNum < costPerShuffle){
@@ -139,10 +140,10 @@
                           return;
                         }
                         do {
-                          var new_option0 = myNames[Math.floor(Math.random()*myNames.length)];
+                          var new_option0 = friendNames[Math.floor(Math.random()*friendNames.length)];
                         } while (new_option0 == player);
                         do {
-                          var new_option1 = myNames[Math.floor(Math.random()*myNames.length)];
+                          var new_option1 = friendNames[Math.floor(Math.random()*friendNames.length)];
                         } while (new_option1 == player || new_option1 == new_option0);
                         option0ele.innerHTML = new_option0;
                         option1ele.innerHTML = new_option1;

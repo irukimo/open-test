@@ -11,7 +11,7 @@ var TDFriendSelector = (function(module, $) {
 	var init, setFriends, getFriends, getFriendById, newInstance,
 
 	// Private variables
-	settings, friends,
+	settings, friends, me,
 	$friends, $container, $friendsContainer, $searchField, $selectedCount, $selectedCountMax, $pageNumber, $pageNumberTotal, $pagePrev, $pageNext, $buttonClose, $buttonOK,
 
 	// Private functions
@@ -249,7 +249,7 @@ var TDFriendSelector = (function(module, $) {
 			$buttonOK.bind('click', function(e) {
 				e.preventDefault();
 				hideFriendSelector();
-				if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(selectedFriendNames, friends); }
+				if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 			});
 
 			$searchField.bind('keyup', function(e) {
@@ -286,7 +286,7 @@ var TDFriendSelector = (function(module, $) {
 					e.preventDefault();
 					e.stopPropagation();
 					hideFriendSelector();
-					if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(selectedFriendNames, friends); }
+					if (typeof instanceSettings.callbackSubmit === "function") { instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 				} else if (e.which === 27) {
 					// The escape key has the same effect as the close button
 					e.preventDefault();
@@ -472,13 +472,14 @@ var TDFriendSelector = (function(module, $) {
 	};
 
 	/**
-	 * sortFriends: 
+	 * sortFriends: 	
 	 * @param  {id, name} input    [description]
 	 * @return {id, name} friends  in the order of number of mutual friends
 	 */
 	sortFriends = function(input, callback) {
 		FB.api('/me', function (resp) {
 			myID = resp.id;
+			me = resp.name;
       console.log('my ID: ' + myID);
       var barrier = new CallbackBarrier();
        console.log(input);

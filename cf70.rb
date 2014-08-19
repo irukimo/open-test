@@ -42,7 +42,7 @@ def set_interval(delay, name)
   end
 end
 
-def import_questions
+def self.import_questions
   
   @@categories = Hash.new
   @@questions = Array.new
@@ -57,7 +57,7 @@ def import_questions
 end
 
 # run after import_questions
-def extract_categ
+def self.extract_categ
   categories = @@categories.values.map{|hash| hash["categ"]}.uniq
   categories.each do |categ|
     next if categ == "F"
@@ -69,7 +69,7 @@ def extract_categ
   end
 end
 
-def import_names
+def self.import_names
   # @@names = ["John", "Peter", "Rachel Williams", "Daniel", "Sean", "中文 名字"]
   
   @@names = Array.new
@@ -78,7 +78,7 @@ def import_names
   end
 end
 
-def configure_Twilio
+def self.configure_Twilio
   account_sid = "ACea251252af736aa1ea64f234945d840b"
   auth_token = "35822c755833de8c04bf3f7a1bdc9ce7"
 
@@ -88,7 +88,7 @@ end
 
 # assuming names and questions are set
 # format: [tester, question, chosen option, unchosen option]
-def initialize_record
+def self.initialize_record
 
   @@tester_progress = Array.new(@@names.count, -1)
   @@phone_number = Hash.new
@@ -128,9 +128,12 @@ def initialize_record
   @@score = Array.new(@@names.count){|i|Array.new(@@questions.count,prng.rand(2))}
 
   @@librarian = Librarian.new(@@names)
+
+  @@friends = Hash.new
+
 end
 
-def initialize_independent_urls
+def self.initialize_independent_urls
   @@independent_ids = Hash.new
   prng = Random.new(1234)
   @@names.each do |name|
@@ -150,7 +153,7 @@ def initialize_independent_urls
   end
 end
 
-def initilize_variables
+def self.initilize_variables
   @@names.each do |name|
     @@coins[name] = INITIAL_COINS
     @@level[name] = 1
@@ -166,6 +169,7 @@ def initilize_variables
     @@use_gems[name] = Array.new
     @@unlock_someone[name] = Array.new
     @@logged_in[name] = Array.new
+    @@friends[name] = Array.new
   end
 end
 
@@ -219,16 +223,17 @@ def add_new_player
     if @@use_gems[name] == nil then @@use_gems[name] = Array.new end
     if @@unlock_someone[name] == nil then @@unlock_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
-
+    if @@friends[name] == nil then @@friends[name] = Array.new end
     @@librarian.add_player name
   end
 end
 
 post '/selectedFriendNames' do
   selectedFriendNames = params["data"]
-  puts selectedFriendNames
-
-  
+  tester = session[:tester]
+  puts "in selectedFriendNames, tester: " + tester
+  @@friends[tester] += selectedFriendNames
+  @@names += selectedFriendNames
 end
 
 route :get, :post, '/home' do
@@ -237,8 +242,8 @@ route :get, :post, '/home' do
     @@names << params["name"] unless @@names.include? params["name"]
     
     add_new_player
-
     session[:tester] = params["name"]
+
   end
   if @@started_playing[session[:tester]] == nil
     set_interval(REFILL, session[:tester])
@@ -248,6 +253,7 @@ route :get, :post, '/home' do
 
   #question, bet(Integer), correctness(BOOL)
   @notifications = @@librarian.get_notification session[:tester]
+
   clear_session
   erb :home
 end
@@ -270,6 +276,21 @@ get '/' do
   # redirect to('/tel'), 307
 end
 
+post '/hasLoggedIn' do
+  tester = params["name"]
+  session[:tester] = tester
+  @@names << params["name"] unless @@names.include? params["name"]
+    
+  add_new_player
+
+  if @@logged_in[tester] == nil or @@logged_in[tester].count == 0
+    status 200
+    body 'false'
+  else
+    status 200
+    body 'true'
+  end
+end
 
 get '/tel' do
   session[:stage] = "tel"
@@ -320,33 +341,19 @@ end
 
 post '/choose_people' do
   session[:categ] = params[:categ]
-  @@play_answer[session[:tester]] << Time.now
+  tester = session[:tester]
+  @@play_answer[tester] << Time.now
 
-  if @@energy_left[session[:tester]] > 0
-     @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
-     if @@energy_left[session[:tester]] == 4
-        Thread.kill(@@threads[session[:tester]])
-        set_interval(REFILL, session[:tester])
+  if @@energy_left[tester] > 0
+     @@energy_left[tester] = @@energy_left[tester] - 1
+     if @@energy_left[tester] == 4
+        Thread.kill(@@threads[tester])
+        set_interval(REFILL, tester)
      end
   end
 
-  prng = Random.new
-  @initial_first = @@names[prng.rand(@@names.count)]
-  @initial_second = @@names[prng.rand(@@names.count)]
-  @shuffle_first = @@names[prng.rand(@@names.count)]
-  @shuffle_second = @@names[prng.rand(@@names.count)]
-  while @initial_first == session[:tester] do
-    @initial_first = @@names[prng.rand(@@names.count)]
-  end
-  while @initial_second == @initial_first or @initial_second == session[:tester]
-    @initial_second = @@names[prng.rand(@@names.count)]
-  end
-  while @shuffle_first == session[:tester] do
-    @shuffle_first = @@names[prng.rand(@@names.count)]
-  end
-  while @shuffle_second == @shuffle_first or @shuffle_second == session[:tester]
-    @shuffle_second = @@names[prng.rand(@@names.count)]
-  end
+  @initial_first, @initial_second = @@friends[tester].sample(2)
+   
   erb :choose_people
 end
 
@@ -439,7 +446,6 @@ post '/choose_answer' do
     session[:question] = params[:question]
   end
 
-  prng = Random.new
   if params[:answer] and params[:betting]
      quiz = Hash.new
      quiz["question"] = session[:question]
@@ -503,7 +509,7 @@ end
 post '/level_up' do
   @@energy_left[session[:tester]] = ENERGY_CAPACITY
   xp_to_add = session[:xp_to_add]
-  @@level[session[:tester]] = @@level[session[:tester]] + 1
+  @@level[session[:tester]] += 1
   xp_needed = get_XP_needed(session[:tester])
   @@progress[session[:tester]] = (100*(xp_to_add.to_f/xp_needed.to_f)).floor
   @@gems[session[:tester]] =  @@gems[session[:tester]] + 1
@@ -804,7 +810,10 @@ route :get, :post, '/rankings' do
     redirect to('/level_up'), 307
   end
 
-  @sortedLevelArray = @@level.sort_by {|key,value| value}
+  # @sortedLevelArray = @@level.sort_by {|key,value| value}
+  tester = session[:tester]
+  tmp = @@level.select{|key, value| @@friends[tester].include? key}
+  @sortedLevelArray = tmp.sort_by {|key,value| value}
   clear_session
   erb :rankings
 end
@@ -971,9 +980,9 @@ post "/shuffle_question" do
     session[:skippedquestions] = Array.new
     session[:skippedquestions] << params[:oldq]
   end
-  prng = Random.new
+
   loop do 
-      @question = @@questions[prng.rand(@@questions.count)]     
+      @question = @@questions.sample
       break if !already_exists(@question, session[:bundle])
   end 
   # puts @question
@@ -1329,4 +1338,3 @@ end
 
 #   erb :sharing_history
 # end
-
