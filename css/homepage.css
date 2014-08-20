@@ -43,14 +43,14 @@
       margin-top: 4px;
       max-height: 10px;
     }
-
+/*
     body {
       background-color: #5d5d5b;
-    }
+    }*/
 
-    #player_name, #coin_display, #gem_display, #medal_display, #energy_display{
+    #player_name, #medal_display{
       background: #FFFFFF;
-      border-radius: 5px;
+      border-radius: 100px;
       margin-top: 7px;
       margin-left: 7px;
       padding-top: 3px;
@@ -62,42 +62,148 @@
       /*font-family: 'HNLS';*/
     }
 
-    #medal_display{
-      background: #FFFFFF;
-      border-radius: 5px;
+    #coin_display{
+      background-image: url('/img/coinsnew.png');
+      background-size: 136px 50px;
+      background-repeat: no-repeat;
+      background-position:center;
+      border-radius: 0px;
       margin-top: 7px;
       margin-left: 7px;
       padding-top: 3px;
       padding-bottom: 3px;
       padding-left: 0px;
-      padding-right: 0px;
-      font-size: 12pt;
-      width: 53px;
-      height: 32px;
+      padding-right: 21px;
+      font-size: 18pt;
+      height: 50px;
+      width: 140px;
+      text-align: right;
+      line-height: 182%;
     }
 
-    #level_display, #time_display{
+    #medal_display{
+      background: #f54360;
+      border-radius: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-bottom: 3px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 12pt;
+      height: 50px;
+      width: 50px;
+      margin-right: 55px;
+    }
+
+    #level_display{
       background: #FFFFFF;
-      border-radius: 5px;
+      border-radius: 100px;
+      border-width: 5px;
+      border-color: #ffa23f;
+      border-style: solid;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 7pt;
+      line-height: 158%;
+      height: 50px;
+      width: 50px;
+    }
+    #name_display{
+      background: #ef5739;
+      /*background-image:url('/img/guess.png');*/
+      /*background-size: 123px 100px; */
+      /*border-radius: 5px;*/
+      margin-top: 7px;
+      margin-left: 20px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 20px;
+      padding-right: 0px;
+      width: 245px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 35px;
+      margin-bottom: 10px;
+      color:#FFFFFF;
+      text-align: center;
+      height:66px;
+    }
+
+    #red_background{
+      /*background: #ffe5f8;*/
+      border-top-right-radius: 5px;
+      height: 100px;
       margin-top: 7px;
       margin-left: 7px;
       padding-top: 5px;
       padding-bottom: 5px;
       padding-left: 0px;
       padding-right: 0px;
-      font-size: 12pt;
-      height: 32px;
+      font-size: 20pt;
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 270px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
-    #time_display{
-      padding-left: 6px;
+    #green_background{
+      /*background-image:url('/img/play.png');*/
+      /*background-size: 123px 100px; */
+      background: #6bc46c;
+      color: #FFFFFF;
+      border-radius: 100px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 48px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      width: 100px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 35pt;
+      text-align: center;
+      line-height: 75%;
     }
-/*    #level_display{
-      background-image: linear-gradient(to left, #FFFFFF 0%,#f4d1ec 0%);
-    }*/
-    #gemnum, #energy_bar{
-      display: inline-block;
+    #blue_background{
+      background: #3db4e0;
+      color: #FFFFFF;
+      /*background-image:url('/img/guess.png');*/
+      /*background-size: 123px 100px; */
+      border-radius: 100px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 25px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      width: 100px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 35pt;
+      text-align: center;
+      line-height: 75%;
     }
-
-    #gem_display{
-      max-width: 151px;
+    #yellow_background{
+      background: #fcf6b9;
+      /*background-image:url('/img/guess.png');*/
+      /*background-size: 123px 100px; */
+      border-radius: 5px;
+      height: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      min-width: 306px;
+      max-width: 653px;
+      min-height: 110px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 20px;
+      margin-bottom: 10px;
     }

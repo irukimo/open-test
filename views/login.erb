@@ -37,7 +37,7 @@
   <center>
   <img src="/img/yours_logo.png" width="250">
   <br>
-  <div class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
+  <div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
 
   <div id="status">
   </div>
@@ -120,16 +120,19 @@
       js.src = "//connect.facebook.net/zh_TW/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
-
+    
     // Here we run a very simple test of the Graph API after login is
     // successful.  See statusChangeCallback() for when this call is made.
     function testAPI() {
       console.log('Welcome!  Fetching your information.... ');
+      btnelement = document.getElementById("fb-login-btn");
+      btnelement.parentNode.removeChild(btnelement);
+
 
       FB.api('/me', function(response) {
         console.log('Successful Facebook login for: ' + response.name);
         document.getElementById('status').innerHTML =
-          'Welcome back, ' + response.name + '!' + '<br><br>';
+          '歡迎, ' + response.name + '!' + '<br>' + '請稍等...';
 
         $.post("<%=URL + '/hasLoggedIn'%>",
                 {name: response.name}, 

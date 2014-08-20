@@ -247,20 +247,11 @@
                  <div class="col-xs-6 col-md-6">
                     <p><button type="submit" id="option1btn" class="btn btn-success btn-lg btn-block" name="answer" value="<%=session[:option1]%>"><%=session[:option1]%></button></p>
                 </div>
-              <center>
                     </form>
               </br>
-                
-<!--               <font color="#4169e3" size="3pt">
-              Your bet <img src="/img/chip.png" alt="Smiley face" width="22" height="22"> <span id="range">0</span>
-              <button id="messagebtn" class="btn" data-toggle="modal" data-target="#myModal">
-                  <img src="/img/question.png" alt="Smiley face" width="25" height="25">
-              </button>
-              <input id="rangeid" type="range" min="0" max="<%=session[:bettingleft]%>" value="0" step="10" onchange="showValue(this.value,<%=session[:bettingleft]%>)" />
-            </font> -->
             
               
-    </div>
+    <button class="btn btn-default btn-lg btn-block" onclick="invitefrd('<%=@option0_id%>','<%=@option1_id%>')">邀請他們來玩！</button></div>
   </div>
 
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -281,6 +272,14 @@
 </div>
 
 <script type="text/javascript">
+(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/zh_TW/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
 function showValue(newValue, bettingleft)
 {
   var bettingleft = parseInt(bettingleft);
@@ -288,6 +287,28 @@ function showValue(newValue, bettingleft)
   var myform = document.forms["nextform"];
   myform.betting.value = newValue;
 }
+
+function invitefrd(option0_id,option1_id){
+  
+
+  console.log(option0_id);
+  console.log(option1_id);
+  FB.ui({method: 'apprequests',
+    to: [option0_id,option1_id],
+    title: '邀請你！',
+    message: '喲呼！快來玩玩麻吉大學！',
+  });
+}
+
+window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '610309559054620',
+        cookie     : true,  // enable cookies to allow the server to access 
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v1.0' // use version 2.0
+      });
+};
 </script>
 
 

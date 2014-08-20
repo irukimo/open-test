@@ -123,77 +123,7 @@
         padding-top: 5px;
         min-width: 316px;
       }
-    #red_background{
-      background: #ffe5f8;
-      border-top-right-radius: 5px;
-      height: 100px;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      font-size: 20pt;
-      min-width: 306px;
-      max-width: 653px;
-      min-height: 270px;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-    #green_background{
-      /*background-image:url('/img/play.png');*/
-      /*background-size: 123px 100px; */
-      background: #d2ffea;
-      border-radius: 5px;
-      height: 100px;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      width: 150px;
-      height: 85px;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-    #blue_background{
-      background: #caecfa;
-      /*background-image:url('/img/guess.png');*/
-      /*background-size: 123px 100px; */
-      border-radius: 5px;
-      height: 100px;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      width: 149px;
-      height: 85px;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-    #yellow_background{
-      background: #fcf6b9;
-      /*background-image:url('/img/guess.png');*/
-      /*background-size: 123px 100px; */
-      border-radius: 5px;
-      height: 100px;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      min-width: 306px;
-      max-width: 653px;
-      min-height: 110px;
-      padding-left: 10px;
-      padding-right: 10px;
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
+
 
     </style>
 
@@ -233,27 +163,26 @@
     </form>
 
   <div class="row">
-    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級 <%=@@level[session[:tester]]%> </center></div>
-    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><%= @@coins[session[:tester]] %></center></div>
-    <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="medal_display" class="col-xs-2 col-sm-2" onclick="medalClicked()"><center>
-        <img src="/img/medal.png" alt="Smiley face" width="25" height="25">
+    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
+    <div id="medal_display" class="col-xs-6 col-sm-4" onclick="medalClicked()"><center>
+        <img src="/img/trophie.png" alt="Smiley face" width="43" height="43">
       </center>
     </div>
+    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    
   </div>
 
   <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
-  <img src="/img/user.png" alt="Smiley face" width="40" height="40"> <font color="#727272"><%=session[:tester]%></font>
+
 
 
 
     <div id="body1">
        <div id="chart1" ></div>
     </div>
-    <div align="right">
-        <font color="#40288e" size="5pt" onclick="goreport()" onmouseover="" style="cursor: pointer;"><font size="3pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>更多</b></font>
-    </div>
+      <div id="name_display" onclick="goreport()"><%=session[:tester]%></div>
 
      <script type="text/JavaScript">
         //<![CDATA[
@@ -283,11 +212,11 @@
   <div class="row">
     <div id="green_background" class="col-xs-11 col-md-3" onclick="gocompare()" onmouseover="" style="cursor: pointer;">
     </br>
-        <b><center><font size="5pt" color="#1a754b">比一下</font></center></b>  
+        比  
     </div>
     <div id="blue_background" class="col-xs-11 col-md-3" onclick="goguess()" onmouseover="" style="cursor: pointer;">
           </br>
-        <b><center><font size="5pt" color="#1c5979">猜一下</font></center></b>
+        猜
     </div>
   </div>
 
@@ -338,16 +267,20 @@
             // yellow_background_element = document.getElementById("yellow_background");
             red_background.style.height="390px";
             red_background.style.width="700px";
-            green_background.style.width="323px";
-            blue_background.style.width="323px";
+            green_background.style.marginLeft="120px";
+            green_background.style.marginRight="100px";
+            // blue_background.style.width="323px";
             yellow_background.style.width="700px";
-            medal_display.style.width="151px";
+            medal_display.style.marginRight="350px";
+            name_display.style.width="380px";
+            name_display.style.marginLeft="80px";
         }
+
 
        var level_element = document.getElementById("level_display");
        var progress = <%=@@progress[session[:tester]]%>;
        var whitewidth = 100 - progress;
-       var imageText = (("linear-gradient(to left, #FFFFFF ").concat(whitewidth.toString())).concat("%,#f4d1ec 0%)")
+       var imageText = (("linear-gradient(to bottom, #FFFFFF ").concat(whitewidth.toString())).concat("%,#ffc17f 0%)")
        level_display.style.backgroundImage = imageText;
 
       function guessButton(btnid, coins){
