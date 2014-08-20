@@ -150,25 +150,32 @@ class Librarian
       tmp = parcels.select{|parcel| parcel[2] == categ} 
       
       tmp.each{|parcel| parcel[3] = author}
-      categ_confined << tmp.flatten(1)
+      puts "tmp"
+      puts tmp.inspect
+      categ_confined += tmp
     }
+
     # strip away those empty arrays
     categ_confined.select!{|parcel| !parcel.empty? and tester != parcel[3]}
 
     puts "get_parcels"
-    puts categ_confined.inspect
+    puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
+    # option: tester     +10
     # option: friends    +4
     # option: fb_friends +2
     # option: no-go      -100
     # author: friends    +2
     # author: fb_friends +1
     # author: stranger   +0
+    # author: tester     -100
 
     categ_confined.each do |parcel| 
       score = 0
       [parcel[1][0]["option0"], parcel[1][0]["option1"]].each do |option|
-        if friends.include? option
+        if tester == option
+          score += 10
+        elsif friends.include? option
           score += 4
         elsif fb_friends.include? option
           score += 2
@@ -177,17 +184,21 @@ class Librarian
         end
       end
 
+      # score author
       if friends.include? parcel[3]
         score += 2
       elsif fb_friends.include? parcel[3]
         score += 1
+      elsif parcel[3] == tester # no-go
+        score -= 100
       end
 
-      parcel << score
+      parcel[4] = score
     end
-
+    puts "with score"
+    puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
-    return categ_confined.select{|parcel| parcel[4] > 0}.sort{|a,b| b[4]<=>a[4]}.slice(0,num)
+    return categ_confined.select{|parcel| parcel.pop; parcel[4] > 0}.sort{|a,b| b[4]<=>a[4]}.slice(0, num)
 
   end
 

@@ -17,7 +17,7 @@ require './librarian.rb'
 
 # CH or EN
 LANG = "CH"
-IP = "192.168.1.97"
+IP = "192.168.1.43"
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
@@ -299,26 +299,7 @@ end
 
 
 
-post '/welcome' do
-  @current_tester = session[:tester]
 
-  if session[:stage] == "tel"
-    session[:stage] = nil
-    if (@@phone_number[@current_tester] == nil) or 
-       (params[:skip] != "yes")
-
-      phone_number = params[:phone_number]
-
-      @@phone_number[@current_tester] = phone_number  
-    end
-  end
-  if @@started_playing[session[:tester]] == nil
-     # set_interval(REFILL, session[:tester])
-     @@started_playing[session[:tester]] = TRUE
-  end
-  @@logged_in[session[:tester]] << Time.now
-  redirect to('/home'), 307
-end
 
 post '/choose_categ' do
   erb :choose_categ
@@ -464,9 +445,9 @@ post '/choose_answer' do
   session[:question] = question
   session[:bettingleft] = (@@coins[session[:tester]] < PLAY_MAX_BET)? @@coins[session[:tester]] : PLAY_MAX_BET
 
-  # FB_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
-  friend0 = @@FB_friends[session[:tester]].select{|frd| frd[:name] == session[:option0]}
-  friend1 = @@FB_friends[session[:tester]].select{|frd| frd[:name] == session[:option1]}
+  # fb_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
+  friend0 = @@fb_friends[session[:tester]].select{|frd| frd[:name] == session[:option0]}
+  friend1 = @@fb_friends[session[:tester]].select{|frd| frd[:name] == session[:option1]}
   puts friend0
   puts friend1
   @option0_id = friend0[0][:id]
@@ -834,11 +815,12 @@ route :get, :post, '/rankings' do
 
   # @sortedLevelArray = @@level.sort_by {|key,value| value}
   tester = session[:tester]
-  # tmp = @@level.select{|key, value| @@friends[tester].include? key}
-  puts @@level
-  puts @@names
+  # tmp = @@level.select{|key, value| @@friends[tester].include? key}  
   fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
-  tmp = @@level.select{|key, value| fb_friend_names.include? key}
+  tmp = @@level.select{|key, value| ((fb_friend_names.include? key) or (key == tester)) and 
+                                    (@@logged_in[key] != nil and @@logged_in[key].count > 0)
+                      }
+  puts "ranking"
   puts tmp
   @sortedLevelArray = tmp.sort_by {|key,value| value}
   clear_session
@@ -1391,4 +1373,25 @@ end
 
 #   @current_tester = session[:tester]  
 #   erb :tel
+# end
+# 
+# # post '/welcome' do
+#   @current_tester = session[:tester]
+
+#   if session[:stage] == "tel"
+#     session[:stage] = nil
+#     if (@@phone_number[@current_tester] == nil) or 
+#        (params[:skip] != "yes")
+
+#       phone_number = params[:phone_number]
+
+#       @@phone_number[@current_tester] = phone_number  
+#     end
+#   end
+#   if @@started_playing[session[:tester]] == nil
+#      # set_interval(REFILL, session[:tester])
+#      @@started_playing[session[:tester]] = TRUE
+#   end
+#   @@logged_in[session[:tester]] << Time.now
+#   redirect to('/home'), 307
 # end
