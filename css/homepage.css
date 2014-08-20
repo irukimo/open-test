@@ -69,7 +69,7 @@
       background-position:center;
       border-radius: 0px;
       margin-top: 7px;
-      margin-left: 7px;
+      margin-left: 34px;
       padding-top: 3px;
       padding-bottom: 3px;
       padding-left: 0px;
@@ -83,16 +83,55 @@
 
     #medal_display{
       background: #f54360;
+      background-image: url('/img/trophie.png');
+      background-size: 40px 40px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      background-position: 5px 5px;
+      border-radius: 100px;
+      margin-top: 7px;
+      margin-left: 35px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      padding-left: 0px;
+      padding-right: 21px;
+      font-size: 18pt;
+      height: 50px;
+      width: 50px;
+      text-align: right;
+      line-height: 182%;
+/*      background: #f54360;
       border-radius: 100px;
       margin-top: 7px;
       margin-left: 7px;
       padding-bottom: 3px;
       padding-left: 0px;
       padding-right: 0px;
-      font-size: 12pt;
+      font-size: 10pt;
       height: 50px;
       width: 50px;
       margin-right: 55px;
+      line-height: 182%;*/
+    }
+    #home_display{
+      background: #78c26b;
+      background-image: url('/img/home.png');
+      background-size: 35px 35px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      background-position: 7px 7px;
+      border-radius: 100px;
+      margin-top: 7px;
+      margin-left: 35px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      padding-left: 0px;
+      padding-right: 21px;
+      font-size: 18pt;
+      height: 50px;
+      width: 50px;
+      text-align: right;
+      line-height: 182%;
     }
 
     #level_display{
@@ -116,8 +155,8 @@
       /*background-image:url('/img/guess.png');*/
       /*background-size: 123px 100px; */
       /*border-radius: 5px;*/
-      margin-top: 7px;
-      margin-left: 20px;
+      /*margin-top: 7px;*/
+      /*margin-left: 20px;*/
       padding-top: 5px;
       padding-bottom: 5px;
       padding-left: 20px;
@@ -130,15 +169,19 @@
       color:#FFFFFF;
       text-align: center;
       height:66px;
+      width: 302px;
     }
 
-    #red_background{
+    #name_pentagon_background{
       /*background: #ffe5f8;*/
-      border-top-right-radius: 5px;
+      /*border-top-right-radius: 5px;*/
+      border-style: solid;
+      border-width: 3px;
+      border-color: #ef5739;
       height: 100px;
       margin-top: 7px;
       margin-left: 7px;
-      padding-top: 5px;
+      /*padding-top: 5px;*/
       padding-bottom: 5px;
       padding-left: 0px;
       padding-right: 0px;
@@ -146,8 +189,8 @@
       min-width: 306px;
       max-width: 653px;
       min-height: 270px;
-      padding-left: 10px;
-      padding-right: 10px;
+      /*padding-left: 10px;*/
+      /*padding-right: 10px;*/
     }
     #green_background{
       /*background-image:url('/img/play.png');*/
@@ -164,9 +207,9 @@
       width: 100px;
       padding-left: 10px;
       padding-right: 10px;
-      font-size: 35pt;
+      font-size: 19pt;
       text-align: center;
-      line-height: 75%;
+      line-height: 130%;
     }
     #blue_background{
       background: #3db4e0;
@@ -183,9 +226,9 @@
       width: 100px;
       padding-left: 10px;
       padding-right: 10px;
-      font-size: 35pt;
+      font-size: 19pt;
       text-align: center;
-      line-height: 75%;
+      line-height: 130%;
     }
     #yellow_background{
       background: #fcf6b9;

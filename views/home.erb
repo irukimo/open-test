@@ -9,6 +9,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/RadarChart.js"></script>
     <script src="js/WTPentagon.js"></script>
+    <script src="js/basic_display.js"></script>
 
     <title><%=TITLE%></title>
 
@@ -165,27 +166,28 @@
   <div class="row">
     <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
     <div id="medal_display" class="col-xs-6 col-sm-4" onclick="medalClicked()"><center>
-        <img src="/img/trophie.png" alt="Smiley face" width="43" height="43">
+        <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
       </center>
     </div>
     <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    
   </div>
 
+
   <div class="row">
-    <div id="red_background" class="col-xs-11 col-md-7">
+    <div id="name_pentagon_background" class="col-xs-11 col-md-7" onclick="goreport()">
 
 
 
-
+<div id="name_display"><%=session[:tester]%></div>
     <div id="body1">
        <div id="chart1" ></div>
     </div>
-      <div id="name_display" onclick="goreport()"><%=session[:tester]%></div>
+      
 
      <script type="text/JavaScript">
         //<![CDATA[
+          new level_progress("level_display","<%=@@progress[session[:tester]]%>");
 
           var firstPentagon = [
               [
@@ -212,11 +214,11 @@
   <div class="row">
     <div id="green_background" class="col-xs-11 col-md-3" onclick="gocompare()" onmouseover="" style="cursor: pointer;">
     </br>
-        比  
+        比一下  
     </div>
     <div id="blue_background" class="col-xs-11 col-md-3" onclick="goguess()" onmouseover="" style="cursor: pointer;">
           </br>
-        猜
+        猜一下
     </div>
   </div>
 
@@ -265,23 +267,20 @@
             // blue_background_element = document.getElementById("green_background");
             // red_background_element = document.getElementById("red_background");
             // yellow_background_element = document.getElementById("yellow_background");
-            red_background.style.height="390px";
-            red_background.style.width="700px";
+            name_pentagon_background.style.height="390px";
+            name_pentagon_background.style.width="700px";
+            name_display.style.width="650px";
             green_background.style.marginLeft="120px";
             green_background.style.marginRight="100px";
             // blue_background.style.width="323px";
             yellow_background.style.width="700px";
             medal_display.style.marginRight="350px";
-            name_display.style.width="380px";
-            name_display.style.marginLeft="80px";
+            // name_display.style.width="380px";
+            // name_display.style.marginLeft="80px";
         }
 
 
-       var level_element = document.getElementById("level_display");
-       var progress = <%=@@progress[session[:tester]]%>;
-       var whitewidth = 100 - progress;
-       var imageText = (("linear-gradient(to bottom, #FFFFFF ").concat(whitewidth.toString())).concat("%,#ffc17f 0%)")
-       level_display.style.backgroundImage = imageText;
+       
 
       function guessButton(btnid, coins){
         var obj = this;

@@ -10,6 +10,7 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/RadarChart.js"></script>
     <script src="js/Pentagon.js"></script>
+    <script src="js/basic_display.js"></script>
         <style type="text/css">
       .my-container [class^="col-"] {
           padding-top: 10px;
@@ -28,7 +29,7 @@
       }
           #red_background{
       font-size: 20pt;
-      background: #ffe5f8;
+      /*background: #ffe5f8;*/
       border-radius: 5px;
       margin-top: 7px;
       margin-left: 7px;
@@ -175,30 +176,28 @@
   <div class="container marketing">
 
   <div class="row">
-    <div id="player_name" class="col-xs-5 col-sm-3" onclick="backtohome()"><center>
-        <span class="glyphicon glyphicon-home"></span> 主選單
-      </center>
-    </div>
-    <div id="coin_display" class="col-xs-4 col-sm-2"><center><img src="/img/coin.png" alt="Smiley face" width="25" height="25"><div id="coinicon"><%= @@coins[session[:tester]] %></div></center></div>
+    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="gem_display" class="col-xs-2 col-sm-2" onclick="refillEnergy()"><center><img src="/img/medal.png" alt="Smiley face" width="25" height="25">
+    <div id="home_display" class="col-xs-2 col-sm-2" onclick="backtohome()"><center>
+      <!-- <img src="/img/home.png" alt="Smiley face" width="35" height="35"> -->
     </center>
     </div>
+    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
   </div>
-  <form id="viewform" class="form-horizontal" role="form" action="view_others_choose_people" method="get">
-  </form>
+
   <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
-  </form>
-   <script type="text/JavaScript">
-    //<![CDATA[
-    function backtohome(){
-      var homeform = document.forms["homeform"];
-      homeform.submit();
-    }
-       //]]>
-    </script>
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        new level_progress("level_display","<%=@@progress[session[:tester]]%>");
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
 
-
+<form id="viewform" class="form-horizontal" role="form" action="view_others_choose_people" method="get">
   <!-- </div> -->
 
   <div class="row">
