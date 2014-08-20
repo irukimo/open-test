@@ -500,7 +500,7 @@ var TDFriendSelector = (function(module, $) {
       var barrier = new CallbackBarrier();
        console.log(input);
 			for (var i in input) {
-				if (i > 100) {
+				if (i > 1) {
 					input[i].closeness = 200000;
 					continue;
 				}

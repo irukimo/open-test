@@ -10,7 +10,7 @@
   <!-- Bootstrap core CSS -->
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/tdfriendselector.css" /><!-- Style source: tdfriendselector.scss -->
+  
   <!-- Optional theme -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
   <style>
@@ -45,34 +45,6 @@
   </font>
 </div>
 
-<!-- Markup for These Days Friend Selector -->
-    <div id="TDFriendSelector">
-      <div class="TDFriendSelector_dialog">
-        <div class="TDFriendSelector_form">
-          <div class="TDFriendSelector_header">
-            <p>選朋友一起來玩！</p>
-          </div>
-          <div class="TDFriendSelector_content">
-            <p>選你想要出現在遊戲裡的10位朋友們:-D 別擔心，這不會送出任何邀請！</p>
-            <div class="TDFriendSelector_searchContainer TDFriendSelector_clearfix">
-              <div class="TDFriendSelector_selectedCountContainer">已選<span class="TDFriendSelector_selectedCount">0</span>位朋友</div>  
-              <input type="text" placeholder="搜尋朋友" id="TDFriendSelector_searchField" />
-            </div>
-            <div class="TDFriendSelector_friendsContainer"></div>
-          </div>
-          <div class="TDFriendSelector_footer TDFriendSelector_clearfix">
-
-            <a href="#" id="TDFriendSelector_pagePrev" class="TDFriendSelector_disabled">Previous</a>
-            <a href="#" id="TDFriendSelector_pageNext">Next</a>
-            <div class="TDFriendSelector_pageNumberContainer">
-               <span id="TDFriendSelector_pageNumber">1</span> / <span id="TDFriendSelector_pageNumberTotal">1</span>頁
-            </div>
-            <a href="#" id="TDFriendSelector_buttonOK">OK</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -81,8 +53,6 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
 
-  <script src="/js/callbackBarrier.js"></script>
-  <script src="/js/tdfriendselector.js"></script>
   <script>
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
@@ -141,38 +111,6 @@
 
     };
 
-    var selector, logActivity, callbackMaxSelection, callbackSubmit;
-
-    // When the user clicks OK, log a message
-    callbackSubmit = function(me, selectedFriendNames, FBFriends) {
-      logActivity('Clicked OK with the following friends selected: ' + selectedFriendNames.join(", "));
-      console.log("submit: " + me);
-      $.ajax({
-        type: "POST",
-        url: "<%=URL + '/friendNames'%>",
-        data: { selectedFriendNames:selectedFriendNames , FBFriends:FBFriends},
-        success: function( data ) {
-          window.location.href = "/home";
-        }
-      });
-    };
-    
-    // Initialise the Friend Selector with options that will apply to all instances
-    TDFriendSelector.init({debug: true});
-
-    // Create some Friend Selector instances
-    selector = TDFriendSelector.newInstance({
-      callbackMaxSelection     : callbackMaxSelection,
-      callbackSubmit           : callbackSubmit,
-      maxSelection             : 10,
-      friendsPerPage           : 5,
-      autoDeselection          : false
-    });
-
-    logActivity = function (message) {
-      console.log(message);
-      // $("#results").append('<div>' + new Date() + ' - ' + message + '</div>');
-    };
 
     // Load the SDK asynchronously
     (function(d, s, id) {
@@ -201,8 +139,7 @@
                     console.log("logged in before");
                     window.location.href = "/home?name=" + response.name;
                   } else {
-                    console.log("first time logging in");
-                    selector.showFriendSelector();
+                    window.location.href = "/wtstart";
                   }
         });
       });

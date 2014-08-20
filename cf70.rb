@@ -137,25 +137,25 @@ def self.initialize_record
   @@fb_friends = Hash.new
 end
 
-def self.initialize_independent_urls
-  @@independent_ids = Hash.new
-  prng = Random.new(1234)
-  @@names.each do |name|
-     id = (prng.rand(100000000)).to_s
-     @@independent_ids[id] = name
-  end
+# def self.initialize_independent_urls
+#   @@independent_ids = Hash.new
+#   prng = Random.new(1234)
+#   @@names.each do |name|
+#      id = (prng.rand(100000000)).to_s
+#      @@independent_ids[id] = name
+#   end
 
-  @@independent_ids.each do |id, name|
-    puts "%s->\n%s/?id=%s" % [name, URL, id]
-  end
+#   @@independent_ids.each do |id, name|
+#     puts "%s->\n%s/?id=%s" % [name, URL, id]
+#   end
 
-  File.open("private_links.txt", 'w') do |file|
-    file.write "Private links:\n"
-    @@independent_ids.each do |id, name|
-      file.write "%s -> %s/?id=%s\n" % [name, URL, id]
-    end
-  end
-end
+#   File.open("private_links.txt", 'w') do |file|
+#     file.write "Private links:\n"
+#     @@independent_ids.each do |id, name|
+#       file.write "%s -> %s/?id=%s\n" % [name, URL, id]
+#     end
+#   end
+# end
 
 def self.initilize_variables
   @@names.each do |name|
@@ -189,7 +189,7 @@ configure do
   initialize_record
   configure_Twilio
   initilize_variables
-  initialize_independent_urls
+  # initialize_independent_urls
 
   CATEGORIES = Hash.new
   extract_categ
@@ -279,26 +279,10 @@ route :get, :post, '/home' do
   erb :home
 end
 
-get '/' do
-  # if params[:id] == nil
-  clear_session
-  erb :login
-  # else
-  #   erb :tel
-  # end
-  # Who are you?
-  #erb :home
-  # if params[:id]
-  #    id = params[:id]
-  #    session[:tester] = @@independent_ids[id]
-  # end 
-  # puts "name: "+session[:tester]
-  # clear_session
-  # redirect to('/tel'), 307
-end
 
 post '/hasLoggedIn' do
   tester = params["name"]
+  puts "in hasLoggedIn, " + tester
   session[:tester] = tester
   @@names << params["name"] unless @@names.include? params["name"]
 
@@ -313,27 +297,7 @@ post '/hasLoggedIn' do
   end
 end
 
-get '/tel' do
-  session[:stage] = "tel"
 
-  ##hacking to play
-  puts params[:num] 
-  if params[:num] == "1"
-    session[:tester] = "Iru Wang"
-  elsif params[:num] == "2"
-    session[:tester] = "Chiu-Ho Lin"
-  else
-    session[:tester] = "Wen Shaw"
-  end
-  @@names << "Iru Wang"
-  @@names << "Chiu-Ho Lin"
-  @@names << "Wen Shaw"
-  add_new_player
-  ###end hack
-
-  @current_tester = session[:tester]  
-  erb :tel
-end
 
 post '/welcome' do
   @current_tester = session[:tester]
@@ -401,6 +365,11 @@ def sample_questions_in_categ categ, bundle
   return sample_base.sample
 end
 
+
+get '/' do
+  clear_session
+  erb :login
+end
 
 get '/wtstart' do
   erb :wtstart
@@ -1390,4 +1359,27 @@ end
 #   end
 
 #   erb :sharing_history
+# end
+# 
+# 
+# get '/tel' do
+#   session[:stage] = "tel"
+
+#   ##hacking to play
+#   puts params[:num] 
+#   if params[:num] == "1"
+#     session[:tester] = "Iru Wang"
+#   elsif params[:num] == "2"
+#     session[:tester] = "Chiu-Ho Lin"
+#   else
+#     session[:tester] = "Wen Shaw"
+#   end
+#   @@names << "Iru Wang"
+#   @@names << "Chiu-Ho Lin"
+#   @@names << "Wen Shaw"
+#   add_new_player
+#   ###end hack
+
+#   @current_tester = session[:tester]  
+#   erb :tel
 # end
