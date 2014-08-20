@@ -1,8 +1,10 @@
-# @@generated_bundles[name] = [
-  #                              [uuid, [{qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}, 
-  #                                      {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx},
-  #                                      {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}]]
-  #                             ]
+# @@bundles[name] = [
+#                    [uuid, [{qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}, 
+#                            {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx},
+#                            {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}],
+#                     categ
+#                    ],
+#                   ]
 
 
   # quiz = {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}
@@ -138,6 +140,55 @@ class Librarian
     @bundles[name] = Array.new if @bundles[name] == nil
     @bundles[name] << [uuid, bundle, categ]
     return uuid
+  end
+
+  def get_parcels_for_guess(num, tester, categ, friends, fb_friends)
+    #let options be friends
+    
+    categ_confined = Array.new
+    @bundles.each{|author, parcels| 
+      tmp = parcels.select{|parcel| parcel[2] == categ} 
+      
+      tmp.each{|parcel| parcel[3] = author}
+      categ_confined << tmp.flatten(1)
+    }
+    # strip away those empty arrays
+    categ_confined.select!{|parcel| !parcel.empty? and tester != parcel[3]}
+
+    puts "get_parcels"
+    puts categ_confined.inspect
+    # parcel => [uuid, bundle, categ, author, score]
+    # option: friends    +4
+    # option: fb_friends +2
+    # option: no-go      -100
+    # author: friends    +2
+    # author: fb_friends +1
+    # author: stranger   +0
+
+    categ_confined.each do |parcel| 
+      score = 0
+      [parcel[1][0]["option0"], parcel[1][0]["option1"]].each do |option|
+        if friends.include? option
+          score += 4
+        elsif fb_friends.include? option
+          score += 2
+        else
+          score -= 100 # no-go
+        end
+      end
+
+      if friends.include? parcel[3]
+        score += 2
+      elsif fb_friends.include? parcel[3]
+        score += 1
+      end
+
+      parcel << score
+    end
+
+    # parcel => [uuid, bundle, categ, author, score]
+    return categ_confined.select{|parcel| parcel[4] > 0}.sort{|a,b| b[4]<=>a[4]}.slice(0,num)
+
   end
 
   def get_parcels_by_categ name, categ

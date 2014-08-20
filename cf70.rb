@@ -134,7 +134,7 @@ def self.initialize_record
   @@librarian = Librarian.new(@@names)
 
   @@friends = Hash.new
-  @@FB_friends = Hash.new
+  @@fb_friends = Hash.new
 end
 
 def self.initialize_independent_urls
@@ -174,7 +174,7 @@ def self.initilize_variables
     @@unlock_someone[name] = Array.new
     @@logged_in[name] = Array.new
     @@friends[name] = Array.new
-    @@FB_friends[name] = Array.new
+    @@fb_friends[name] = Array.new
   end
 end
 
@@ -229,20 +229,22 @@ def add_new_player
     if @@unlock_someone[name] == nil then @@unlock_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
     if @@friends[name] == nil then @@friends[name] = Array.new end
-    if @@FB_friends[name] == nil then @@FB_friends[name] = Array.new end
+    if @@fb_friends[name] == nil then @@fb_friends[name] = Array.new end
     @@librarian.add_player name
   end
 end
 
 post '/friendNames' do
   selected_friend_names = params["selectedFriendNames"]
-  FB_friends = params["FBFriends"]
+  fb_friends = params["FBFriends"]
   tester = session[:tester]
   puts "in selectedFriendNames, tester: " + tester
   
   @@friends[tester]    += selected_friend_names
-  # FB_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
-  @@FB_friends[tester]  = FB_friends.values
+  # fb_friends => tester : [{name: "Albert Lin", closeness: 23, id:xxx}, 
+  #                         {name: "Tim Lin", closeness: 20, id:xxx}
+  #                        ]
+  @@fb_friends[tester]  = fb_friends.values
   
   @@names += selected_friend_names
   add_new_player
@@ -479,10 +481,11 @@ post '/choose_answer' do
      quiz["done"] = false
      session[:bundle] << quiz
   end
-
+  puts "played Session " + session[:choose].to_s
   if session[:choose] == 4
     
-    @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ])
+    uuid = @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ])
+    puts "played over: " + uuid
     clear_session
     redirect to('/choose_ending'), 307
   end
@@ -734,36 +737,10 @@ post '/choose_guess_people' do
   tester = session[:tester]
   @categ = params[:categ]
 
-  @bundle_array = Array.new
-
-  ### this may as well be refactored into Librarian
-  # first priority: friends
-  @@friends[tester].each do |frd_name|
-    next if (tmp = @@librarian.get_parcels_by_categ(frd_name, @categ)) == nil
-    tmp.each{|parcel| parcel[3] = frd_name}
-    @bundle_array += tmp
-  end
-
-  # second priority: Facebook friends that are players
-  if @bundle_array.count == 0
-    @@FB_friends[tester].each do |fb_frd_name|
-      next if (tmp = @@librarian.get_parcels_by_categ(fb_frd_name, @categ)) == nil
-      tmp.each{|parcel| parcel[3] = fb_frd_name}
-      @bundle_array += tmp
-    end
-  end
-
-  # third priority: any player
-  if @bundle_array.count == 0
-    @@names.each do |player_name|
-      next if tester == player_name
-      next if (tmp = @@librarian.get_parcels_by_categ(player_name, @categ)) == nil
-      tmp.each{|parcel| parcel[3] = player_name}
-      @bundle_array += tmp
-    end
-  end
-
-  @bundle_array.shuffle
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+  @parcel_array = @@librarian.get_parcels_for_guess(10, tester, @categ, @@friends[tester], fb_friend_names)
+  
+  @parcel_array.shuffle
   erb :choose_guess_people
 end
 
@@ -815,6 +792,8 @@ post '/result' do
   # has not displayed before
   # only happen at first time being played
   tester, bundle = @@librarian.get_bundle_by_uuid(session[:uuid])
+  puts "result: "
+  puts bundle
   bundle.each_with_index do |quiz, index|
     if quiz["done"] == false
       puts quiz["bet"]
@@ -880,8 +859,8 @@ route :get, :post, '/rankings' do
   # tmp = @@level.select{|key, value| @@friends[tester].include? key}
   puts @@level
   puts @@names
-  FB_friend_names = @@FB_friends[tester].map{|elem| elem["name"]}
-  tmp = @@level.select{|key, value| FB_friend_names.include? key}
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+  tmp = @@level.select{|key, value| fb_friend_names.include? key}
   puts tmp
   @sortedLevelArray = tmp.sort_by {|key,value| value}
   clear_session
