@@ -241,7 +241,7 @@ post '/friendNames' do
     id = elem.keys[0]
     closeness = elem.values[0]["cl"]
     name = elem.values[0]["nm"]
-    {name: name, closeness: closeness, id: id}
+    {"name"=> name, "closeness"=> closeness, "id"=> id}
   end
   
   tester = session[:tester]
@@ -379,6 +379,8 @@ get '/wtcoin' do
 end
 
 get '/view_others_choose_people' do
+  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
+  @others_to_view = @@names & fb_friend_names
   erb :view_others_choose_people
 end
 
@@ -454,8 +456,9 @@ post '/choose_answer' do
   session[:bettingleft] = (@@coins[session[:tester]] < PLAY_MAX_BET)? @@coins[session[:tester]] : PLAY_MAX_BET
 
   # fb_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
-  friend0 = @@fb_friends[session[:tester]].select{|frd| frd[:name] == session[:option0]}
-  friend1 = @@fb_friends[session[:tester]].select{|frd| frd[:name] == session[:option1]}
+  friend0 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option0]}
+  friend1 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option1]}
+  puts "choose_answer"
   puts friend0
   puts friend1
   @option0_id = friend0[0][:id]

@@ -141,7 +141,8 @@
           <form id="reportform" class="form-horizontal" role="form" action="view_others_report" method="post">
             <input type="hidden" name="clickedname" value=""> 
           </form>
-            <%@@names.each do |name|%> 
+          
+            <%@others_to_view.each do |name|%> 
               <%next if name == session[:tester]%>
               <div class="col-xs-12 col-md-12">     
                 <button type="submit" id="<%=name%>" class="btn btn-block">

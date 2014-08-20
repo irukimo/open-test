@@ -198,7 +198,7 @@ class Librarian
     puts "with score"
     puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
-    return categ_confined.select{|parcel| parcel.pop; parcel[4] > 0}.sort{|a,b| b[4]<=>a[4]}.slice(0, num)
+    return categ_confined.select{|parcel| parcel[4] > 0}.sort{|a,b| b[4]<=>a[4]}.slice(0, num)
 
   end
 
