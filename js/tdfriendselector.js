@@ -254,7 +254,15 @@ var TDFriendSelector = (function(module, $) {
 					hideFriendSelector();
 					if (typeof instanceSettings.callbackSubmit === "function") { 
 						friends.forEach(function(elem){
-								delete elem["upperCaseName"];});
+							delete elem["upperCaseName"];
+							id = elem.id;
+							cl = elem.closeness;	
+							name = elem.name;
+							delete elem["name"];
+							delete elem["id"];
+							delete elem["closeness"];
+							elem[id] = {cl: cl, nm: name};
+							});
 						instanceSettings.callbackSubmit(me, selectedFriendNames, friends); 
 					}
 				}
@@ -299,8 +307,16 @@ var TDFriendSelector = (function(module, $) {
 						hideFriendSelector();
 						if (typeof instanceSettings.callbackSubmit === "function") { 
 							friends.forEach(function(elem){
-								delete elem["id"]; 
-								delete elem["upperCaseName"];});
+								
+								delete elem["upperCaseName"];
+							id = elem.id;
+							cl = elem.closeness;	
+							name = elem.name;
+							delete elem["name"];
+							delete elem["id"];
+							delete elem["closeness"];
+							elem[id] = {cl: cl, nm: name};
+							});
 							instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 					}
 				} else if (e.which === 27) {
@@ -501,7 +517,7 @@ var TDFriendSelector = (function(module, $) {
        console.log(input);
 			for (var i in input) {
 				if (i > 1) {
-					input[i].closeness = 200000;
+					input[i].closeness = 0;
 					continue;
 				}
 				(function(i) {

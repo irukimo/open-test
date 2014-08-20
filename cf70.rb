@@ -236,15 +236,23 @@ end
 
 post '/friendNames' do
   selected_friend_names = params["selectedFriendNames"]
-  fb_friends = params["FBFriends"]
+
+  fb_friends = params["FBFriends"].values.map do |elem|
+    id = elem.keys[0]
+    closeness = elem.values[0]["cl"]
+    name = elem.values[0]["nm"]
+    {name: name, closeness: closeness, id: id}
+  end
+  
   tester = session[:tester]
   puts "in selectedFriendNames, tester: " + tester
+  # elem[id] = {cl: cl, nm: name};
   
   @@friends[tester]    += selected_friend_names
   # fb_friends => tester : [{name: "Albert Lin", closeness: 23, id:xxx}, 
   #                         {name: "Tim Lin", closeness: 20, id:xxx}
   #                        ]
-  @@fb_friends[tester]  = fb_friends.values
+  @@fb_friends[tester]  = fb_friends
   
   @@names += selected_friend_names
   add_new_player
