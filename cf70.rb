@@ -464,8 +464,8 @@ post '/choose_answer' do
   puts "choose_answer"
   puts friend0
   puts friend1
-  @option0_id = friend0[0][:id]
-  @option1_id = friend1[0][:id]
+  @option0_id = friend0[0]["id"]
+  @option1_id = friend1[0]["id"]
 
   erb :choose_answer
 end
