@@ -261,10 +261,15 @@ end
 route :get, :post, '/home' do
   if params["name"]
     puts "name: " + params["name"]
-    @@names << params["name"] unless @@names.include? params["name"]
-    
-    add_new_player
-    session[:tester] = params["name"]
+    unless @@names.include? params["name"]
+      @@names << params["name"] 
+      add_new_player
+      tester = params["name"]
+      session[:tester] = tester
+
+      @@friends[tester] = ["Henry", "David", "Peter"]
+      @@fb_friends[tester] = [{"name"=> "Henry"}, {"name"=> "David"}, {"name"=> "Peter"}]
+    end
 
   elsif params["name"] == nil and session[:tester] == nil
     puts "**ERROR**: Wrong entry point"
@@ -703,6 +708,12 @@ end
 
 
 post '/choose_guess_categ' do
+  tester = session[:tester]
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+  @disable_professional = (@@librarian.get_parcels_for_guess(1, tester, "P", @@friends[tester], fb_friend_names).count == 0)
+  @disable_relationship = (@@librarian.get_parcels_for_guess(1, tester, "R", @@friends[tester], fb_friend_names).count == 0)
+  @disable_social       = (@@librarian.get_parcels_for_guess(1, tester, "S", @@friends[tester], fb_friend_names).count == 0)
+  @disable_fun          = (@@librarian.get_parcels_for_guess(1, tester, "F", @@friends[tester], fb_friend_names).count == 0)
   erb :choose_guess_categ
 end
 

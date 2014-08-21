@@ -19,7 +19,12 @@
    
   }
   </style>
-  
+  <script>
+
+  (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")
+
+
+  </script>
 </head>
 <body>
   <div id="fb-root"></div>
@@ -34,10 +39,12 @@
   <font color="white">
     <br>
   <center>
-  <img src="/img/logo.png" width="250">
+  <img src="/img/logo.png" width="200">
   <br>
+  
   <div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
-
+  
+  <!-- <button onclick="tryLogin();">GO</button> -->
   <div id="status">
   </div>
   </center>  
@@ -53,6 +60,13 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
 
   <script>
+    function tryLogin(){
+      redirectPage = "http://192.168.1.43:7009"
+      var permissionUrl = "https://m.facebook.com/dialog/oauth?client_id=" + "610309559054620" + "&response_type=code&redirect_uri=" + redirectPage;
+      console.log("logged!!!");
+      console.log("ok " + permissionUrl);
+      window.location = permissionUrl;
+    }
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
       console.log('statusChangeCallback');
@@ -120,6 +134,7 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
     
+
     // Here we run a very simple test of the Graph API after login is
     // successful.  See statusChangeCallback() for when this call is made.
     function testAPI() {

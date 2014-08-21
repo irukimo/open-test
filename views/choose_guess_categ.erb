@@ -111,12 +111,12 @@
           <form id="people_form" class="form-horizontal" role="form" action="choose_guess_people" method="post">
           <div class="row">
             <div class="col-xs-6 col-md-3">
-              <button id="prof_categ" type="submit" id="pbtn" class="btn btn-block" name="categ" value="P">
+              <button id="prof_categ" type="submit" id="pbtn" class="btn btn-block" name="categ" value="P" <% if @disable_professional%> disabled style="opacity:0.1"<%end%>>
               <div class="col-xs-2 col-md-4"></div>
               </button>
             </div>
             <div class="col-xs-6 col-md-3">
-              <button id="relat_categ" type="submit" id="rbtn" class="btn btn-block" name="categ" value="R">
+              <button id="relat_categ" type="submit" id="rbtn" class="btn btn-block" name="categ" value="R" <% if @disable_relationship%> disabled style="opacity:0.1"<%end%>>
               <div class="col-xs-2 col-md-4"></div>
               </button>
             </div>
@@ -132,11 +132,11 @@
         </br>
           <div class="row">
             <div class="col-xs-6 col-md-3">
-              <button id="social_categ" type="submit" id="sbtn" class="btn btn-block" name="categ" value="S">
+              <button id="social_categ" type="submit" id="sbtn" class="btn btn-block" name="categ" value="S" <% if @disable_social%> disabled style="opacity:0.1"<%end%>>
               </button>
             </div>
             <div class="col-xs-6 col-md-3">
-              <button id="fun_categ" type="submit" id="fbtn" class="btn btn-block" name="categ" value="F">
+              <button id="fun_categ" type="submit" id="fbtn" class="btn btn-block" name="categ" value="F" <% if @disable_fun%> disabled style="opacity:0.1"<%end%>>
               </button>
             </div>
           </div>
