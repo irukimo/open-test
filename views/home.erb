@@ -222,7 +222,7 @@
 
           var oldColor1 = "#2dffc1";
           var newColor1 = "#ff8a90";
-          new Pentagon(firstPentagon, "<%=@time_difference%>",oldColor1,newColor1,"body1","chart1","#body1","#chart1");
+          new Pentagon(firstPentagon, '<%=@time_difference%>',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
 
       </script>
 
@@ -296,7 +296,8 @@
 
 
         var isIphone;
-        if( screen.width <= 480 ) {
+        if( screen.width <= 640 ) {
+            // coin_display.innerHTML = screen.width.toString();
             // chartelement = document.getElementById(chartID);
         }else{
             // green_background_element = document.getElementById("green_background");
