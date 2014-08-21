@@ -128,7 +128,7 @@
       btnelement.parentNode.removeChild(btnelement);
 
 
-      FB.api('/me', function(response) {
+      FB.api('/me?locale=zh_TW', function(response) {
         console.log('Successful Facebook login for: ' + response.name);
         document.getElementById('status').innerHTML =
           '歡迎, ' + response.name + '!' + '<br>' + '請稍等...';

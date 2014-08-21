@@ -461,7 +461,7 @@ var TDFriendSelector = (function(module, $) {
 		FB.getLoginStatus(function(response) {
 			if (response.status === 'connected') {
 				// Load Facebook friends
-				FB.api('/me/friends?fields=id,name', function(response) {
+				FB.api('/me/friends?locale=zh_TW&fields=id,name', function(response) {
 					if (response.data) {
 						setFriends(response.data, function(){
 								// Build the markup
@@ -509,7 +509,7 @@ var TDFriendSelector = (function(module, $) {
 	 * @return {id, name} friends  in the order of number of mutual friends
 	 */
 	sortFriends = function(input, callback) {
-		FB.api('/me', function (resp) {
+		FB.api('/me?locale=zh_TW', function (resp) {
 			myID = resp.id;
 			me = resp.name;
       console.log('my ID: ' + myID);
