@@ -49,7 +49,7 @@
       min-height: 400px;
     }
 
-    .btn-block{
+/*    .btn-block{
       min-height: 60px;
       font-size: 15pt;
       background-color: #474747;
@@ -65,7 +65,7 @@
     .btn-block:active {
       color: #FFFFFF;
 
-    }
+    }*/
     </style>
 
   </head>
@@ -145,8 +145,7 @@
             <%@others_to_view.each do |name|%> 
               <%next if name == session[:tester]%>
               <div class="col-xs-12 col-md-12">     
-                <button type="submit" id="<%=name%>" class="btn btn-block">
-                <div class="col-xs-1 col-md-4"></div>
+                <button type="submit" id="<%=name%>" class="btn blue_ppl_button btn-block">
                 <div class="col-xs-4 col-md-4">
                 <img src="/img/userwhite.png" alt="Smiley face" width="44" height="44"> 
                    <%=name%>

@@ -116,7 +116,7 @@
     #home_display{
       background: #78c26b;
       background-image: url('/img/home.png');
-      background-size: 35px 35px;
+      background-size: 35px 32px;
       background-repeat: no-repeat;
       background-position:absolute;
       background-position: 7px 7px;
@@ -250,3 +250,57 @@
       font-size: 20px;
       margin-bottom: 10px;
     }
+
+    .green_button{
+      background: #1ab5a3;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+    }
+    .orange_button{
+      background: #f77c1c;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+    }
+
+    .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
+      color:#FFFFFF;
+    }
+
+    .grass_green_button{
+      background: #78c26b;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+      height:70px;
+      line-height: 100%;
+      white-space: normal;
+    }
+
+    .pink_button{
+      background: #ff5160;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+    }
+
+    .blue_button{
+      background: #59b4e1;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+      height:70px;
+      line-height: 100%;
+      white-space: normal;
+    }
+    .blue_ppl_button{
+      background: #59b4e1;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+      height:70px;
+      line-height: 100%;
+    }
+
+    

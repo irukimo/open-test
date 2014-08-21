@@ -198,6 +198,7 @@
         </script>
 
 <form id="viewform" class="form-horizontal" role="form" action="view_others_choose_people" method="get">
+</form>
   <!-- </div> -->
 
   <div class="row">
@@ -205,7 +206,7 @@
 
       <%if @name == session[:tester]%>
           <div class="col-xs-12 col-md-12">
-            <button id="viewOthersButton" class="btn btn-block">看朋友的性向分析 <img src="/img/coin.png" alt="Smiley face" width="25" height="25">200</button>
+            <button id="viewOthersButton" class="btn orange_button">看朋友的性向分析 <img src="/img/coinnew.png" alt="Smiley face" width="33" height="33">200</button>
             <script type="text/JavaScript">
                   //<![CDATA[
                   new viewOthersButton("viewOthersButton","<%=@@coins[session[:tester]]%>"); 
@@ -215,11 +216,11 @@
       <%else%>
           <div class="col-xs-6 col-md-6">
             <form class="form-horizontal" role="form" action="view_my_report" method="post">
-              <button id="my_report_btn" class="btn btn-block">回去我的性向分析</button>
+              <button id="my_report_btn" class="btn pink_button btn-block">回去我的性向分析</button>
             </form>
           </div>
           <div class="col-xs-6 col-md-6">
-            <button id="viewOthersButton" class="btn btn-block">看朋友的性向分析 <img src="/img/coin.png" alt="Smiley face" width="25" height="25">200</button>
+            <button id="viewOthersButton" class="btn orange_button btn-block">看朋友的性向分析 <img src="/img/coin.png" alt="Smiley face" width="25" height="25">200</button>
             <script type="text/JavaScript">
                   //<![CDATA[
                   new viewOthersButton("viewOthersButton","<%=@@coins[session[:tester]]%>"); 
@@ -353,7 +354,7 @@
 
     <form id="people_form" class="form-horizontal" role="form" action="home" method="post">
 
-      <center><button type="submit" class="btn btn-info btn-block"><span class="glyphicon glyphicon-home"></span> 主選單</button></center>
+      <center><button type="submit" class="btn green_button btn-block">回主選單</button></center>
     </form>
 
 <!-- red background end -->

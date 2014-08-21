@@ -17,7 +17,7 @@ require './librarian.rb'
 
 # CH or EN
 LANG = "CH"
-IP = "192.168.1.43"
+IP = "192.168.1.40"
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
