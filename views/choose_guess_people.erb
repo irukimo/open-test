@@ -36,26 +36,18 @@
 
     #red_background{
       /*background: #caecfa;*/
-      border-radius: 5px;
+      /*border-radius: 5px;*/
       margin-top: 7px;
       margin-left: 7px;
       padding-top: 5px;
       padding-bottom: 5px;
-      padding-left: 10px;
+      padding-left: 0px;
       padding-right: 10px;
       min-width: 306px;
       max-width: 653px;
       min-height: 400px;
     }
 
-    .guessbtn{
-      background: #9bcd8a;
-      font-size: 12pt;
-    }
-
-    .guessbtn:hover{
-      color: #424242;
-    }
     </style>
 
     <script type="text/JavaScript">
@@ -140,12 +132,23 @@
         <%puts quiz_array[0][:option0]%>
         <%puts "uuid: " + parcel[0]%>
           <%btnid = "button" + parcel[0]%>
-          <center><button id="<%=btnid%>" class="btn btn-block guessbtn" name="uuid" value="<%=parcel[0]%>" >猜<%=name%>如何比較</br><%=quiz_array[0]["option0"]%> vs <%=quiz_array[0]["option1"]%></button></center>
+          <button id="<%=btnid%>" class="white_button col-xs-12 col-md-11" name="uuid" value="<%=parcel[0]%>" >
+              <div class="row">
+                <div class="col-xs-9 col-md-8 compare_text">
+                    <span class="compare_author"><%=name%></span>比較了</br><span class="compare_option"><%=quiz_array[0]["option0"]%></span> vs <span class="compare_option"><%=quiz_array[0]["option1"]%></span>
+                </div>
+                <div class="col-xs-3 col-md-3">
+                    <div class="blue_circle">去猜</div>
+                </div>
+              </div>
+          </button>
         <script type="text/javascript">
           //<![CDATA[
              new guessButton("<%=btnid%>","<%=parcel[0]%>","<%=@@coins[session[:tester]]%>");
+
           //]]>
         </script>
+      </br>
       <%end%>
     </div>
 

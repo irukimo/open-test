@@ -211,11 +211,11 @@
           var firstPentagon = [
               [
               {axis:"感情",value:<%=@@score_buffer[@name]["old"]["R"]%>},
-              {axis:"事業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
+              {axis:"專業",value:<%=@@score_buffer[@name]["old"]["P"]%>},
               {axis:"社交",value:<%=@@score_buffer[@name]["old"]["S"]%>}
               ],[
               {axis:"感情",value:<%=@@score_buffer[@name]["new"]["R"]%>},
-              {axis:"事業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
+              {axis:"專業",value:<%=@@score_buffer[@name]["new"]["P"]%>},
               {axis:"社交",value:<%=@@score_buffer[@name]["new"]["S"]%>}
               ]
           ];
@@ -248,12 +248,14 @@
   <%btnid = "button" + parcel[0]%>
   <div class="row">
     <div id="yellow_background" class="col-xs-11 col-md-7">
-      <b><%=parcel[3]%></b>剛剛比了<b><%=quiz["option0"]%></b>跟<b><%=quiz["option1"]%></b>
-    </br>
-    <font color="#ffa302" onmouseover="" style="cursor: pointer;">
-      <font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font>
-      <button id="<%=btnid%>" name="uuid" value="<%=parcel[0]%>">去猜</button>
-    </font>
+      <div class="col-xs-8 col-md-7">
+      <b><span class="compare_author"><%=parcel[3]%></span></b>剛剛比了<b><span class="compare_option"><%=quiz["option0"]%></span></b>跟<b><span class="compare_option"><%=quiz["option1"]%></span></b>
+      </div>
+      <div class="col-xs-3 col-md-3">
+        <font onmouseover="" style="cursor: pointer;">
+          <button id="<%=btnid%>" class="orange_small_circle" name="uuid" value="<%=parcel[0]%>">去猜</button>
+        </font>
+      </div>
     </div>
   </div>
   <script type="text/javascript">

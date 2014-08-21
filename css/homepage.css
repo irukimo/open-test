@@ -245,8 +245,6 @@
       min-width: 306px;
       max-width: 653px;
       min-height: 110px;
-      padding-left: 10px;
-      padding-right: 10px;
       font-size: 20px;
       margin-bottom: 10px;
     }
@@ -303,4 +301,55 @@
       line-height: 100%;
     }
 
-    
+    .white_button{
+      /*background: #59b4e1;*/
+      background: #FFFFFF;
+      border-bottom-style: solid;
+      border-top-width: 0px;
+      border-left-width: 0px;
+      border-right-width: 0px;
+      border-bottom-width: 1px;
+      border-bottom-color: #c2c2c2;
+      text-align: left;
+      /*width: 295px;*/
+      font-size: 20px;
+      padding-left: 2px;
+
+    }
+
+    .blue_circle{
+      background: #ffa23f;
+      border-radius: 100px;
+      width: 70px;
+      height: 70px;
+      font-size: 25px;
+      color:#FFFFFF;
+      line-height: 265%;
+      padding-left: 10px;
+      margin-top: 5px;
+      border-width: 0px;
+    }
+    .orange_small_circle{
+      background: #ffa23f;
+      border-radius: 100px;
+      width: 70px;
+      height: 70px;
+      font-size: 23px;
+      color:#FFFFFF;
+      line-height: 230%;
+      padding-left: 0px;
+      padding-right: 0px;
+      margin-top: 5px;
+      border-width: 0px;
+      white-space: normal;
+    }
+    .compare_text{
+      padding-top:5px;
+      font-weight:500;
+    }
+    .compare_author{
+      color:#2b9f78;
+    }
+    .compare_option{
+      color:#006599;
+    }
