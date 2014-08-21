@@ -278,12 +278,15 @@ route :get, :post, '/home' do
   @@logged_in[session[:tester]] << Time.now
 
   #question, bet(Integer), correctness(BOOL)
-  @notifications = @@librarian.get_notification session[:tester]
+  # @notifications = @@librarian.get_notification session[:tester]
 
   clear_session
 
   view_report(session[:tester])
   @name = session[:tester]
+
+  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
+  @parcel_array = @@librarian.get_parcels_for_guess(5, session[:tester], nil, @@friends[session[:tester]], fb_friend_names)
   erb :home
 end
 

@@ -222,13 +222,26 @@
     </div>
   </div>
 
+<%puts "home"%>
+<%
+
+%>
+<%puts @parcel_array.inspect%>
+<%@parcel_array.each do |parcel|%>
+  <%next if @@librarian.has_played?(session[:tester], parcel[0])%>
+  <%quiz = parcel[1][0]%>
+  <%btnid = "button" + parcel[0]%>
   <div class="row">
     <div id="yellow_background" class="col-xs-11 col-md-7">
-      <b>小明</b>剛剛比了<b>小白</b>跟<b>小黃</b>
-    </br><font color="#ffa302" onmouseover="" style="cursor: pointer;"><font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font><b>去猜</b></font>
-
+      <b><%=parcel[3]%></b>剛剛比了<b><%=quiz["option0"]%></b>跟<b><%=quiz["option1"]%></b>
+    </br>
+    <font color="#ffa302" onmouseover="" style="cursor: pointer;">
+      <font size="2pt"><span class="glyphicon glyphicon-chevron-right"></span></font>
+      <button name="uuid" value="<%=parcel[0]%>">去猜</button>
+    </font>
     </div>
   </div>
+  <%end%>
 
 </div>
 

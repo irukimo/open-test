@@ -147,11 +147,15 @@ class Librarian
     
     categ_confined = Array.new
     @bundles.each{|author, parcels| 
-      tmp = parcels.select{|parcel| parcel[2] == categ} 
+      if categ != nil
+        tmp = parcels.select{|parcel| parcel[2] == categ} 
+      else
+        tmp = parcels
+      end
       
       tmp.each{|parcel| parcel[3] = author}
-      puts "tmp"
-      puts tmp.inspect
+      # puts "tmp"
+      # puts tmp.inspect
       categ_confined += tmp
     }
 
