@@ -17,7 +17,9 @@ require './librarian.rb'
 
 # CH or EN
 LANG = "CH"
-IP = "192.168.74.185"
+
+IP = "192.168.0.60"
+
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
@@ -377,7 +379,21 @@ end
 
 get '/' do
   clear_session
-  erb :login
+  puts "logging in!"
+  logged_in = false
+  # if params["code"] != nil and params["error"] == nil
+  #   session[:fb_code] = params["code"]
+  #   # connected, not_authorized
+  #   session[:fb_status] = "connected"
+  #   puts "FB connected"
+  #   logged_in = true
+  # end
+
+  if logged_in
+    erb :wtstart
+  else
+    erb :login
+  end
 end
 
 get '/wtstart' do

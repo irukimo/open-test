@@ -20,7 +20,7 @@
   }
   </style>
   <script>
-
+  var appId = '610309559054620';
   (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")
 
 
@@ -41,10 +41,11 @@
   <center>
   <img src="/img/logo.png" width="200">
   <br>
-  
-  <div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>
-  
-  <!-- <button onclick="tryLogin();">GO</button> -->
+  <br>
+  <!--<div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>-->
+  <!-- <button onclick="next();">next</button>
+  <button onclick="FB.logout();">log out</button>-->
+  <img id="fb-login-btn" src="/img/facebookLogin.png" onclick="tryLogin();">
   <div id="status">
   </div>
   </center>  
@@ -60,11 +61,13 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
 
   <script>
+    function next(){
+      window.location.href = "/wtstart";
+    }
     function tryLogin(){
-      redirectPage = "http://192.168.1.43:7009"
-      var permissionUrl = "https://m.facebook.com/dialog/oauth?client_id=" + "610309559054620" + "&response_type=code&redirect_uri=" + redirectPage;
-      console.log("logged!!!");
-      console.log("ok " + permissionUrl);
+      redirectPage = "<%=URL%>";
+      var permissionUrl = "https://www.facebook.com/dialog/oauth?client_id=" + appId + "&response_type=code&redirect_uri=" + redirectPage;
+      console.log("url: " + permissionUrl);
       window.location = permissionUrl;
     }
     // This is called with the results from from FB.getLoginStatus().
@@ -100,7 +103,7 @@
 
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '610309559054620',
+        appId      : appId,
         cookie     : true,  // enable cookies to allow the server to access 
                             // the session
         xfbml      : true,  // parse social plugins on this page
@@ -116,7 +119,7 @@
     // 2. Logged into Facebook, but not your app ('not_authorized')
     // 3. Not logged into Facebook and can't tell if they are logged into
     //    your app or not.
-    //
+    //ome
     // These three cases are handled in the callback function.
       FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
@@ -139,12 +142,10 @@
     // successful.  See statusChangeCallback() for when this call is made.
     function testAPI() {
       console.log('Welcome!  Fetching your information.... ');
-      $("#fb-login-btn").remove();
-      // btnelement.parentNode.removeChild(btnelement);
-
-
+      
       FB.api('/me?locale=zh_TW', function(response) {
         console.log('Successful Facebook login for: ' + response.name);
+        $("#fb-login-btn").remove();
         document.getElementById('status').innerHTML =
           '歡迎, ' + response.name + '!' + '<br>' + '請稍等...';
 
@@ -154,7 +155,7 @@
                   console.log("data: " + data);
                   if (data == "true") {
                     console.log("logged in before");
-                    window.location.href = "/home?name=" + response.name;
+                    window.location.href = "/home";
                   } else {
                     window.location.href = "/wtstart";
                   }
