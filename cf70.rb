@@ -301,8 +301,9 @@ route :get, :post, '/home' do
   view_report(session[:tester])
   @name = session[:tester]
 
-  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
-  @parcel_array = @@librarian.get_parcels_for_guess(5, session[:tester], nil, @@friends[session[:tester]], fb_friend_names)
+  fb_friend_names = @@fb_friends[@name].map{|elem| elem["name"]}
+  @parcel_array = @@librarian.get_parcels_for_guess(5, @name, nil, @@friends[@name], fb_friend_names)
+
   erb :home
 end
 
