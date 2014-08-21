@@ -17,7 +17,7 @@ require './librarian.rb'
 
 # CH or EN
 LANG = "CH"
-IP = "192.168.1.40"
+IP = "192.168.1.123"
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
@@ -234,6 +234,17 @@ def add_new_player
   end
 end
 
+post '/moreFriendNames' do
+  selected_friend_names = params["selectedFriendNames"]
+  tester = session[:tester]
+  
+  @@friends[tester] += selected_friend_names
+  @@friends[tester].uniq!
+  
+  @@names += selected_friend_names
+  add_new_player
+end
+
 post '/friendNames' do
   selected_friend_names = params["selectedFriendNames"]
 
@@ -314,9 +325,6 @@ post '/hasLoggedIn' do
 end
 
 
-
-
-
 post '/choose_categ' do
   erb :choose_categ
 end
@@ -334,8 +342,11 @@ post '/choose_people' do
   #       set_interval(REFILL, session[:tester])
   #    end
   # end
-
-  @initial_first, @initial_second = @@friends[tester].sample(2)
+  if params[:addedMore]
+    @initial_first, @initial_second = @@friends[tester].slice(-5,5).sample(2)
+  else
+    @initial_first, @initial_second = @@friends[tester].sample(2)
+  end
    
   erb :choose_people
 end
