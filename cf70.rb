@@ -289,11 +289,26 @@ route :get, :post, '/home' do
     redirect to('/'), 307
   end
 
+  if @@fb_friends[session[:tester]] == nil
+    puts "ERROR: fb_friends of %s is nil" % session[:tester]
+  elsif @@fb_friends[session[:tester]].count == 0
+    puts "ERROR: fb_friends of %s is empty" % session[:tester]
+  end
+    
   if @@started_playing[session[:tester]] == nil
     # set_interval(REFILL, session[:tester])
     @@started_playing[session[:tester]] = TRUE
   end
   @@logged_in[session[:tester]] << Time.now
+
+  # add players that are tester's FB friends to tester's friends list
+  @@names.each do |name|
+    if @@logged_in[name] != nil and @@logged_in[name].count > 0
+      unless @@friends[session[:tester]].include? name
+        @@friends[session[:tester]] << name
+      end
+    end
+  end
 
   #question, bet(Integer), correctness(BOOL)
   # @notifications = @@librarian.get_notification session[:tester]
@@ -873,8 +888,8 @@ route :get, :post, '/rankings' do
   tmp = @@level.select{|key, value| ((fb_friend_names.include? key) or (key == tester)) and 
                                     (@@logged_in[key] != nil and @@logged_in[key].count > 0)
                       }
-  puts "ranking"
-  puts tmp
+  # puts "ranking"
+  # puts tmp
   @sortedLevelArray = tmp.sort_by {|key,value| value}
   clear_session
   erb :rankings
