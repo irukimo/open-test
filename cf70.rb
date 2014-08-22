@@ -252,9 +252,8 @@ post '/friendNames' do
 
   fb_friends = params["FBFriends"].values.map do |elem|
     id = elem.keys[0]
-    closeness = elem.values[0]["cl"]
-    name = elem.values[0]["nm"]
-    {"name"=> name, "closeness"=> closeness, "id"=> id}
+    name = elem.values[0]
+    {"name"=> name, "id"=> id}
   end
   
   tester = session[:tester]

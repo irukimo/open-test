@@ -241,7 +241,6 @@
     </div>
   </div>
 
-<%puts @parcel_array.inspect%>
 <%@parcel_array.each do |parcel|%>
   <%next if @@librarian.has_played?(session[:tester], parcel[0])%>
   <%quiz = parcel[1][0]%>

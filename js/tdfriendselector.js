@@ -256,12 +256,11 @@ var TDFriendSelector = (function(module, $) {
 						friends.forEach(function(elem){
 							delete elem["upperCaseName"];
 							id = elem.id;
-							cl = elem.closeness;	
 							name = elem.name;
 							delete elem["name"];
 							delete elem["id"];
 							delete elem["closeness"];
-							elem[id] = {cl: cl, nm: name};
+							elem[id] = name;
 							});
 						instanceSettings.callbackSubmit(me, selectedFriendNames, friends); 
 					}
@@ -307,15 +306,13 @@ var TDFriendSelector = (function(module, $) {
 						hideFriendSelector();
 						if (typeof instanceSettings.callbackSubmit === "function") { 
 							friends.forEach(function(elem){
-								
 								delete elem["upperCaseName"];
-							id = elem.id;
-							cl = elem.closeness;	
-							name = elem.name;
-							delete elem["name"];
-							delete elem["id"];
-							delete elem["closeness"];
-							elem[id] = {cl: cl, nm: name};
+								id = elem.id;
+								name = elem.name;
+								delete elem["name"];
+								delete elem["id"];
+								delete elem["closeness"];
+								elem[id] = name;
 							});
 							instanceSettings.callbackSubmit(me, selectedFriendNames, friends); }
 					}
