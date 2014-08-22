@@ -236,6 +236,17 @@ def add_new_player
   end
 end
 
+post '/moreFriendNames' do
+  selected_friend_names = params["selectedFriendNames"]
+  tester = session[:tester]
+  
+  @@friends[tester] += selected_friend_names
+  @@friends[tester].uniq!
+  
+  @@names += selected_friend_names
+  add_new_player
+end
+
 post '/friendNames' do
   selected_friend_names = params["selectedFriendNames"]
 
@@ -263,10 +274,15 @@ end
 route :get, :post, '/home' do
   if params["name"]
     puts "name: " + params["name"]
-    @@names << params["name"] unless @@names.include? params["name"]
-    
-    add_new_player
-    session[:tester] = params["name"]
+    unless @@names.include? params["name"]
+      @@names << params["name"] 
+      add_new_player
+      tester = params["name"]
+      session[:tester] = tester
+
+      @@friends[tester] = ["Henry", "David", "Peter"]
+      @@fb_friends[tester] = [{"name"=> "Henry"}, {"name"=> "David"}, {"name"=> "Peter"}]
+    end
 
   elsif params["name"] == nil and session[:tester] == nil
     puts "**ERROR**: Wrong entry point"
@@ -287,8 +303,9 @@ route :get, :post, '/home' do
   view_report(session[:tester])
   @name = session[:tester]
 
-  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
-  @parcel_array = @@librarian.get_parcels_for_guess(5, session[:tester], nil, @@friends[session[:tester]], fb_friend_names)
+  fb_friend_names = @@fb_friends[@name].map{|elem| elem["name"]}
+  @parcel_array = @@librarian.get_parcels_for_guess(5, @name, nil, @@friends[@name], fb_friend_names)
+
   erb :home
 end
 
@@ -311,9 +328,6 @@ post '/hasLoggedIn' do
 end
 
 
-
-
-
 post '/choose_categ' do
   erb :choose_categ
 end
@@ -331,8 +345,11 @@ post '/choose_people' do
   #       set_interval(REFILL, session[:tester])
   #    end
   # end
-
-  @initial_first, @initial_second = @@friends[tester].sample(2)
+  if params[:addedMore]
+    @initial_first, @initial_second = @@friends[tester].slice(-5,5).sample(2)
+  else
+    @initial_first, @initial_second = @@friends[tester].sample(2)
+  end
    
   erb :choose_people
 end
@@ -719,6 +736,12 @@ end
 
 
 post '/choose_guess_categ' do
+  tester = session[:tester]
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+  @disable_professional = (@@librarian.get_parcels_for_guess(1, tester, "P", @@friends[tester], fb_friend_names).count == 0)
+  @disable_relationship = (@@librarian.get_parcels_for_guess(1, tester, "R", @@friends[tester], fb_friend_names).count == 0)
+  @disable_social       = (@@librarian.get_parcels_for_guess(1, tester, "S", @@friends[tester], fb_friend_names).count == 0)
+  @disable_fun          = (@@librarian.get_parcels_for_guess(1, tester, "F", @@friends[tester], fb_friend_names).count == 0)
   erb :choose_guess_categ
 end
 

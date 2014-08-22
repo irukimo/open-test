@@ -50,7 +50,7 @@
           ExtraWidthX: 300,
           //cannot be more than 300
           svgWidth:(isIphone)? 300: 630,
-          svgHeight:(isIphone)? 300: 500,
+          svgHeight:(isIphone)? 300: 450,
           color:colorscale,
           //how faraway are the legends to the graph
           factorLegend: (isIphone)?.65:.85,

@@ -53,7 +53,7 @@
           //how faraway are the legends to the graph
           factorLegend: (isIphone)?.65:.85,
           //xoffset of whole diagram
-          TranslateX: (isIphone)?60:120,
+          TranslateX: (isIphone)?70:120,
         }
 
         //Call function to draw the Radar chart
@@ -94,7 +94,7 @@
             .append("rect")
             //change x offset
             // .attr("x", (isIphone)? (w - 190) : (w - 53))
-            .attr("x", (isIphone)? (w - 53) : (w - 53))
+            .attr("x", (isIphone)? (w - 73) : (w - 53))
             // .attr("y", function(d, i){ return i * 20 + ((isIphone)?200:100) ;})
             .attr("y", function(d, i){ return i * 20 + ((isIphone)?20:100) ;})
             .attr("width", 10)
@@ -108,7 +108,7 @@
             .append("text")
             //change x offset
             // .attr("x", (isIphone)? (w - 177) : (w-40))
-            .attr("x", (isIphone)? (w - 40) : (w-40))
+            .attr("x", (isIphone)? (w - 60) : (w-40))
             // .attr("y", function(d, i){ return i * 20 + ((isIphone)?209:109);})
             .attr("y", function(d, i){ return i * 20 + ((isIphone)?29:109);})
             .attr("font-size", "15px")

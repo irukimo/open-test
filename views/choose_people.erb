@@ -49,6 +49,15 @@
       max-width: 653px;
       min-height: 400px;
     }
+
+    .col-xs-6{
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+
+    #select_frd{
+      padding-left: 20px;
+    }
     </style>
 
   </head>
@@ -101,18 +110,18 @@
             <center><font size="3pt" color="gray">vs</font></center>
             <center><font size="5pt"><div id="option1"><%=@initial_second%></div></font></center>
           </br>
+          <!-- <div class="row"> -->
             <center>
-            <div class="row">
               <div class="col-xs-6 col-md-6">
                   <button id="shufflebtn" type="button" class="btn orange_button"><span class="glyphicon glyphicon-random"></span>  換朋友<img src="/img/coinnew.png" alt="Smiley face" width="33" height="33">30</button>    
                   <div id="timesleftbig">還有<div id="timesleft">3</div>次</div><br>
               </div>
-              <div class="col-xs-6 col-md-6">
-                  <button id="select-friends-btn" class="btn pink_button btn-lg btn-block" onclick="selectFriends()">選更多你的朋友們！</button>
+              <div id="select_frd" class="col-xs-6 col-md-5">
+                  <button id="select-friends-btn" class="btn pink_button btn-lg btn-block" onclick="selectFriends()">選更多朋友!</button>
                   <span id="status"></span>
               </div>
-            </div>
             </center>
+          <!-- </div> -->
             
               </br></br></br>
               <form id="people_form" class="form-horizontal" role="form" action="choose_answer" method="post">
@@ -287,7 +296,7 @@
      
       function selectFriends() {
         $("#select-friends-btn").remove();
-        $("#status").html("<br><br> 等一下喲！正在載入中...");
+        $("#status").html("等一下喲！正在載入中...");
         selector.showFriendSelector();
       }
     </script>
