@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "192.168.0.60"
+IP = "107.170.232.66"
 
 GAME_CYCLE = 600
 REFILL = 480
@@ -79,9 +79,9 @@ def self.import_names
   # @@names = ["John", "Peter", "Rachel Williams", "Daniel", "Sean", "中文 名字"]
   
   @@names = Array.new
-  CSV.foreach("names.csv") do |row|
-    @@names << row[0]
-  end
+  # CSV.foreach("names.csv") do |row|
+  #   @@names << row[0]
+  # end
 end
 
 def self.configure_Twilio
