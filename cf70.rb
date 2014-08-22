@@ -302,7 +302,7 @@ route :get, :post, '/home' do
 
   # add players that are tester's FB friends to tester's friends list
   @@names.each do |name|
-    if @@logged_in[name] != nil and @@logged_in[name].count > 0
+    if @@logged_in[name] != nil and @@logged_in[name].count > 0 and name != session[:tester]
       unless @@friends[session[:tester]].include? name
         @@friends[session[:tester]] << name
       end
