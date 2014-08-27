@@ -12,7 +12,7 @@ require 'csv'
 require 'uuidtools'
 require 'twilio-ruby'
 require 'time'
-
+require 'koala'
 require './librarian.rb'
 
 # CH or EN
@@ -248,27 +248,18 @@ post '/moreFriendNames' do
 end
 
 post '/friendNames' do
-  selected_friend_names = params["selectedFriendNames"]
-
-  fb_friends = params["FBFriends"].values.map do |elem|
-    id = elem.keys[0]
-    name = elem.values[0]
-    {"name"=> name, "id"=> id}
-  end
-  
   tester = session[:tester]
-  puts "in selectedFriendNames, tester: " + tester
-  # elem[id] = {cl: cl, nm: name};
-  add_new_player if @@friends[tester] == nil
+
+  selected_friend_names = params["selectedFriendNames"]
   
-  @@friends[tester]    += selected_friend_names
-  # fb_friends => tester : [{name: "Albert Lin", closeness: 23, id:xxx}, 
-  #                         {name: "Tim Lin", closeness: 20, id:xxx}
-  #                        ]
-  @@fb_friends[tester]  = fb_friends
+  puts "in selectedFriendNames, tester: " + tester
+  puts "%s already have %d FB friends" % [tester, @@fb_friends[tester].count]
+  # elem[id] = {cl: cl, nm: name};
   
   @@names += selected_friend_names
   add_new_player
+
+  @@friends[tester] += selected_friend_names
 end
 
 route :get, :post, '/home' do
@@ -299,6 +290,7 @@ route :get, :post, '/home' do
     # set_interval(REFILL, session[:tester])
     @@started_playing[session[:tester]] = TRUE
   end
+  puts "At home, tester: " + session[:tester]
   @@logged_in[session[:tester]] << Time.now
 
   # add players that are tester's FB friends to tester's friends list
@@ -313,8 +305,6 @@ route :get, :post, '/home' do
     end
   end
 
-  puts "friends: "
-  puts @@friends[session[:tester]].inspect
   #question, bet(Integer), correctness(BOOL)
   # @notifications = @@librarian.get_notification session[:tester]
 
@@ -337,8 +327,16 @@ post '/hasLoggedIn' do
   @@names << params["name"] unless @@names.include? params["name"]
 
   add_new_player
+  token = params["token"]
+  puts "token: " + params["token"]
 
   if @@logged_in[tester] == nil or @@logged_in[tester].count == 0
+
+    Thread.new{  
+      graph = Koala::Facebook::API.new(token)
+      @@fb_friends[tester] = graph.get_connections("me", "friends") 
+      puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
+    }
     status 200
     body 'false'
   else

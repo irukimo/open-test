@@ -80,7 +80,8 @@
       // for FB.getLoginStatus().
       if (response.status === 'connected') {
         // Logged into your app and Facebook.
-        testAPI();
+        console.log(response.authResponse.accessToken);
+        testAPI(response.authResponse.accessToken);
       } else if (response.status === 'not_authorized') {
         // The person is logged into Facebook, but not your app.
         
@@ -140,7 +141,7 @@
 
     // Here we run a very simple test of the Graph API after login is
     // successful.  See statusChangeCallback() for when this call is made.
-    function testAPI() {
+    function testAPI(token) {
       console.log('Welcome!  Fetching your information.... ');
       
       FB.api('/me?locale=zh_TW', function(response) {
@@ -150,7 +151,7 @@
           '歡迎, ' + response.name + '!' + '<br>' + '請稍等...';
 
         $.post("<%=URL + '/hasLoggedIn'%>",
-                {name: response.name}, 
+                {name: response.name, token: token}, 
                 function(data){
                   console.log("data: " + data);
                   if (data == "true") {
