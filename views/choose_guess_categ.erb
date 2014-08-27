@@ -97,7 +97,12 @@
         </script>
 
   <!-- <h1>Records</h1> -->
-
+<% tester = session[:tester]
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+puts "Choose guess categ"
+puts @@librarian.get_parcels_for_guess(1, session[:tester], "P", @@friends[session[:tester]], fb_friend_names).inspect
+puts @@librarian.get_parcels_for_guess(1, session[:tester], "P", @@friends[session[:tester]], fb_friend_names).count
+%>
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
 

@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "107.170.232.66"
+IP = "192.168.1.123"
 
 GAME_CYCLE = 600
 REFILL = 480
@@ -259,6 +259,7 @@ post '/friendNames' do
   tester = session[:tester]
   puts "in selectedFriendNames, tester: " + tester
   # elem[id] = {cl: cl, nm: name};
+  add_new_player if @@friends[tester] == nil
   
   @@friends[tester]    += selected_friend_names
   # fb_friends => tester : [{name: "Albert Lin", closeness: 23, id:xxx}, 
@@ -273,11 +274,11 @@ end
 route :get, :post, '/home' do
   if params["name"]
     puts "name: " + params["name"]
+    session[:tester] = params["name"]
     unless @@names.include? params["name"]
       @@names << params["name"] 
       add_new_player
       tester = params["name"]
-      session[:tester] = tester
 
       @@friends[tester] = ["Henry", "David", "Peter"]
       @@fb_friends[tester] = [{"name"=> "Henry"}, {"name"=> "David"}, {"name"=> "Peter"}]
@@ -301,14 +302,19 @@ route :get, :post, '/home' do
   @@logged_in[session[:tester]] << Time.now
 
   # add players that are tester's FB friends to tester's friends list
-  @@names.each do |name|
-    if @@logged_in[name] != nil and @@logged_in[name].count > 0 and name != session[:tester]
+  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
+  (@@names - [session[:tester]]).each do |name|
+    puts "try to add: " + name
+    if @@logged_in[name] != nil and @@logged_in[name].count > 0 and fb_friend_names.include? name
+      puts "%s is friends of %s on FB" % [name, session[:tester]]
       unless @@friends[session[:tester]].include? name
         @@friends[session[:tester]] << name
       end
     end
   end
 
+  puts "friends: "
+  puts @@friends[session[:tester]].inspect
   #question, bet(Integer), correctness(BOOL)
   # @notifications = @@librarian.get_notification session[:tester]
 
@@ -508,9 +514,10 @@ post '/choose_answer' do
   # fb_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
   friend0 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option0]}
   friend1 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option1]}
-  puts "choose_answer"
-  puts friend0
-  puts friend1
+  if friend0 == nil or friend1 == nil
+    puts "ERROR: cannot find %s/%s in %s's FB friends" % [session[:option0], session[:option1], session[:tester]]
+  end
+  
   @option0_id = friend0[0]["id"]
   @option1_id = friend1[0]["id"]
 

@@ -240,9 +240,7 @@
         猜一下
     </div>
   </div>
-
 <%@parcel_array.each do |parcel|%>
-  <%next if @@librarian.has_played?(session[:tester], parcel[0])%>
   <%quiz = parcel[1][0]%>
   <%btnid = "button" + parcel[0]%>
   <div class="row">
