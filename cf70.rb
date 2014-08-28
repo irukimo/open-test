@@ -117,7 +117,7 @@ def self.initialize_record
   @@progress = Hash.new
   
   @@unlocked_uuid_index = Hash.new
-  @@data_to_w_r = ["questions_left", "started_playing", "categories", "score_buffer","logged_in","view_report","unlock_someone", 
+  @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","unlock_someone", 
                    "play_others","play_answer","view_rankings","wins", "losses", "threads", 
                    "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names"]
   @@wins = Hash.new
