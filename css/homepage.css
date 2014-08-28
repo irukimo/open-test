@@ -282,6 +282,13 @@
       color:#FFFFFF;
       font-size: 20px;
     }
+    .orange_shuffle_button{
+      background: #ffa23f;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
+      display: inline-block;
+    }
 
     .orangecircle{
       background: #ffa23f;
@@ -292,11 +299,11 @@
       font-size: 20px;
     }
 
-.orangecircle:focus, .green_button:focus, .orange_button:focus, .grass_green_button:focus{
+.orangecircle:focus, .green_button:focus, .orange_button:focus, .grass_green_button:focus, .orange_shuffle_button:focus{
    color:#FFFFFF;
     }
     
-    .orangecircle:hover, .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
+    .orange_shuffle_button:hover,.orangecircle:hover, .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
       color:#FFFFFF;
     }
 

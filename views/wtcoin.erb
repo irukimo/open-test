@@ -119,8 +119,17 @@
   <b><center><font color=#585858 size="5pt">金幣可以用來看朋友的<br>形象分析圖！<span id="status"></span></font></center></b>
 </br></br></br>
     
-    <button id="select-friends-btn" class="btn green_button btn-lg btn-block" onclick="selectFriends()">我們開始吧！</button>
-
+    <button id="select-friends-btn" class="btn green_button btn-lg btn-block" onclick="backtohome()">我們開始吧！</button>
+<form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
     
 
 

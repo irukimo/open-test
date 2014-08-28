@@ -59,6 +59,9 @@
       padding-left: 20px;
 
     }
+    #option0,#option1{
+      display: inline-block;
+    }
     </style>
 
   </head>
@@ -107,13 +110,13 @@
             <b><center><font size="5pt">這樣的對戰組合你滿意嗎?</font></center></b>
           </br>
             <div>
-            <center><font size="5pt"><span id="option0"><%=@initial_first%></span>
-            <button id="shufflebtn" type="button" class="btn orange_button">換  </button>  </font></center></div>
+            <center><font size="5pt"><div id="option0"><%=@initial_first%></div>
+            <button id="shuffle_option0" type="button" class="btn orange_shuffle_button">換  </button>  </font></center>
 
             <center><font size="5pt" color="gray">vs</font></center>
        
-            <center><font size="5pt"><span id="option1"><%=@initial_second%></span>
-             <button id="shufflebtn" type="button" class="btn orange_button">換</button></font></center></div>
+            <center><font size="5pt"><div id="option1"><%=@initial_second%></div>
+             <button id="shuffle_option1" type="button" class="btn orange_shuffle_button">換</button></font></center>
             </div>
           </br>
           <!-- <div class="row"> -->
@@ -146,43 +149,59 @@
                     var option0ele = document.getElementById("option0");
                     var option1ele = document.getElementById("option1");
                     var shufflebtn = document.getElementById("shufflebtn");
+                    var shuffle_option0_btn = document.getElementById("shuffle_option0");
+                    var shuffle_option1_btn = document.getElementById("shuffle_option1");
                     var coinele =  document.getElementById("coin_display");
                     var timesleftele = document.getElementById("timesleft");
                     myform.option0.value = option0ele.innerHTML;
                     myform.option1.value = option1ele.innerHTML;
                     var player = "<%=session[:tester]%>";
                     var friendNames = [<%= @@friends[session[:tester]].map { |name| '"' + name + '"' }.join(", ") %>];
-                    var costPerShuffle = 30;
+                    var costPerShuffle = 10;
 
                     console.log(friendNames[0]);
-                    shufflebtn.onclick = function(){
+                    shuffle_option0_btn.onclick = function(){shuffle_func(0);}
+                    shuffle_option1_btn.onclick = function(){shuffle_func(1);}
+                    shufflebtn.onclick = function(){shuffle_func(3);}
+                    var shuffle_func = function(option){
                         var coinsNum = parseInt(coinele.innerHTML);
                         if(coinsNum < costPerShuffle){
                           alert("sorry... not enough coins...");
                           return;
                         }
-                        do {
-                          var new_option0 = friendNames[Math.floor(Math.random()*friendNames.length)];
-                        } while (new_option0 == player);
-                        do {
-                          var new_option1 = friendNames[Math.floor(Math.random()*friendNames.length)];
-                        } while (new_option1 == player || new_option1 == new_option0);
-                        option0ele.innerHTML = new_option0;
-                        option1ele.innerHTML = new_option1;
-                        myform.option0.value = option0ele.innerHTML;
+                        current_option0 = option0ele.innerHTML;
+                        current_option1 = option1ele.innerHTML;
+                        if(option==0 || option==3){
+                          do {
+                            var new_option0 = friendNames[Math.floor(Math.random()*friendNames.length)];
+                          } while (new_option0 == player || new_option0 == current_option1 || new_option0 == current_option0);
+                          current_option0 = new_option0;
+                          option0ele.innerHTML = new_option0;
+                          myform.option0.value = option0ele.innerHTML;
+                        }
+                        if(option==1 || option==3){
+                          do {
+                            var new_option1 = friendNames[Math.floor(Math.random()*friendNames.length)];
+                          } while (new_option1 == player || new_option1 == current_option0 || new_option1 == current_option1);
+                          current_option1 = new_option1;
+                          option1ele.innerHTML = new_option1;
+                          myform.option1.value = option1ele.innerHTML;
+                        }
+                        
+                        
                         myform.option1.value = option1ele.innerHTML;
                         coinsLeft = coinsNum - costPerShuffle;
                         coinele.innerHTML = coinsLeft.toString();
 
-                        timesleft = parseInt(timesleftele.innerHTML);
-                        timesleft = timesleft - 1;
-                        if (timesleft == 0){
-                          timeleftbigele = document.getElementById("timesleftbig");
-                          timeleftbigele.parentNode.removeChild(timeleftbigele);
-                          shufflebtn.style.visibility = 'hidden';
-                        }else{
-                          timesleftele.innerHTML = timesleft.toString();
-                        }
+                        // timesleft = parseInt(timesleftele.innerHTML);
+                        // timesleft = timesleft - 1;
+                        // if (timesleft == 0){
+                        //   timeleftbigele = document.getElementById("timesleftbig");
+                        //   timeleftbigele.parentNode.removeChild(timeleftbigele);
+                        //   shufflebtn.style.visibility = 'hidden';
+                        // }else{
+                        //   timesleftele.innerHTML = timesleft.toString();
+                        // }
 
                         var myXHR = new XMLHttpRequest();
                         myXHR.open("POST", "/shuffle_people" + "?tester=" + player + "&coinsLeft=" + coinele.innerHTML);
