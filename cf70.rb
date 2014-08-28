@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "192.168.1.47"
+IP = "192.168.1.89"
 
 GAME_CYCLE = 600
 REFILL = 480
@@ -511,6 +511,7 @@ post '/choose_answer' do
   session[:bettingleft] = (@@coins[session[:tester]] < PLAY_MAX_BET)? @@coins[session[:tester]] : PLAY_MAX_BET
 
   # fb_friends : [{name: "Albert Lin", closeness: 23}, {name: "Tim Lin", closeness: 20}]
+  puts "options are %s, %s" % [session[:option0], session[:option1]]
   friend0 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option0]}
   friend1 = @@fb_friends[session[:tester]].select{|frd| frd["name"] == session[:option1]}
   if friend0 == nil or friend1 == nil

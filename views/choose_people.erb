@@ -75,7 +75,6 @@
     <div class="container marketing">
 
   <!-- <h1>Records</h1> -->
-
   <div class="row">
     <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
@@ -108,12 +107,12 @@
             <b><center><font size="5pt">這樣的對戰組合你滿意嗎?</font></center></b>
           </br>
             <div>
-            <center><font size="5pt"><div id="option0"><%=@initial_first%>
+            <center><font size="5pt"><span id="option0"><%=@initial_first%></span>
             <button id="shufflebtn" type="button" class="btn orange_button">換  </button>  </font></center></div>
 
             <center><font size="5pt" color="gray">vs</font></center>
        
-            <center><font size="5pt"><div id="option1"><%=@initial_second%>
+            <center><font size="5pt"><span id="option1"><%=@initial_second%></span>
              <button id="shufflebtn" type="button" class="btn orange_button">換</button></font></center></div>
             </div>
           </br>
