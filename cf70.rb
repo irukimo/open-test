@@ -96,26 +96,30 @@ end
 # format: [tester, question, chosen option, unchosen option]
 def self.initialize_record
 
-  @@tester_progress = Array.new(@@names.count, -1)
-  @@phone_number = Hash.new
+  # @@tester_progress = Array.new(@@names.count, -1)
+  # @@phone_number = Hash.new
+
+  # @@unlocked = Hash.new
+  # @@others_comments = Hash.new
+  # @@energy_left = Hash.new
+  # @@last_time_modified = Hash.new
+  # @@gems = Hash.new
+  # @@use_gems = Hash.new
+  # prng = Random.new(1234)
+  # @@score = Array.new(@@names.count){|i|Array.new(@@questions.count,prng.rand(2))}
 
   @@questions_left = Hash.new
-  # @@energy_left = Hash.new
   @@started_playing = Hash.new
   @@threads = Hash.new
-  @@last_time_modified = Hash.new
   @@coins = Hash.new
-  @@unlocked = Hash.new
-  @@others_comments = Hash.new
-
+  
   @@level = Hash.new
   @@progress = Hash.new
-  @@gems = Hash.new
+  
   @@unlocked_uuid_index = Hash.new
-  @@data_to_w_r = ["categories", "score_buffer","logged_in","view_report","unlock_someone", 
-                   "play_others","play_answer","view_rankings","use_gems","wins", "losses", 
-                   "level", "progress", "gems", "unlocked_uuid_index", "coins", "record", 
-                   "unlocked"]
+  @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","unlock_someone", 
+                   "play_others","play_answer","view_rankings","wins", "losses", "threads", 
+                   "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names"]
   @@wins = Hash.new
   @@losses = Hash.new
 
@@ -123,16 +127,13 @@ def self.initialize_record
   @@play_others = Hash.new
   @@play_answer = Hash.new
   @@view_rankings = Hash.new
-  @@use_gems = Hash.new
+  
   @@unlock_someone = Hash.new
   @@logged_in = Hash.new
-
   @@score_buffer = Hash.new
 
   @@record = Array.new 
-  prng = Random.new(1234)
-  @@score = Array.new(@@names.count){|i|Array.new(@@questions.count,prng.rand(2))}
-
+  
   @@librarian = Librarian.new(@@names)
 
   @@friends = Hash.new
@@ -165,14 +166,14 @@ def self.initilize_variables
     @@level[name] = 1
     # @@energy_left[name] = ENERGY_CAPACITY
     @@progress[name] = 0
-    @@gems[name] = 0
+    # @@gems[name] = 0
     @@wins[name] = 0
     @@losses[name] = 0
     @@view_report[name] = Array.new
     @@play_others[name] = Array.new
     @@play_answer[name] = Array.new
     @@view_rankings[name] = Array.new
-    @@use_gems[name] = Array.new
+    # @@use_gems[name] = Array.new
     @@unlock_someone[name] = Array.new
     @@logged_in[name] = Array.new
     @@friends[name] = Array.new
@@ -220,14 +221,14 @@ def add_new_player
     if @@level[name] == nil then @@level[name] = 1 end
     # if @@energy_left[name] == nil then @@energy_left[name] = ENERGY_CAPACITY end
     if @@progress[name] == nil then @@progress[name] = 0 end
-    if @@gems[name] == nil then @@gems[name] = 0 end
+    # if @@gems[name] == nil then @@gems[name] = 0 end
     if @@wins[name] == nil then @@wins[name] = 0 end
     if @@losses[name] == nil then @@losses[name] = 0 end
     if @@view_report[name] == nil then @@view_report[name] = Array.new end
     if @@play_others[name] == nil then @@play_others[name] = Array.new end
     if @@play_answer[name] == nil then @@play_answer[name] = Array.new end
     if @@view_rankings[name] == nil then @@view_rankings[name] = Array.new end
-    if @@use_gems[name] == nil then @@use_gems[name] = Array.new end
+    # if @@use_gems[name] == nil then @@use_gems[name] = Array.new end
     if @@unlock_someone[name] == nil then @@unlock_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
     if @@friends[name] == nil then @@friends[name] = Array.new end
@@ -560,17 +561,17 @@ post '/level_up' do
   @@level[session[:tester]] += 1
   xp_needed = get_XP_needed(session[:tester])
   @@progress[session[:tester]] = (100*(xp_to_add.to_f/xp_needed.to_f)).floor
-  @@gems[session[:tester]] =  @@gems[session[:tester]] + 1
+  # @@gems[session[:tester]] =  @@gems[session[:tester]] + 1
   @@coins[session[:tester]] += 200
   erb :level_up
 end
 
 post '/refill' do
-  @@use_gems[session[:tester]] << Time.now
+  # @@use_gems[session[:tester]] << Time.now
 
   session[:tester] = params[:tester]
   # @@energy_left[session[:tester]] = ENERGY_CAPACITY
-  @@gems[session[:tester]] = @@gems[session[:tester]] - 1
+  # @@gems[session[:tester]] = @@gems[session[:tester]] - 1
   redirect to('/home'), 307
 end
 
@@ -834,11 +835,11 @@ post '/result' do
 
       if quiz["displayed"] != true
         
-        if quiz["bet"] > 0
+        # if quiz["bet"] > 0
           # tester, question, bet, correctness
-          @@librarian.record_notification(tester, quiz["question"], 2 * quiz["bet"], 
-                                          session[:correct_history][index] == "true")
-        end
+        #   @@librarian.record_notification(tester, quiz["question"], 2 * quiz["bet"], 
+        #                                   session[:correct_history][index] == "true")
+        # end
 
         quiz["displayed"] = true
       end
@@ -899,120 +900,120 @@ route :get, :post, '/rankings' do
   erb :rankings
 end
 
-post '/start' do
-  # if @@energy_left[session[:tester]] > 0
-  #    @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
-  #    if @@energy_left[session[:tester]] == 4
-  #       Thread.kill(@@threads[session[:tester]])
-  #       set_interval(REFILL, session[:tester])
-  #    end
-  # end
-  @@questions_left[session[:tester]] = 5
-  @current_tester = session[:tester]
-  #if @@questions_left[session[:tester]] == nil
-  #    @@questions_left[session[:tester]] = 10;
-  #    @@last_played[session[:tester]] = Time.now
-  #end
+# post '/start' do
+#   # if @@energy_left[session[:tester]] > 0
+#   #    @@energy_left[session[:tester]] = @@energy_left[session[:tester]] - 1
+#   #    if @@energy_left[session[:tester]] == 4
+#   #       Thread.kill(@@threads[session[:tester]])
+#   #       set_interval(REFILL, session[:tester])
+#   #    end
+#   # end
+#   @@questions_left[session[:tester]] = 5
+#   @current_tester = session[:tester]
+#   #if @@questions_left[session[:tester]] == nil
+#   #    @@questions_left[session[:tester]] = 10;
+#   #    @@last_played[session[:tester]] = Time.now
+#   #end
 
 
-  #if session[:stage] == "tel"
-  #  session[:stage] = nil
-  #  if (@@phone_number[@current_tester] == nil) or 
-  #     (params[:skip] != "yes")
+#   #if session[:stage] == "tel"
+#   #  session[:stage] = nil
+#   #  if (@@phone_number[@current_tester] == nil) or 
+#   #     (params[:skip] != "yes")
 
-  #    phone_number = params[:phone_number]
+#   #    phone_number = params[:phone_number]
 
-  #    @@client.account.messages.create(
-  #      :from => '+17183955452',
-  #      :to => phone_number,
-  #      :body => 'Welcome, %s! Ready to play the game? :-)' % @current_tester
-  #    )
+#   #    @@client.account.messages.create(
+#   #      :from => '+17183955452',
+#   #      :to => phone_number,
+#   #      :body => 'Welcome, %s! Ready to play the game? :-)' % @current_tester
+#   #    )
 
-  #    @@phone_number[@current_tester] = phone_number  
-  #  end
-  #end
+#   #    @@phone_number[@current_tester] = phone_number  
+#   #  end
+#   #end
 
-  name_index = @@names.index(@current_tester)
-  if @@tester_progress[name_index] != -1
-    @current_question = @@questions[@@tester_progress[name_index]]
+#   name_index = @@names.index(@current_tester)
+#   if @@tester_progress[name_index] != -1
+#     @current_question = @@questions[@@tester_progress[name_index]]
     
-  else
-    @current_question = @@questions.sample
-    question_index = @@questions.index(@current_question)
-    @@tester_progress[name_index] = question_index
+#   else
+#     @current_question = @@questions.sample
+#     question_index = @@questions.index(@current_question)
+#     @@tester_progress[name_index] = question_index
   
-  end
+#   end
 
-  if session[:option0] and session[:option1]
-    @current_options = [session[:option0], session[:option1]]
-  else
-    @current_options = (@@names - [@current_tester]).sample(2)  
-  end
+#   if session[:option0] and session[:option1]
+#     @current_options = [session[:option0], session[:option1]]
+#   else
+#     @current_options = (@@names - [@current_tester]).sample(2)  
+#   end
 
-  session[:question] = @current_question
-  session[:option0] = @current_options[0]
-  session[:option1] = @current_options[1]
-  name_index_0 = @@names.index(@current_options[0])
-  name_index_1 = @@names.index(@current_options[1])
-  current_question_index = @@questions.index(@current_question)
-  @option_0_vote = @@score[name_index_0][current_question_index]
-  @option_1_vote = @@score[name_index_1][current_question_index]
+#   session[:question] = @current_question
+#   session[:option0] = @current_options[0]
+#   session[:option1] = @current_options[1]
+#   name_index_0 = @@names.index(@current_options[0])
+#   name_index_1 = @@names.index(@current_options[1])
+#   current_question_index = @@questions.index(@current_question)
+#   @option_0_vote = @@score[name_index_0][current_question_index]
+#   @option_1_vote = @@score[name_index_1][current_question_index]
 
 
-  if @@questions_left[session[:tester]] == 0
-    @@questions_left[session[:tester]] = nil
-    redirect to('/lobby'), 307
-  else
-    erb :question
-  end
-end
+#   if @@questions_left[session[:tester]] == 0
+#     @@questions_left[session[:tester]] = nil
+#     redirect to('/lobby'), 307
+#   else
+#     erb :question
+#   end
+# end
 
-post '/next' do
-  @@questions_left[session[:tester]] = @@questions_left[session[:tester]] -1
+# post '/next' do
+#   @@questions_left[session[:tester]] = @@questions_left[session[:tester]] -1
   
-  prev_options = [session[:option0], session[:option1]]
-  prev_question = session[:question]
-  @current_tester = session[:tester]
+#   prev_options = [session[:option0], session[:option1]]
+#   prev_question = session[:question]
+#   @current_tester = session[:tester]
   
-  answer = params[:chosenName]
-  #unanswer = (prev_options[0] == answer) ? prev_options[1] : prev_options[0]
+#   answer = params[:chosenName]
+#   #unanswer = (prev_options[0] == answer) ? prev_options[1] : prev_options[0]
 
-  # record the result
-  @@record << [@current_tester, prev_question, answer, prev_options[0], prev_options[1], Time.now]
+#   # record the result
+#   @@record << [@current_tester, prev_question, answer, prev_options[0], prev_options[1], Time.now]
 
-  subject_index = @@names.index(answer)
-  if subject_index != nil
-    question_index = @@questions.index(prev_question)
-    if question_index != nil
-      @@score[subject_index][question_index] += 1
-    end
-  end
+#   subject_index = @@names.index(answer)
+#   # if subject_index != nil
+#   #   question_index = @@questions.index(prev_question)
+#   #   if question_index != nil
+#   #     @@score[subject_index][question_index] += 1
+#   #   end
+#   # end
 
-  new_index = @@questions.index(prev_question) + 1
-  new_index = 0 if new_index >= (@@questions.count)
+#   new_index = @@questions.index(prev_question) + 1
+#   new_index = 0 if new_index >= (@@questions.count)
 
-  @current_question = @@questions[new_index]
-  name_index = @@names.index(@current_tester)
-  @@tester_progress[name_index] = new_index
-  @current_options = (@@names - [@current_tester]).sample(2)
+#   @current_question = @@questions[new_index]
+#   name_index = @@names.index(@current_tester)
+#   @@tester_progress[name_index] = new_index
+#   @current_options = (@@names - [@current_tester]).sample(2)
 
-  session[:question] = @current_question
-  session[:option0] = @current_options[0]
-  session[:option1] = @current_options[1]
-  name_index_0 = @@names.index(@current_options[0])
-  name_index_1 = @@names.index(@current_options[1])
-  current_question_index = @@questions.index(@current_question)
-  @option_0_vote = @@score[name_index_0][current_question_index]
-  @option_1_vote = @@score[name_index_1][current_question_index]
+#   session[:question] = @current_question
+#   session[:option0] = @current_options[0]
+#   session[:option1] = @current_options[1]
+#   name_index_0 = @@names.index(@current_options[0])
+#   name_index_1 = @@names.index(@current_options[1])
+#   current_question_index = @@questions.index(@current_question)
+#   # @option_0_vote = @@score[name_index_0][current_question_index]
+#   # @option_1_vote = @@score[name_index_1][current_question_index]
   
-  if @@questions_left[session[:tester]] == 0
-    @@questions_left[session[:tester]] = nil
-    @@coins[session[:tester]] = @@coins[session[:tester]] + 10
-    redirect to('/lobby'), 307
-  else   
-    erb :question
-  end
-end
+#   if @@questions_left[session[:tester]] == 0
+#     @@questions_left[session[:tester]] = nil
+#     @@coins[session[:tester]] = @@coins[session[:tester]] + 10
+#     redirect to('/lobby'), 307
+#   else   
+#     erb :question
+#   end
+# end
 
 post "/unlockGuesser" do
   # puts "unlock guesser: " + params[:uuid]
@@ -1146,23 +1147,23 @@ def collect_contributors name
   return contributors.uniq
 end
 
-get '/score' do
-  name = params[:name]
-  name_index = @@names.index(name)
+# get '/score' do
+#   name = params[:name]
+#   name_index = @@names.index(name)
   
-  @p_score = Array.new
-  @@score[name_index].each_with_index do |number, index| 
-    @p_score << [index, number]
-  end
-  @p_score.sort!{ |a, b|
-    b[1] <=> a[1]
-  }
+#   @p_score = Array.new
+#   @@score[name_index].each_with_index do |number, index| 
+#     @p_score << [index, number]
+#   end
+#   @p_score.sort!{ |a, b|
+#     b[1] <=> a[1]
+#   }
 
-  @contributors = collect_contributors(name)
-  @name = name
+#   @contributors = collect_contributors(name)
+#   @name = name
 
-  erb :score
-end
+#   erb :score
+# end
 
 get '/record' do
   erb :record

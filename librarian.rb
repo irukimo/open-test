@@ -22,8 +22,8 @@
 class Librarian
 
   def initialize all_names
-    @data_to_record = ["notifications", "records", "bundles", "bundles_played"]
-    @notifications = Hash.new
+    @data_to_record = ["records", "bundles", "bundles_played"]
+    # @notifications = Hash.new
     @records = Hash.new
     @bundles = Hash.new
     @bundles_played = Hash.new
@@ -53,7 +53,7 @@ class Librarian
 
   def initialize_for_a_player name
     # @unlocked_guesser_uuid[name] = Array.new if @unlocked_guesser_uuid[name] == nil
-    @notifications[name] = Array.new if @notifications[name] == nil
+    # @notifications[name] = Array.new if @notifications[name] == nil
     @records[name] = Array.new if @records[name] == nil
     @bundles[name] = Array.new if @bundles[name] == nil
     @bundles_played[name] = Array.new if @bundles_played[name] == nil
@@ -76,15 +76,15 @@ class Librarian
   end
 
   # return notification for tester
-  def get_notification tester
-    ret = Array.new(@notifications[tester])
-    @notifications[tester] = Array.new
-    return ret
-  end
+  # def get_notification tester
+  #   ret = Array.new(@notifications[tester])
+  #   @notifications[tester] = Array.new
+  #   return ret
+  # end
 
-  def record_notification(tester, question, bet, correctness)
-    @notifications[tester] << [question, bet, correctness]
-  end
+  # def record_notification(tester, question, bet, correctness)
+  #   @notifications[tester] << [question, bet, correctness]
+  # end
 
   # def unlock_guesser(tester, uuid)
   #   @unlocked_guesser_uuid[tester] = Array.new if @unlocked_guesser_uuid[tester] == nil
