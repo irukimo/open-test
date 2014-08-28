@@ -47,7 +47,7 @@
       font-size: 12pt;
       min-width: 306px;
       max-width: 653px;
-      min-height: 400px;
+      min-height: 220px;
     }
 
     .col-xs-6{
@@ -57,6 +57,7 @@
 
     #select_frd{
       padding-left: 20px;
+
     }
     </style>
 
@@ -104,17 +105,23 @@
     <div id="red_background" class="col-xs-11 col-md-7">
 
 </br>
-            <b><center><font size="5pt">請比較...</font></center></b>
+            <b><center><font size="5pt">這樣的對戰組合你滿意嗎?</font></center></b>
           </br>
-            <center><font size="5pt"><div id="option0"><%=@initial_first%></div></font></center>
-            <center><font size="3pt" color="gray">vs</font></center>
-            <center><font size="5pt"><div id="option1"><%=@initial_second%></div></font></center>
+            <div>
+            <center><font size="5pt"><div id="option0"><%=@initial_first%>
+            <button id="shufflebtn" type="button" class="btn orange_button">換  </button>  </font></center></div>
+
+            <center><font size="5pt" color="gray">vs</font></center>
+       
+            <center><font size="5pt"><div id="option1"><%=@initial_second%>
+             <button id="shufflebtn" type="button" class="btn orange_button">換</button></font></center></div>
+            </div>
           </br>
           <!-- <div class="row"> -->
             <center>
               <div class="col-xs-6 col-md-6">
-                  <button id="shufflebtn" type="button" class="btn orange_button"><span class="glyphicon glyphicon-random"></span>  換朋友<img src="/img/coinnew.png" alt="Smiley face" width="33" height="33">30</button>    
-                  <div id="timesleftbig">還有<div id="timesleft">3</div>次</div><br>
+                  <button id="shufflebtn" type="button" class="btn orange_button">全換</button>    
+                  <div> 換一次10<img src="coinicon.png"></div><br>
               </div>
               <div id="select_frd" class="col-xs-6 col-md-5">
                   <button id="select-friends-btn" class="btn pink_button btn-lg btn-block" onclick="selectFriends()">選更多朋友!</button>

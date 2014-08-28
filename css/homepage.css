@@ -262,10 +262,22 @@
       font-size: 20px;
     }
 
-    .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
+    .orangecircle{
+      background: #ffa23f;
+      width: 50px;
+      height:50px;
+      border-radius: 50px;
       color:#FFFFFF;
+      font-size: 20px;
     }
 
+.orangecircle:focus, .green_button:focus, .orange_button:focus, .grass_green_button:focus{
+   color:#FFFFFF;
+    }
+    
+    .orangecircle:hover, .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
+      color:#FFFFFF;
+    }
 
 
     .grass_green_button{
