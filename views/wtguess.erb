@@ -65,7 +65,7 @@
 
   <style>
       #red_background{
-      background: #caecfa;
+      /*background: #caecfa;*/
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -86,8 +86,14 @@
           padding-top: 10px;
           padding-bottom: 10px;
           background-color: rgba(255,255,255,.0);
-          border: 1px dashed rgba(0,0,0,.4);
-
+          /*border: 1px dashed rgba(0,0,0,.4);*/
+          padding-left: 0px;
+          padding-right: 0px;
+          margin-right: 0px;
+      }
+      .col-xs-12, .col-sm-12{
+        padding-left: 4px;
+        padding-right: 0px;
       }
   </style>
 <!-- NAVBAR
@@ -105,29 +111,30 @@
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
 
-    </br>
+    
     <b><center><font size="12pt" color="#1c5979">猜一下</font></center></b>
-    <b><font color=#585858 size="5pt">除了比朋友之外，也可以猜朋友的想法哦！</font></b>
-  </br>
+    <br>
+    <b><font color=#585858 size="5pt">第二種是猜朋友的想法！</font></b>
+  </br><br>
 
 <div class="container my-container">
 
    <div class="col-xs-12 col-sm-12"><font size="5pt" color="#5a76cd">
-  <div id="questionid"><b>你猜周杰倫選了誰？</b></div></font>
+  <div id="questionid"><b>猜你的朋友柯P選了誰？</b></div></font>
 </div>
 
  <div class="col-xs-12 col-sm-12"><font size="5pt">
-  <div id="questionid">Q：誰有過於常人的智慧？</div>
+  <div id="questionid">Q: 誰有過於常人的智慧？</div>
 </div>
 </br>
 
                 <form id="nextform" role="form" action="wtprofile" method="get">    
-                </br></br></br>
+                  <br><br>
                  <div class="col-xs-6 col-md-6">
-                  <p><button id="option0btn" class="btn blue_button btn-lg btn-block" name="answer" value="<%=session[:option0]%>">雞排妹</button></p>
+                  <p><button id="option0btn" class="btn blue_button btn-lg btn-block" name="answer" value="<%=session[:option0]%>">豆花妹</button></p>
                  </div>
                  <div class="col-xs-6 col-md-6">
-                    <p><button id="option1btn" class="btn blue_button btn-lg btn-block" name="answer" value="<%=session[:option1]%>">豆花妹</button></p>
+                    <p><button id="option1btn" class="btn blue_button btn-lg btn-block" name="answer" value="<%=session[:option1]%>">雞排妹</button></p>
                 </div>
               <center>
                     </form>

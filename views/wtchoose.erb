@@ -65,7 +65,7 @@
 
   <style>
       #red_background{
-      background: #d9fdd6;
+      /*background: #d9fdd6;*/
       border-radius: 5px;
       height: 100px;
       margin-top: 7px;
@@ -86,8 +86,15 @@
           padding-top: 10px;
           padding-bottom: 10px;
           background-color: rgba(255,255,255,.0);
-          border: 1px dashed rgba(0,0,0,.4);
+          /*border: 1px dashed rgba(0,0,0,.4);*/
+          padding-left: 0px;
+          padding-right: 0px;
+          margin-left: 0px;
+          margin-right: 0px;
+      }
 
+      .col-xs-12, .col-sm-12{
+        padding-left: 7px;
       }
   </style>
 <!-- NAVBAR
@@ -105,25 +112,26 @@
  <div class="row">
     <div id="red_background" class="col-xs-11 col-md-7">
 
-    </br>
+    
     <b><center><font size="12pt" color="#1a754b">比一下</font></center></b>
-    <b><font color=#585858 size="5pt">歡迎！</br>覺得小叮噹跟馬英九如何？比一下吧！</font></b>
-  </br>
+    <br>
+    <b><font color=#585858 size="5pt">遊戲分成兩種模式，第一種是比一下你的兩個朋友</font></b>
+  </br><br>
 
 <div class="container my-container">
 
  <div class="col-xs-12 col-sm-12"><font size="5pt">
-  <div id="questionid">Q：誰在菜市場殺價最猛？</div>
+  <div id="questionid">Q: 誰在菜市場殺價最猛？</div>
 </div>
 
 
                 <form id="nextform" role="form" action="wtguess" method="get">    
-                </br></br></br>
+                <br><br>
                  <div class="col-xs-6 col-md-6">
-                  <p><button id="option0btn" class="btn grass_green_button btn-lg btn-block" name="answer" value="<%=session[:option0]%>">小叮噹</button></p>
+                  <p><button id="option0btn" class="btn grass_green_button btn-lg btn-block" name="answer" value="<%=session[:option0]%>">豬哥亮</button></p>
                  </div>
                  <div class="col-xs-6 col-md-6">
-                    <p><button id="option1btn" class="btn grass_green_button btn-lg btn-block" name="answer" value="<%=session[:option1]%>">馬英九</button></p>
+                    <p><button id="option1btn" class="btn grass_green_button btn-lg btn-block" name="answer" value="<%=session[:option1]%>">小S</button></p>
                 </div>
               <center>
                     </form>

@@ -240,28 +240,32 @@
         猜一下
     </div>
   </div>
-<%@parcel_array.each do |parcel|%>
-  <%quiz = parcel[1][0]%>
-  <%btnid = "button" + parcel[0]%>
-  <div class="row">
-    <div id="yellow_background" class="col-xs-11 col-md-7">
-      <div class="col-xs-8 col-md-7">
-      <b><span class="compare_author"><%=parcel[3]%></span></b>剛剛比了<b><span class="compare_option"><%=quiz["option0"]%></span></b>跟<b><span class="compare_option"><%=quiz["option1"]%></span></b>
-      </div>
-      <div class="col-xs-3 col-md-3">
-        <font onmouseover="" style="cursor: pointer;">
-          <button id="<%=btnid%>" class="orange_small_circle" name="uuid" value="<%=parcel[0]%>">去猜</button>
-        </font>
-      </div>
-    </div>
-  </div>
-  <script type="text/javascript">
-    //<![CDATA[
-       new guessButton("<%=btnid%>","<%=parcel[0]%>","<%=@@coins[session[:tester]]%>");
-    //]]>
-  </script>
+<%if @parcel_array.count != 0%>
+    <div id="news_section">
+        <%@parcel_array.each do |parcel|%>
+          <%quiz = parcel[1][0]%>
+          <%btnid = "button" + parcel[0]%>
+          <div class="row">
+            <div id="yellow_background" class="col-xs-11 col-md-7">
+              <div class="col-xs-8 col-md-7">
+              <b><span class="compare_author"><%=parcel[3]%></span></b>剛剛比了<b><span class="compare_option"><%=quiz["option0"]%></span></b>跟<b><span class="compare_option"><%=quiz["option1"]%></span></b>
+              </div>
+              <div class="col-xs-3 col-md-3">
+                <font onmouseover="" style="cursor: pointer;">
+                  <button id="<%=btnid%>" class="orange_small_circle" name="uuid" value="<%=parcel[0]%>">去猜</button>
+                </font>
+              </div>
+            </div>
+          </div>
+          <script type="text/javascript">
+            //<![CDATA[
+               new guessButton("<%=btnid%>","<%=parcel[0]%>","<%=@@coins[session[:tester]]%>");
+            //]]>
+          </script>
 
-  <%end%>
+        <%end%>
+    </div><!-- news_section -->
+<%end%>
 
 </div>
 

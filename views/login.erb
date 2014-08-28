@@ -18,6 +18,14 @@
     background: #25211C;
    
   }
+  #description{
+    line-height: 130%;
+  }
+  #s-description{
+    color: #FFFFFF;
+    line-height: 130%;
+    font-size: 12pt;
+  }
   </style>
   <script>
   var appId = '610309559054620';
@@ -37,16 +45,18 @@
 -->
 <div class="jumbotron gradient-color">
   <font color="white">
-    <br>
   <center>
   <img src="/img/logo.png" width="200">
-  <br>
+  <br><br>
+  <div id="description"><b><center>快來測試你</br>了不了解你的朋友們！</font></center></b></div>
   <br>
   <!--<div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>-->
   <!-- <button onclick="next();">next</button>
   <button onclick="FB.logout();">log out</button>-->
-  <img id="fb-login-btn" src="/img/facebookLogin.png" onclick="tryLogin();">
   <div id="status">
+  <img id="fb-login-btn" src="/img/facebookLogin.png" onclick="tryLogin();">
+  <br>
+  <div id="s-description"><b><center>別擔心，我們絕不會在你的facebook上po文或送出邀請！</font></center></b></div>
   </div>
   </center>  
   </font>
@@ -62,7 +72,7 @@
 
   <script>
     function next(){
-      window.location.href = "/wtstart";
+      window.location.href = "/wtchoose";
     }
     function tryLogin(){
       redirectPage = "<%=URL%>";
@@ -158,7 +168,7 @@
                     console.log("logged in before");
                     window.location.href = "/home";
                   } else {
-                    window.location.href = "/wtstart";
+                    window.location.href = "/wtchoose";
                   }
         });
       });

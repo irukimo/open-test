@@ -377,7 +377,7 @@ window.fbAsyncInit = function() {
                                 return;
                              }
                              if (this.status == 200) {
-                                questionele.innerHTML = this.responseText;
+                                questionele.innerHTML = "Q："+this.responseText;
                                 myform.question.value = questionele.innerHTML;
                                 console.log(questionele.innerHTML);
                                 return;
