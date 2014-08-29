@@ -335,7 +335,7 @@ post '/hasLoggedIn' do
 
     Thread.new{  
       graph = Koala::Facebook::API.new(token)
-      @@fb_friends[tester] = graph.get_connections("me", "friends") 
+      @@fb_friends[tester] = graph.get_connections("me", "friends", {"locale"=>"zh_TW"}) 
       puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
     }
     status 200

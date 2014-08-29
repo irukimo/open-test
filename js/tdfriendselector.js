@@ -31,7 +31,7 @@ var TDFriendSelector = (function(module, $) {
 		settings = {
 			speed                    : 500,
 			debug                    : false,
-			textSelect               : 'select233',
+			textSelect               : 'select',
 			disabledClass            : 'TDFriendSelector_disabled',
 			friendSelectedClass      : 'TDFriendSelector_friendSelected',
 			friendDisabledClass      : 'TDFriendSelector_friendDisabled',
