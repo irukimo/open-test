@@ -271,6 +271,7 @@
   <form style="display: hidden" action="choose_people" method="POST" id="resubimt">
     <input type="hidden" name="categ" value="<%=session[:categ]%>"/>
     <input type="hidden" name="addedMore" value="true"/>
+    <input id="number" type="hidden" name="number" value="0"/>
   </form>
 
     <!-- Bootstrap core JavaScript
@@ -304,6 +305,7 @@
           url: "<%=URL + '/moreFriendNames'%>",
           data: { selectedFriendNames:selectedFriendNames},
           success: function( data ) {
+            $("#number").val(selectedFriendNames.length);
             $("#resubimt").submit();
           }
         });
@@ -317,7 +319,7 @@
         callbackMaxSelection     : callbackMaxSelection,
         callbackSubmit           : callbackSubmit,
         maxSelection             : 6,
-        minSelection             : 2,
+        minSelection             : 0,
         friendsPerPage           : 5,
         autoDeselection          : false
       });

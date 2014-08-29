@@ -374,8 +374,9 @@ post '/choose_people' do
   #       set_interval(REFILL, session[:tester])
   #    end
   # end
-  if params[:addedMore]
-    @initial_first, @initial_second = @@friends[tester].slice(-5,5).sample(2)
+  if params[:addedMore] == "true" and params[:number].to_i > 2
+    number = params[:number].to_i
+    @initial_first, @initial_second = @@friends[tester].slice(-number, number).sample(2)
   else
     @initial_first, @initial_second = @@friends[tester].sample(2)
   end
