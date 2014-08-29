@@ -126,6 +126,7 @@ var TDFriendSelector = (function(module, $) {
 		// Default settings
 		instanceSettings = {
 			maxSelection             : 4,
+			minSelection             : 1,
 			friendsPerPage           : 10,
 			autoDeselection          : false, // Allow the user to keep on selecting once they reach maxSelection, and just deselect the first selected friend
 			filterCharacters         : 1, // Set to 3 if you would like the filter to only run after the user has typed 3 or more chars
@@ -248,8 +249,8 @@ var TDFriendSelector = (function(module, $) {
 
 			$buttonOK.bind('click', function(e) {
 				e.preventDefault();
-				if (selectedFriendIds.length != instanceSettings.maxSelection) {
-					alert("請選" + instanceSettings.maxSelection + "位朋友！");
+				if (selectedFriendIds.length < instanceSettings.minSelection) {
+					alert("請選至少" + instanceSettings.minSelection + "位朋友！");
 				} else {
 					hideFriendSelector();
 					if (typeof instanceSettings.callbackSubmit === "function") { 
@@ -299,8 +300,8 @@ var TDFriendSelector = (function(module, $) {
 				if (e.which === 13) {
 					// The enter key has the same effect as the OK button
 					e.preventDefault();
-					if (selectedFriendIds.length != instanceSettings.maxSelection) {
-						alert("請選" + instanceSettings.maxSelection + "位朋友！");
+					if (selectedFriendIds.length < instanceSettings.minSelection) {
+						alert("請選至少" + instanceSettings.minSelection + "位朋友！");
 					} else {
 						e.stopPropagation();
 						hideFriendSelector();
