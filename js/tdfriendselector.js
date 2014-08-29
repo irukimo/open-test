@@ -500,11 +500,9 @@ var TDFriendSelector = (function(module, $) {
 
 				friends.forEach(function(elem, index, array){
 					en_name = findSameID(en_friends, elem["id"]);
+					elem["ch_name"] = elem["name"];
 					if (en_name != elem["name"]) {
-						elem["ch_name"] = elem["name"];
 						elem["name"] += " (" + en_name + ")";
-						
-						console.log(elem["name"]);
 					}
 				});
 
@@ -531,6 +529,7 @@ var TDFriendSelector = (function(module, $) {
 
 		// Return the markup for a single friend
 		buildFriendMarkup = function(friend) {
+
 			return '<a href="#" class="TDFriendSelector_friend TDFriendSelector_clearfix touch_on" data-id="' + friend.id + '" data-name="' + friend.ch_name + '">' +
 					'<img src="//graph.facebook.com/' + friend.id + '/picture?type=square" width="50" height="50" alt="' + friend.name + '" class="TDFriendSelector_friendAvatar" />' +
 					'<div class="TDFriendSelector_friendName">' + 
