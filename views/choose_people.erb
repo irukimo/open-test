@@ -46,7 +46,7 @@
       padding-right: 0px;
       font-size: 12pt;
       min-width: 306px;
-      max-width: 653px;
+      max-width: 500px;
       min-height: 220px;
     }
 
@@ -76,6 +76,7 @@
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
     <div class="container marketing">
+
   <!-- <h1>Records</h1> -->
   <div class="row">
     <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
@@ -120,30 +121,35 @@
           </br>
           <!-- <div class="row"> -->
             <center>
-              <div class="col-xs-6 col-md-6">
+              <!-- <div class="col-xs-6 col-md-6"> -->
                   <button id="shufflebtn" type="button" class="btn orange_button">全換</button>    
                   <div> 換一次<img src="/img/coinnew.png" alt="Smiley face" width="25" height="25">10</div><br>
-              </div>
+              <!-- </div> -->
+            </center>
+
+            <br>
               <div id="select_frd" class="col-xs-6 col-md-5">
-                  <button id="select-friends-btn" class="btn pink_button btn-lg btn-block" onclick="selectFriends()">選更多朋友!</button>
+                  <button id="select-friends-btn" class="btn pink_button btn-block" onclick="selectFriends()">選更多朋友!</button>
                   <span id="status"></span>
               </div>
-            </center>
+            
           <!-- </div> -->
             
-              </br></br></br>
-              <form id="people_form" class="form-horizontal" role="form" action="choose_answer" method="post">
+          <form id="people_form" class="form-horizontal" role="form" action="choose_answer" method="post">
                   <input type="hidden" name="option0" value=""> 
                   <input type="hidden" name="option1" value=""> 
-
-            <center><button type="submit" class="btn btn-block green_button">下一步<span class="glyphicon glyphicon-chevron-right"></span></button></center>
           </form>
+              <div id="select_frd" class="col-xs-6 col-md-5">
+                  <center><button class="btn btn-block green_button" onclick="nextClicked()">下一步<span class="glyphicon glyphicon-chevron-right"></span></button></center>
+              </div>
+          
       </div>
   </div>
 </div><!-- /.container -->
 
       <script type="text/JavaScript">
                  //<![CDATA[
+
                     var myform = document.forms["people_form"];
                     var option0ele = document.getElementById("option0");
                     var option1ele = document.getElementById("option1");
@@ -162,10 +168,22 @@
                     shuffle_option0_btn.onclick = function(){shuffle_func(0);}
                     shuffle_option1_btn.onclick = function(){shuffle_func(1);}
                     shufflebtn.onclick = function(){shuffle_func(3);}
+
+                    var nextClicked = function(){
+                        if(friendNames.length < 2){
+                            alert("可以選的朋友不夠多哦...\n請選擇幾個朋友來玩吧！");
+                            return;
+                        }
+                        myform.submit();
+                    }
+
                     var shuffle_func = function(option){
                         var coinsNum = parseInt(coinele.innerHTML);
                         if(coinsNum < costPerShuffle){
-                          alert("sorry... not enough coins...");
+                          alert("金幣不夠了...");
+                          return;
+                        }
+                        if(friendNames.length < 3){
                           return;
                         }
                         current_option0 = option0ele.innerHTML;
@@ -227,7 +245,7 @@
       <div class="TDFriendSelector_dialog">
         <div class="TDFriendSelector_form">
           <div class="TDFriendSelector_header">
-            <p>選朋友一起來玩！</p>
+            <p>選想要出現在遊戲裡的朋友</p>
           </div>
           <div class="TDFriendSelector_content">
             <p>選你想要出現在遊戲裡的5位朋友們:-D 別擔心，這不會送出任何邀請！</p>
