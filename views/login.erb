@@ -48,16 +48,16 @@
   <center>
   <img src="/img/logo.png" width="200">
   <br><br>
-  <div id="description"><b><center>快來測試你</br>了不了解你的朋友們！</font></center></b></div>
+  <div id="description"><b><center>快來測試你了不了解</br>你的朋友們！</font></center></b></div>
   <br>
   <!--<div id="fb-login-btn" class="fb-login-button" data-max-rows="10" data-size="xlarge" data-show-faces="false" scope="public_profile,email" onlogin="checkLoginState();"></div>-->
   <!-- <button onclick="next();">next</button>
   <button onclick="FB.logout();">log out</button>-->
-  <div id="status">
+  <div id="status"></div>
   <img id="fb-login-btn" src="/img/facebookLogin.png" onclick="tryLogin();">
   <br>
   <div id="s-description"><b><center>別擔心，我們絕不會在你的facebook上po文或送出邀請！</font></center></b></div>
-  </div>
+  
   </center>  
   </font>
 </div>
@@ -159,6 +159,7 @@
         $("#fb-login-btn").remove();
         document.getElementById('status').innerHTML =
           '歡迎, ' + response.name + '!' + '<br>' + '請稍等...';
+        document.getElementById('status').style.color = '#FFFFFF';
 
         $.post("<%=URL + '/hasLoggedIn'%>",
                 {name: response.name, token: token}, 
