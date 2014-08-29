@@ -11,7 +11,7 @@ var TDFriendSelector = (function(module, $) {
 	var init, setFriends, getFriends, getFriendById, newInstance,
 
 	// Private variables
-	settings, friends, me,
+	settings, friends, en_friends, ch_friends, me,
 	$friends, $container, $friendsContainer, $searchField, $selectedCount, $selectedCountMax, $pageNumber, $pageNumberTotal, $pagePrev, $pageNext, $buttonClose, $buttonOK,
 
 	// Private functions
@@ -257,8 +257,9 @@ var TDFriendSelector = (function(module, $) {
 						friends.forEach(function(elem){
 							delete elem["upperCaseName"];
 							id = elem.id;
-							name = elem.name;
+							name = elem.ch_name;
 							delete elem["name"];
+							delete elem["ch_name"];
 							delete elem["id"];
 							delete elem["closeness"];
 							elem[id] = name;
@@ -309,8 +310,9 @@ var TDFriendSelector = (function(module, $) {
 							friends.forEach(function(elem){
 								delete elem["upperCaseName"];
 								id = elem.id;
-								name = elem.name;
+								name = elem.ch_name;
 								delete elem["name"];
+								delete elem["ch_name"];
 								delete elem["id"];
 								delete elem["closeness"];
 								elem[id] = name;
@@ -457,26 +459,64 @@ var TDFriendSelector = (function(module, $) {
 
 		// Check that the user is logged in to Facebook
 		FB.getLoginStatus(function(response) {
+			var loadNameBarrier = new CallbackBarrier();
 			if (response.status === 'connected') {
 				// Load Facebook friends
+				
+				loadNameBarrier.setBarrier();
 				FB.api('/me/friends?locale=zh_TW&fields=id,name', function(response) {
 					if (response.data) {
-						setFriends(response.data, function(){
-								// Build the markup
-							buildMarkup();
-							// Call the callback
-							if (typeof callback === 'function') { callback(); }
-						});
-						
+						ch_friends = response.data;
+						loadNameBarrier.tryCallback();
 					} else {
 						log('TDFriendSelector - buildFriendSelector - No friends returned');
 						return false;
 					}
 				});
-			} else {
-				log('TDFriendSelector - buildFriendSelector - User is not logged in to Facebook');
-				return false;
+				
+				loadNameBarrier.setBarrier();
+				FB.api('/me/friends?locale=en_US&fields=id,name', function(response) {
+					if (response.data) {
+						en_friends = response.data;
+						loadNameBarrier.tryCallback();
+					} else {
+						log('TDFriendSelector - buildFriendSelector - No friends returned');
+						return false;
+					}
+				});
 			}
+
+			loadNameBarrier.finalize(function(){
+				friends = ch_friends;
+
+				function findSameID(array, id){
+					for (var i = 0; i < array.length; i++){
+						if (array[i]["id"] == id){
+							return array[i]["name"];
+							break;
+						}
+					}
+				};
+
+				friends.forEach(function(elem, index, array){
+					en_name = findSameID(en_friends, elem["id"]);
+					if (en_name != elem["name"]) {
+						elem["ch_name"] = elem["name"];
+						elem["name"] += " (" + en_name + ")";
+						
+						console.log(elem["name"]);
+					}
+				});
+
+				for (i = 0, len = friends.length; i < len; i += 1) {
+					friends[i].upperCaseName = friends[i].name.toUpperCase();
+				}
+
+				// Build the markup
+				buildMarkup();
+				// Call the callback
+				if (typeof callback === 'function') { callback(); }
+			});
 		});
 
 		// Build the markup of the friend selector
@@ -491,7 +531,7 @@ var TDFriendSelector = (function(module, $) {
 
 		// Return the markup for a single friend
 		buildFriendMarkup = function(friend) {
-			return '<a href="#" class="TDFriendSelector_friend TDFriendSelector_clearfix touch_on" data-id="' + friend.id + '" data-name="' + friend.name + '">' +
+			return '<a href="#" class="TDFriendSelector_friend TDFriendSelector_clearfix touch_on" data-id="' + friend.id + '" data-name="' + friend.ch_name + '">' +
 					'<img src="//graph.facebook.com/' + friend.id + '/picture?type=square" width="50" height="50" alt="' + friend.name + '" class="TDFriendSelector_friendAvatar" />' +
 					'<div class="TDFriendSelector_friendName">' + 
 						'<span>' + friend.name + '</span>' +
@@ -506,43 +546,43 @@ var TDFriendSelector = (function(module, $) {
 	 * @param  {id, name} input    [description]
 	 * @return {id, name} friends  in the order of number of mutual friends
 	 */
-	sortFriends = function(input, callback) {
-		FB.api('/me?locale=zh_TW', function (resp) {
-			myID = resp.id;
-			me = resp.name;
-      console.log('my ID: ' + myID);
-      var barrier = new CallbackBarrier();
-       console.log(input);
-			for (var i in input) {
-				if (i > 0) {
-					input[i].closeness = 0;
-					continue;
-				}
-				(function(i) {
-					friendID = input[i].id;
-					barrier.setBarrier();
+	// sortFriends = function(input, callback) {
+	// 	FB.api('/me?locale=zh_TW', function (resp) {
+	// 		myID = resp.id;
+	// 		me = resp.name;
+ //      console.log('my ID: ' + myID);
+ //      var barrier = new CallbackBarrier();
+ //       console.log(input);
+	// 		for (var i in input) {
+	// 			if (i > 0) {
+	// 				input[i].closeness = 0;
+	// 				continue;
+	// 			}
+	// 			(function(i) {
+	// 				friendID = input[i].id;
+	// 				barrier.setBarrier();
 
-					FB.api(
-		        "/" + myID + "/mutualfriends/" + friendID,
-		        function (response) {
-		          if (response && !response.error) {
-		            /* handle the result */
-		            input[i].closeness = response.data.length;
-		            // console.log("name: " + input[i].name + " closeness: " + input[i].closeness);
-		            barrier.tryCallback();
-		          }
-		      });
-				})(i);
-			}
+	// 				FB.api(
+	// 	        "/" + myID + "/mutualfriends/" + friendID,
+	// 	        function (response) {
+	// 	          if (response && !response.error) {
+	// 	            /* handle the result */
+	// 	            input[i].closeness = response.data.length;
+	// 	            // console.log("name: " + input[i].name + " closeness: " + input[i].closeness);
+	// 	            barrier.tryCallback();
+	// 	          }
+	// 	      });
+	// 			})(i);
+	// 		}
 
-			barrier.finalize(function(){
-			  console.log("all the callbacks executed.");
-			  input = input.sort(sortByCloseness);
-			  friends = input;
-			  callback();
-			});
-		}); 
-	};
+	// 		barrier.finalize(function(){
+	// 		  console.log("all the callbacks executed.");
+	// 		  input = input.sort(sortByCloseness);
+	// 		  friends = input;
+	// 		  callback();
+	// 		});
+	// 	}); 
+	// };
 
 	sortByCloseness = function(friend1, friend2) {
 		if (friend1.closeness === friend2.closeness) { return 0; }
