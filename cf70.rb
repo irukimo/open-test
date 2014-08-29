@@ -241,11 +241,15 @@ post '/moreFriendNames' do
   selected_friend_names = params["selectedFriendNames"]
   tester = session[:tester]
   
-  @@friends[tester] += selected_friend_names
-  @@friends[tester].uniq!
-  
-  @@names += selected_friend_names
-  add_new_player
+  puts "in moreFriendNames, tester: " + tester
+
+  if selected_friend_names != nil
+    @@friends[tester] += selected_friend_names
+    @@friends[tester].uniq!
+    
+    @@names += selected_friend_names
+    add_new_player
+  end
 end
 
 post '/friendNames' do
