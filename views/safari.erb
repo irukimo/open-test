@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/RadarChart.js"></script>
+    <script src="js/WTPentagon.js"></script>
+
+    <title><%=TITLE%></title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
+
+  </head>
+
+
+    //global variables
+
+
+
+
+  <style>
+      
+  </style>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+  <!-- <h1>Records</h1> -->
+ <div class="row">
+    <div id="red_background" class="col-xs-11 col-md-7" onclick="nextpage()">
+      <br><br><br><br>
+<b><a href="http://www.w3schools.com" target="_blank">變化喔！</a></font></b><br>
+<br><br><br>
+    <b><a href="/js/machi.mobileconfig" target="_blank">在玩遊戲的同時，朋友的形象也因為你的選擇而變化喔！</a></font></b>
+  </br><br><br>
+
+  <div id="foz" data-href="/js/machi.mobileconfig">Google</div>
+
+     <script type="text/JavaScript">
+    //<![CDATA[
+
+  document.getElementById("foz").addEventListener("click", function(evt) {
+    var a = document.createElement('a');
+    a.setAttribute("href", this.getAttribute("data-href"));
+    a.setAttribute("target", "_blank");
+
+    var dispatch = document.createEvent("HTMLEvents");
+    dispatch.initEvent("click", true, true);
+    a.dispatchEvent(dispatch);
+}, false);
+    
+    //]]>
+    </script>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+  </body>
+</html>
