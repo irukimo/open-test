@@ -294,17 +294,7 @@ route :get, :post, '/home' do
   puts "At home, tester: " + session[:tester]
   @@logged_in[session[:tester]] << Time.now
 
-  # add players that are tester's FB friends to tester's friends list
-  fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
-  (@@names - [session[:tester]]).each do |name|
-    puts "try to add: " + name
-    if @@logged_in[name] != nil and @@logged_in[name].count > 0 and fb_friend_names.include? name
-      puts "%s is friends of %s on FB" % [name, session[:tester]]
-      unless @@friends[session[:tester]].include? name
-        @@friends[session[:tester]] << name
-      end
-    end
-  end
+  
 
   #question, bet(Integer), correctness(BOOL)
   # @notifications = @@librarian.get_notification session[:tester]
@@ -355,6 +345,26 @@ post '/choose_people' do
   session[:categ] = params[:categ]
   tester = session[:tester]
   @@play_answer[tester] << Time.now
+
+  # add players that are tester's FB friends to tester's friends list
+  fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+  (@@names - [tester]).each do |name|
+    puts "try to add: " + name
+    if @@logged_in[name] != nil and @@logged_in[name].count > 0 and fb_friend_names.include? name
+      puts "%s is friends of %s on FB" % [name, tester]
+      @@friends[tester] << name unless @@friends[tester].include? name
+    end
+
+    # add names that are tester's FB friends and also options of other players to tester's friend list
+    @@friends[name].each do |frd|
+      next if frd == tester
+      puts "try to add: " + frd
+      if fb_friend_names.include? frd
+        puts "%s is friends of %s on FB" % [frd, tester]
+        @@friends[tester] << frd unless @@friends[tester].include? frd
+      end
+    end
+  end
 
 
   # if @@energy_left[session[:tester]] > 0
