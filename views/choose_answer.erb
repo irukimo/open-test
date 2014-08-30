@@ -29,7 +29,7 @@
   ga('send', 'pageview');
 
 
-  
+
 
 // Mobile Safari in standalone mode
 if(("standalone" in window.navigator) && window.navigator.standalone){
@@ -339,6 +339,20 @@ function invitefrd(option0_id,option1_id){
     title: '邀請你！',
     message: '喲呼！快來玩玩麻吉大學！',
   });
+
+  var myXHR = new XMLHttpRequest();
+  myXHR.open("POST", "/invite_people" + "?tester=" + player);
+  myXHR.onreadystatechange = function() {
+       if (this.readyState != 4) {
+          return;
+       }
+       if (this.status == 200) {
+          return;
+       } else {
+         console.log("error occurred!");
+       }
+   }
+   myXHR.send();
 }
 
 window.fbAsyncInit = function() {

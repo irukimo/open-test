@@ -117,9 +117,10 @@ def self.initialize_record
   @@progress = Hash.new
   
   @@unlocked_uuid_index = Hash.new
-  @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","unlock_someone", 
+  @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
                    "play_others","play_answer","view_rankings","wins", "losses", "threads", 
-                   "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names"]
+                   "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names", "choose_categ",
+                   "view_others_report","invite_someone", "add_friends"]
   @@wins = Hash.new
   @@losses = Hash.new
 
@@ -128,9 +129,13 @@ def self.initialize_record
   @@play_answer = Hash.new
   @@view_rankings = Hash.new
   
-  @@unlock_someone = Hash.new
+  @@shuffle_someone = Hash.new
+  @@invite_someone = Hash.new
   @@logged_in = Hash.new
   @@score_buffer = Hash.new
+  @@choose_categ = Hash.new
+  @@view_others_report = Hash.new
+  @@add_friends = Hash.new
 
   @@record = Array.new 
   
@@ -174,10 +179,14 @@ def self.initilize_variables
     @@play_answer[name] = Array.new
     @@view_rankings[name] = Array.new
     # @@use_gems[name] = Array.new
-    @@unlock_someone[name] = Array.new
+    @@shuffle_someone[name] = Array.new
+    @@invite_someone[name] = Array.new
     @@logged_in[name] = Array.new
     @@friends[name] = Array.new
     @@fb_friends[name] = Array.new
+    @@choose_categ[name] = Array.new
+    @@view_others_report[name] = Array.new
+    @@add_friends[name] = Array.new
   end
 end
 
@@ -229,10 +238,12 @@ def add_new_player
     if @@play_answer[name] == nil then @@play_answer[name] = Array.new end
     if @@view_rankings[name] == nil then @@view_rankings[name] = Array.new end
     # if @@use_gems[name] == nil then @@use_gems[name] = Array.new end
-    if @@unlock_someone[name] == nil then @@unlock_someone[name] = Array.new end
+    if @@shuffle_someone[name] == nil then @@shuffle_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
     if @@friends[name] == nil then @@friends[name] = Array.new end
     if @@fb_friends[name] == nil then @@fb_friends[name] = Array.new end
+    if @@choose_categ[name] == nil then @@fb_friends[name] = Array.new end
+    if @@view_others_report[name] == nil then @@fb_friends[name] = Array.new end
     @@librarian.add_player name
   end
 end
@@ -240,6 +251,12 @@ end
 post '/moreFriendNames' do
   selected_friend_names = params["selectedFriendNames"]
   tester = session[:tester]
+
+  add_friend_record = Array.new
+  add_friend_record << @@friends[tester].count
+  add_friend_record << selected_friend_names.count
+  add_friend_record << Time.now
+  @@add_friends[tester] << add_friend_record
   
   puts "in moreFriendNames, tester: " + tester
 
@@ -348,7 +365,11 @@ end
 post '/choose_people' do
   session[:categ] = params[:categ]
   tester = session[:tester]
-  @@play_answer[tester] << Time.now
+  
+  categ_record = Array.new
+  categ_record << session[:categ]
+  categ_record << Time.now
+  @@choose_categ[session[:tester]] << categ_record
 
   # add players that are tester's FB friends to tester's friends list
   fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
@@ -481,7 +502,7 @@ route :get, :post, '/view_my_report' do
 end
 
 post '/choose_answer' do
-
+  @@play_answer[session[:tester]] << Time.now
   if session[:choose] == nil
     session[:choose] = 1
     session[:bundle] = Array.new
@@ -646,7 +667,14 @@ def sec_to_units seconds
 end
 
 def view_report(name)
-    @@view_report[name] << Time.now
+    if name == session[:tester]
+        @@view_report[name] << Time.now
+    else
+        view_others_report_record = Array.new
+        view_others_report_record << name
+        view_others_report_record << Time.now
+        @@view_others_report[name] << view_others_report_record
+    end
 
     @my_questions = @@librarian.get_questions_of(name)
 
@@ -1063,8 +1091,15 @@ post "/unlock" do
 end
 
 post "/shuffle_people" do
-  @@unlock_someone[session[:tester]] << Time.now
+  @@shuffle_someone[session[:tester]] << Time.now
   @@coins[session[:tester]] = params[:coinsLeft].to_i
+  
+  status 200
+  body ''
+end
+
+post "/invite_people" do
+  @@invite_someone[session[:tester]] << Time.now
   
   status 200
   body ''
