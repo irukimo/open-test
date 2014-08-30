@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "192.168.1.89"
+IP = "192.168.1.103"
 
 GAME_CYCLE = 600
 REFILL = 480
@@ -242,8 +242,8 @@ def add_new_player
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
     if @@friends[name] == nil then @@friends[name] = Array.new end
     if @@fb_friends[name] == nil then @@fb_friends[name] = Array.new end
-    if @@choose_categ[name] == nil then @@fb_friends[name] = Array.new end
-    if @@view_others_report[name] == nil then @@fb_friends[name] = Array.new end
+    if @@choose_categ[name] == nil then @@choose_categ[name] = Array.new end
+    if @@view_others_report[name] == nil then @@view_others_report[name] = Array.new end
     @@librarian.add_player name
   end
 end
