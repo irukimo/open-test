@@ -342,19 +342,11 @@ post '/hasLoggedIn' do
   tester = params["name"]
   puts "in hasLoggedIn, " + tester
   session[:tester] = tester
-  @@names << params["name"] unless @@names.include? params["name"]
-
-  add_new_player
-  token = params["token"]
+  
+  session[:fb_token] = params["token"]
   puts "token: " + params["token"]
 
   if @@logged_in[tester] == nil or @@logged_in[tester].count == 0
-
-    Thread.new{  
-      graph = Koala::Facebook::API.new(token)
-      @@fb_friends[tester] = graph.get_connections("me", "friends", {"locale"=>"zh_TW"}) 
-      puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
-    }
     status 200
     body 'false'
   else
@@ -442,14 +434,7 @@ get '/' do
   clear_session
   puts "logging in!"
   logged_in = false
-  # if params["code"] != nil and params["error"] == nil
-  #   session[:fb_code] = params["code"]
-  #   # connected, not_authorized
-  #   session[:fb_status] = "connected"
-  #   puts "FB connected"
-  #   logged_in = true
-  # end
-
+  
   if logged_in
     erb :wtstart
   else
@@ -871,20 +856,74 @@ end
 def generate_invitation_code
   num_digits = MAX_INVITATION_CODE.to_s.size - 1
   code = rand(MAX_INVITATION_CODE).to_s.rjust(num_digits, '0')
-  while @@invite_codes.values.flatten.index(code) != nil
+  while @@invite_codes.values.flatten(1).map{|v| v[0]}.index(code) != nil
     code = rand(MAX_INVITATION_CODE).to_s.rjust(num_digits, '0')
   end
   return code
+end
+
+get '/enter_code' do
+  erb :enter_code
+end
+
+post '/receive_code' do
+  puts "code: " + params["code"]
+  success = false
+  code = params["code"]
+  found = @@invite_codes.select{|inviter, codes| codes.map{|v| v[0]}.include? code}
+  # code does not exist
+  if found.count == 0
+    @msg = "Code does not exist"
+  elsif found.count > 1
+    @msg = "Duplicate codes exist"
+  else
+    inviter = found.keys[0]
+    found.values[0].each do |code_status|
+      if code_status[0] == code
+        # the code has been used before
+        if code_status[1] == true
+          @msg = "The code of which inviter is %s has been used before" % inviter
+        # the code has not been used. Now use it
+        else
+          tester = session[:tester]
+          @@names << tester unless @@names.include? tester
+
+          add_new_player
+          token  = session[:fb_token]
+
+          if @@fb_friends[tester] == nil or @@fb_friends[tester].count == 0
+            Thread.new{
+              graph = Koala::Facebook::API.new(token)
+              @@fb_friends[tester] = graph.get_connections("me", "friends", {"locale"=>"zh_TW"})
+              puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
+            }
+          end
+
+          code_status[1] = true
+          success = true
+          @msg = "Welcome! %s invited you;D" % inviter
+        end
+        break # since we found the code already
+      end
+    end    
+  end
+  if success
+    erb :invite_success
+  else
+    erb :invite_failure
+  end
 end
 
 get '/invitation' do
   tester = session[:tester]
   @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
   (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
-    @@invite_codes[tester] << generate_invitation_code
+    # [code, has_used]
+    @@invite_codes[tester] << [generate_invitation_code, false]
   end
 
-  @codes = @@invite_codes[tester]
+  puts @@invite_codes[tester].inspect
+  @codes = @@invite_codes[tester].map{|v| v[0]}
 
   erb :invitation
 end
