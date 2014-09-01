@@ -249,7 +249,7 @@ def add_new_player
     if @@choose_categ[name] == nil then @@choose_categ[name] = Array.new end
     if @@view_others_report[name] == nil then @@view_others_report[name] = Array.new end
     if @@invite_codes[name] == nil then @@invite_codes[name] = Array.new end
-      
+    if @@add_friends[name] == nil then @@add_friends[name] = Array.new end
     @@librarian.add_player name
   end
 end
