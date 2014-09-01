@@ -307,32 +307,49 @@ route :get, :post, '/home' do
     puts "**ERROR**: Wrong entry point"
     redirect to('/'), 307
   end
+  
+  tester = session[:tester]
 
-  if @@fb_friends[session[:tester]] == nil
-    puts "ERROR: fb_friends of %s is nil" % session[:tester]
-  elsif @@fb_friends[session[:tester]].count == 0
-    puts "ERROR: fb_friends of %s is empty" % session[:tester]
+  if @@fb_friends[tester] == nil
+    puts "ERROR: fb_friends of %s is nil" % tester
+  elsif @@fb_friends[tester].count == 0
+    puts "ERROR: fb_friends of %s is empty" % tester
   end
     
-  if @@started_playing[session[:tester]] == nil
-    # set_interval(REFILL, session[:tester])
-    @@started_playing[session[:tester]] = TRUE
+  if @@started_playing[tester] == nil
+    # set_interval(REFILL, tester)
+    @@started_playing[tester] = TRUE
   end
-  puts "At home, tester: " + session[:tester]
-  @@logged_in[session[:tester]] << Time.now
+  puts "At home, tester: " + tester
+  @@logged_in[tester] << Time.now
 
   
 
   #question, bet(Integer), correctness(BOOL)
-  # @notifications = @@librarian.get_notification session[:tester]
+  # @notifications = @@librarian.get_notification tester
 
   clear_session
 
-  view_report(session[:tester])
-  @name = session[:tester]
+  view_report(tester)
+  @name = tester
 
   fb_friend_names = @@fb_friends[@name].map{|elem| elem["name"]}
   @parcel_array = @@librarian.get_parcels_for_guess(5, @name, nil, @@friends[@name], fb_friend_names)
+
+  @fromWalkthrough = false
+  if params["from"] == "walkthrough"
+    
+    @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
+    (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
+      # [code, has_used]
+      @@invite_codes[tester] << [generate_invitation_code, false]
+    end
+    puts "From walkthrough"
+    puts @@invite_codes[tester].inspect
+    @codes = @@invite_codes[tester].map{|v| v[0]}
+
+    @fromWalkthrough = true
+  end
 
   erb :home
 end
