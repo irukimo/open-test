@@ -18,8 +18,10 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "192.168.1.103"
-
+IP = "192.168.1.10"
+# number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
+MAX_INVITATION_CODE = 100000
+NUMBER_INVITATION_CODE = 3
 GAME_CYCLE = 600
 REFILL = 480
 ENERGY_CAPACITY = 5
@@ -143,6 +145,7 @@ def self.initialize_record
 
   @@friends = Hash.new
   @@fb_friends = Hash.new
+  @@invite_codes = Hash.new
 end
 
 # def self.initialize_independent_urls
@@ -187,6 +190,7 @@ def self.initilize_variables
     @@choose_categ[name] = Array.new
     @@view_others_report[name] = Array.new
     @@add_friends[name] = Array.new
+    @@invite_codes[name] = Array.new
   end
 end
 
@@ -244,6 +248,8 @@ def add_new_player
     if @@fb_friends[name] == nil then @@fb_friends[name] = Array.new end
     if @@choose_categ[name] == nil then @@choose_categ[name] = Array.new end
     if @@view_others_report[name] == nil then @@view_others_report[name] = Array.new end
+    if @@invite_codes[name] == nil then @@invite_codes[name] = Array.new end
+      
     @@librarian.add_player name
   end
 end
@@ -859,6 +865,28 @@ post '/guess' do
   @answer = session[:bundle][session[:round]-1]["answer"]
   session[:bettingleft] = (@@coins[session[:tester]] < GUESS_MAX_BET)? @@coins[session[:tester]] : GUESS_MAX_BET
   erb :guess
+end
+
+# the output is a string
+def generate_invitation_code
+  num_digits = MAX_INVITATION_CODE.to_s.size - 1
+  code = rand(MAX_INVITATION_CODE).to_s.rjust(num_digits, '0')
+  while @@invite_codes.values.flatten.index(code) != nil
+    code = rand(MAX_INVITATION_CODE).to_s.rjust(num_digits, '0')
+  end
+  return code
+end
+
+get '/invitation' do
+  tester = session[:tester]
+  @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
+  (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
+    @@invite_codes[tester] << generate_invitation_code
+  end
+
+  @codes = @@invite_codes[tester]
+
+  erb :invitation
 end
 
 post '/result' do
