@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "192.168.1.10"
+# IP = "192.168.1.10"
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
 MAX_INVITATION_CODE = 100000
 NUMBER_INVITATION_CODE = 3
@@ -122,7 +122,7 @@ def self.initialize_record
   @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
                    "play_others","play_answer","view_rankings","wins", "losses", "threads", 
                    "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names", "choose_categ",
-                   "view_others_report","invite_someone", "add_friends"]
+                   "view_others_report","invite_someone", "add_friends", "invite_codes"]
   @@wins = Hash.new
   @@losses = Hash.new
 
@@ -198,8 +198,8 @@ end
 
 configure do
   puts "Configuring..."
-  URL = "http://%s:%s" % [IP, PORT.to_s]
-
+  # URL = "http://%s:%s" % [IP, PORT.to_s]
+  URL = "http://machi.yoursapp.cc"
   import_questions
   import_names
   initialize_record
@@ -339,7 +339,7 @@ route :get, :post, '/home' do
   # @fromWalkthrough = false
   # if params["from"] == "walkthrough"
     
-  @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
+  @@invite_codes[tester] = Array.new if @@invite_codes[tester] == nil
   (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
     # [code, has_used]
     @@invite_codes[tester] << [generate_invitation_code, false]
@@ -956,19 +956,6 @@ get '/invite_failure' do
   erb :invite_failure
 end
 
-get '/invitation' do
-  tester = session[:tester]
-  @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
-  (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
-    # [code, has_used]
-    @@invite_codes[tester] << [generate_invitation_code, false]
-  end
-
-  puts @@invite_codes[tester].inspect
-  @codes = @@invite_codes[tester].map{|v| v[0]}
-
-  erb :invitation
-end
 
 post '/result' do
   # for player-side betting
