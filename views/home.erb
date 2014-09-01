@@ -153,8 +153,91 @@
         padding-top: 5px;
         min-width: 316px;
       }
+      .ticket{
+        background-image: url('/img/ticket.png');
+        background-size: 70px 150px;
+        background-repeat: no-repeat;
+        background-position:absolute;
+        /*background-position: 15px 15px;*/
+        /* IE 9 */
+        -ms-transform: rotate(30deg); 
+        /* Chrome, Safari, Opera */
+        -webkit-transform: rotate(30deg); 
+        transform: rotate(30deg);
+        display: inline-block;
+        margin-left: 10px;
+        width: 70px;
+        height: 150px;
+        color:#000000;
+        padding-left: 15px;
+        line-height: 130%;
+        float: left;
+      }
+      .last_line{
+        line-height: 250%;
+      }
 
+    #medal_home_display{
+      background: #f54360;
+      background-image: url('/img/trophie.png');
+      background-size: 40px 40px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      background-position: 5px 5px;
+      border-radius: 100px;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      padding-left: 0px;
+      /*padding-right: 21px;*/
+      font-size: 18pt;
+      height: 50px;
+      width: 50px;
+      text-align: right;
+      line-height: 182%;
+    }
 
+    #ticket_display{
+      padding-top: 13px;
+      padding-left: 0px;
+      margin-left: 0px;
+    }
+
+    #level_home_display{
+      background: #FFFFFF;
+      border-radius: 100px;
+      border-width: 5px;
+      border-color: #ffa23f;
+      border-style: solid;
+      margin-top: 7px;
+      margin-left: 7px;
+      padding-bottom: 5px;
+      padding-left: 0px;
+      padding-right: 0px;
+      font-size: 7pt;
+      line-height: 158%;
+      height: 50px;
+      width: 50px;
+    }
+    #coin_home_display{
+      background-image: url('/img/coinsnew.png');
+      background-size: 136px 50px;
+      background-repeat: no-repeat;
+      background-position:center;
+      border-radius: 0px;
+      margin-top: 7px;
+      margin-left: 5px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      padding-left: 0px;
+      padding-right: 21px;
+      font-size: 18pt;
+      height: 50px;
+      width: 140px;
+      text-align: right;
+      line-height: 182%;
+    }
     </style>
 
   </head>
@@ -193,12 +276,15 @@
     </form>
 
   <div class="row">
-    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
-    <div id="medal_display" class="col-xs-6 col-sm-4" onclick="medalClicked()"><center>
+    <div id="level_home_display" class="col-xs-4 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
+    <div id="medal_home_display" class="col-xs-3 col-sm-4" onclick="medalClicked()"><center>
         <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
       </center>
     </div>
-    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
+    <div id="ticket_display" class="col-xs-2 col-sm-4" onclick = "ticketbtn()">
+      <img src="/img/tickethoriz.png" alt="Smiley face" width="60" height="35">
+    </div>
+    <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
   </div>
 
@@ -216,7 +302,7 @@
 
      <script type="text/JavaScript">
         //<![CDATA[
-          new level_progress("level_display","<%=@@progress[session[:tester]]%>");
+          new level_progress("level_home_display","<%=@@progress[session[:tester]]%>");
 
           var firstPentagon = [
               [
@@ -326,7 +412,7 @@
             green_background.style.marginLeft="120px";
             green_background.style.marginRight="100px";
             // blue_background.style.width="323px";
-            medal_display.style.marginRight="350px";
+            // medal_display.style.marginRight="350px";
             news_section.style.width = "585px";
             // name_display.style.width="380px";
             // name_display.style.marginLeft="80px";
@@ -366,6 +452,92 @@
 
 
     </div><!-- /.container -->
+
+
+
+
+
+
+    <!-- Button trigger modal -->
+<button id="messagebtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+        
+        你還有3張VIP入場卷！
+        <br><br><br>
+        <div class="col-xs-4 col-md-2">
+          <div class="ticket">
+            <br>
+            55210
+            <br><br><br><br><br>
+            <div class="last_line">
+              55210
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-md-2">
+          <div class="ticket">
+          <br>
+            17890
+            <br><br><br><br><br>
+            <div class="last_line">
+              17890
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 col-md-2">
+          <div class="ticket">
+            <br>
+            24521
+            <br><br><br><br><br>
+            <div class="last_line">
+              24521
+            </div>
+          </div>
+        </div>
+<br><br><br><br><br><br><br><br><br>
+        <b>什麼是VIP入場卷呢？</b><br>
+        你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
+        <br>
+        <b>為什麼這個遊戲要VIP入場卷？</b><br>
+        因為這個遊戲的初衷，就是要跟大家的好朋友們玩一個遊戲！所以你身為早期玩家，當然有特權邀請你的朋友囉！<br>
+        <br>
+        <b>我要怎麼使用VIP入場卷？</b><br>
+        告訴你的朋友一張VIP入場卷的號碼，他輸入後就可以進入遊戲啦！請注意，你只有三張入場卷，用完就沒啦！
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script type="text/javascript">
+  //<![CDATA[
+    var msgbtn = document.getElementById("messagebtn");
+    msgbtn.style.visibility='hidden';
+    if(true){
+      setTimeout(function(){ticketbtn()},0);
+    }
+    function ticketbtn(){
+      msgbtn.click()
+    }
+
+</script>
+
+
+
+
+
+
+
 
 
     <!-- Bootstrap core JavaScript

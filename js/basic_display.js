@@ -3,6 +3,6 @@ function level_progress(level_element_id, progress){
 	var progress = parseInt(progress);
 	var whitewidth = 100 - progress;
 	var imageText = (("linear-gradient(to bottom, #FFFFFF ").concat(whitewidth.toString())).concat("%,#ffc17f 0%)")
-	level_display.style.backgroundImage = imageText;
+	level_home_display.style.backgroundImage = imageText;
 }
 
