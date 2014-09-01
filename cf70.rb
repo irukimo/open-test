@@ -341,8 +341,8 @@ end
 post '/hasLoggedIn' do
   tester = params["name"]
   puts "in hasLoggedIn, " + tester
-  session[:tester] = tester
-  
+
+  session[:tester]   = tester
   session[:fb_token] = params["token"]
   puts "token: " + params["token"]
 
@@ -886,10 +886,10 @@ post '/receive_code' do
         # the code has not been used. Now use it
         else
           tester = session[:tester]
-          @@names << tester unless @@names.include? tester
-
-          add_new_player
           token  = session[:fb_token]
+
+          @@names << tester unless @@names.include? tester
+          add_new_player
 
           if @@fb_friends[tester] == nil or @@fb_friends[tester].count == 0
             Thread.new{
