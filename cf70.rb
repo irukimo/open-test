@@ -346,7 +346,7 @@ route :get, :post, '/home' do
   end
 
   puts @@invite_codes[tester].inspect
-  @codes = @@invite_codes[tester].map{|v| v[0]}
+  @codes = @@invite_codes[tester].select{|v| v[1]==false}.map{|v| v[0]}
 
 
   if session[:fromLogin] == "true"
@@ -950,8 +950,9 @@ get '/invite_failure' do
   fb_friends = graph.get_connections("me", "friends", {"locale"=>"zh_TW"})
   puts "Received %d FB friends for %s" % [fb_friends.count, tester]
 
-  @friends_who_play = @@logged_in.select{|key, val| val.count > 0}.keys & fb_friends.map{|val| val["name"]}
-
+  players = @@logged_in.select{|key, val| val.count > 0}.keys
+  @friends_who_play = fb_friends.select{|v| players.include? v["name"]}
+  # @friends_who_play = [{"name"=>"蕭文翔", "id"=> 220104}]
   erb :invite_failure
 end
 

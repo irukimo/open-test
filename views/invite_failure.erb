@@ -31,19 +31,40 @@
   ga('send', 'pageview');
     //]]>
     </script>
-
-    <style>
-      
-
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="css/homepage.css">
   </head>
 <!-- NAVBAR
 ================================================== -->
   <body>
   <br><br><br>
-  <p class="lead">You failed</p><br>
-  <%=@friends_who_play.join(', ')%>
+  <div class="container marketing">
+    <center>
+    <div class="row">
+      <div id="red_background" class="col-xs-18 col-md-12">      
+        <b><font size="12pt" color="#1c5979">登入失敗！</font></b>
+        <br><br>
+      </div>
+    </div>
+    <div class="row">
+      <b><font color=#585858 size="5pt">喔歐，你的邀請碼無效，要不要再確認一下呢？</font></b>
+      <br><br>
+      <form role="form" action="enter_code" method="get">   
+        <button class="btn btn-default green_button" type="submit">再試一次！</button>
+      </form>
+    </div><br><br>
+    <div class="row">
+      <font color=#585858 size="4pt">以下是你的朋友有加入遊戲的：</font><br>
+      
+      <%@friends_who_play.each do |frd|%>
+        <div class="col-xs-4 col-md-3">      
+          <img src="//graph.facebook.com/<%=frd["id"]%>/picture?type=square" width="60" height="60" /><br>
+          <font size="2"><%=frd["name"]%></font>
+        </div>
+      <%end%>
+    </div>
+    </center>
+  </div>
+  
 
 
 

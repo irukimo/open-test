@@ -28,6 +28,9 @@
           window.location.href = "/invite_failure";
         } else {
           console.log("code verified.");
+          $("#code").remove();
+          $("#codeBtn").remove();
+          $("#status").html("馬上進入遊戲！");
           alertify.alert("成功登入了！ 你接受了" + data + "的邀請！");
           setTimeout(function(){
             window.location.href = "/wtchoose";
@@ -69,7 +72,8 @@
       </br><br>
       <input type="text" style="width:100px;" id="code" name="code" placeholder="邀請碼">
       <br><br>
-      <button class="btn btn-default green_button" onclick="sendCode()">填好了！</button>
+      <button id="codeBtn" class="btn btn-default green_button" onclick="sendCode()">填好了！</button>
+      <span id="status"></span>
     </div>
     </center>
   </div>
