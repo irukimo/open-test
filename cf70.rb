@@ -307,7 +307,7 @@ route :get, :post, '/home' do
     puts "**ERROR**: Wrong entry point"
     redirect to('/'), 307
   end
-  
+
   tester = session[:tester]
 
   if @@fb_friends[tester] == nil
@@ -890,9 +890,10 @@ get '/enter_code' do
   erb :enter_code
 end
 
-post '/receive_code' do
+post '/sendCode' do
   puts "code: " + params["code"]
   success = false
+  inviter = nil
   code = params["code"]
   found = @@invite_codes.select{|inviter, codes| codes.map{|v| v[0]}.include? code}
   # code does not exist
@@ -931,11 +932,27 @@ post '/receive_code' do
       end
     end    
   end
+  puts "Verifying code: " + @msg
   if success
-    erb :invite_success
+    status 200
+    body inviter
   else
-    erb :invite_failure
+    status 200
+    body 'false'
   end
+end
+
+get '/invite_failure' do
+  tester = session[:tester]
+  token  = session[:fb_token]
+
+  graph = Koala::Facebook::API.new(token)
+  fb_friends = graph.get_connections("me", "friends", {"locale"=>"zh_TW"})
+  puts "Received %d FB friends for %s" % [fb_friends.count, tester]
+
+  @friends_who_play = @@logged_in.select{|key, val| val.count > 0}.keys & fb_friends.map{|val| val["name"]}
+
+  erb :invite_failure
 end
 
 get '/invitation' do
