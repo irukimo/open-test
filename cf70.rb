@@ -336,20 +336,27 @@ route :get, :post, '/home' do
   fb_friend_names = @@fb_friends[@name].map{|elem| elem["name"]}
   @parcel_array = @@librarian.get_parcels_for_guess(5, @name, nil, @@friends[@name], fb_friend_names)
 
-  @fromWalkthrough = false
-  if params["from"] == "walkthrough"
+  # @fromWalkthrough = false
+  # if params["from"] == "walkthrough"
     
-    @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
-    (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
-      # [code, has_used]
-      @@invite_codes[tester] << [generate_invitation_code, false]
-    end
-    puts "From walkthrough"
-    puts @@invite_codes[tester].inspect
-    @codes = @@invite_codes[tester].map{|v| v[0]}
-
-    @fromWalkthrough = true
+  @@invite_codes[tester] == Array.new if @@invite_codes[tester] == nil
+  (1..(NUMBER_INVITATION_CODE - @@invite_codes[tester].count)).each do |i|
+    # [code, has_used]
+    @@invite_codes[tester] << [generate_invitation_code, false]
   end
+
+  puts @@invite_codes[tester].inspect
+  @codes = @@invite_codes[tester].map{|v| v[0]}
+
+
+  if session[:fromLogin] == "true"
+    @fromLogin = "true"
+  else
+    @fromLogin = "false"
+  end
+  session[:fromLogin] = nil
+  # @fromWalkthrough = true
+  # end
 
   erb :home
 end
@@ -358,7 +365,7 @@ end
 post '/hasLoggedIn' do
   tester = params["name"]
   puts "in hasLoggedIn, " + tester
-
+  session[:fromLogin] = "true"
   session[:tester]   = tester
   session[:fb_token] = params["token"]
   puts "token: " + params["token"]

@@ -470,41 +470,50 @@
       <div class="modal-body">
 
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-
-        
-        你還有3張VIP入場卷！
-        <br><br><br>
-        <div class="col-xs-4 col-md-2">
-          <div class="ticket">
-            <br>
-            55210
-            <br><br><br><br><br>
-            <div class="last_line">
-              55210
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-4 col-md-2">
-          <div class="ticket">
-          <br>
-            17890
-            <br><br><br><br><br>
-            <div class="last_line">
-              17890
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-4 col-md-2">
-          <div class="ticket">
-            <br>
-            24521
-            <br><br><br><br><br>
-            <div class="last_line">
-              24521
-            </div>
-          </div>
-        </div>
-<br><br><br><br><br><br><br><br><br>
+        <%if @codes%>
+            你還有<%=@codes.count%>張VIP入場卷！
+            <br><br><br>
+            <% if @codes[0]%>
+                <div class="col-xs-4 col-md-2">
+                  <div class="ticket">
+                    <br>
+                    <%=@codes[0]%>
+                    <br><br><br><br><br>
+                    <div class="last_line">
+                      <%=@codes[0]%>
+                    </div>
+                  </div>
+                </div>
+            <%end%>
+            <% if @codes[1]%>
+                <div class="col-xs-4 col-md-2">
+                  <div class="ticket">
+                  <br>
+                    <%=@codes[1]%>
+                    <br><br><br><br><br>
+                    <div class="last_line">
+                      <%=@codes[1]%>
+                    </div>
+                  </div>
+                </div>
+            <%end%>
+            <% if @codes[2]%>
+                <div class="col-xs-4 col-md-2">
+                  <div class="ticket">
+                    <br>
+                    <%=@codes[2]%>
+                    <br><br><br><br><br>
+                    <div class="last_line">
+                      <%=@codes[2]%>
+                    </div>
+                  </div>
+                </div>
+            <%end%>
+            <br><br><br><br><br><br><br><br><br>
+          <%else%>
+            你已經沒有VIP入場卷了！
+            <br><br><br>
+          <%end%>
         <b>什麼是VIP入場卷呢？</b><br>
         你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
         <br>
@@ -523,7 +532,8 @@
   //<![CDATA[
     var msgbtn = document.getElementById("messagebtn");
     msgbtn.style.visibility='hidden';
-    if(true){
+    console.log(<%=@fromLogin%>);
+    if(<%=@fromLogin%> == true){
       setTimeout(function(){ticketbtn()},0);
     }
     function ticketbtn(){
