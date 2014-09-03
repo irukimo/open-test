@@ -10,7 +10,7 @@
     <script src="js/RadarChart.js"></script>
     <script src="js/WTPentagon.js"></script>
     <script src="js/basic_display.js"></script>
-
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <title><%=TITLE%></title>
 
     <!-- Bootstrap core CSS -->
@@ -22,7 +22,6 @@
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
  
-
     <script type="text/JavaScript">
     //<![CDATA[
     //global variables
@@ -453,7 +452,47 @@
 
     </div><!-- /.container -->
 
+<!-- Button trigger modal -->
+<button id="vipBtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">關閉</span></button>
+        <%if @codes%>
+          恭喜！你晉升成為VIP了！
+          <br><br><br>
+          <% if @vip_code%>
+              <div class="col-xs-4 col-md-2">
+                <div class="ticket">
+                  <br>
+                  <%=@vip_code%>
+                  <br><br><br><br><br>
+                  <div class="last_line">
+                    <%=@vip_code%>
+                  </div>
+                </div>
+              </div>
+          <%end%>
+          <br><br><br><br><br><br><br><br><br>
+        <%end%>
+        <b>什麼是VIP入場卷呢？</b><br>
+        你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
+        <br>
+        <b>為什麼這個遊戲要VIP入場卷？</b><br>
+        因為這個遊戲的初衷，就是要跟大家的好朋友們玩一個遊戲！所以你身為早期玩家，當然有特權邀請你的朋友囉！<br>
+        <br>
+        <b>我要怎麼使用VIP入場卷？</b><br>
+        告訴你的朋友一張VIP入場卷的號碼，他輸入後就可以進入遊戲啦！請注意，你只有三張入場卷，用完就沒啦！
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -532,13 +571,21 @@
   //<![CDATA[
     var msgbtn = document.getElementById("messagebtn");
     msgbtn.style.visibility='hidden';
+    $("#vipBtn").hide();
+
     console.log(<%=@fromLogin%>);
+
     if(<%=@fromLogin%> == true){
-      setTimeout(function(){ticketbtn()},0);
+      if(<%=@show_vip_code%> == true) {
+        setTimeout(function(){
+          $("#vipBtn").click();}, 0);
+      } else {
+        setTimeout(function(){ticketbtn()},0);
+      }
     }
     function ticketbtn(){
-      msgbtn.click()
-    }
+      msgbtn.click();
+    }    
 
 </script>
 
@@ -555,7 +602,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
   </body>
 </html>

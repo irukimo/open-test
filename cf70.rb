@@ -360,6 +360,11 @@ route :get, :post, '/home' do
   # @fromWalkthrough = true
   # end
 
+  if @@vip_codes[tester] != nil
+    @show_vip_code = true
+    @vip_code = @@vip_codes[tester]["code"]
+  end
+
   erb :home
 end
 
@@ -843,6 +848,13 @@ get '/process_vip' do
 
     @@vip_codes[vip] = {"code"=> generate_vip_code, "times"=> 0} if @@vip_codes[vip] == nil
     puts "VIP codes:" + @@vip_codes.inspect
+  end
+
+  File.open("vip_code.txt", 'w') do |file|
+    file.write "VIP Code(s):\n"
+    @@vip_codes.each do |name, val|
+      file.write "%s -> code: %s, times: %s\n" % [name, val["code"], val["times"]]
+    end
   end
 end
 
