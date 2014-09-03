@@ -280,7 +280,7 @@
         <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
       </center>
     </div>
-    <div id="ticket_display" class="col-xs-2 col-sm-4" onclick = "ticketbtn()">
+    <div id="ticket_display" class="col-xs-2 col-sm-4">
       <img src="/img/tickethoriz.png" alt="Smiley face" width="60" height="35">
     </div>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
@@ -453,12 +453,12 @@
     </div><!-- /.container -->
 
 <!-- Button trigger modal -->
-<button id="vipBtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+<button id="vipBtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#vip_code">
   Launch demo modal
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="vip_code" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -496,12 +496,12 @@
 
 
     <!-- Button trigger modal -->
-<button id="messagebtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+<button id="messagebtn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#invite_code">
   Launch demo modal
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="invite_code" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -578,11 +578,20 @@
         setTimeout(function(){
           $("#vipBtn").click();}, 0);
       } else {
-        setTimeout(function(){ticketbtn()},0);
+        setTimeout(function(){
+          msgbtn.click();},0);
       }
     }
-    function ticketbtn(){
-      msgbtn.click();
+
+    if(<%=@show_vip_code%> == true) {
+      $("#ticket_display").on("click", function(){
+        $("#vipBtn").click();
+      });
+
+    } else {
+      $("#ticket_display").on("click", function(){
+        msgbtn.click();
+      });
     }
 
 </script>
