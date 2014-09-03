@@ -303,6 +303,7 @@ route :get, :post, '/home' do
 
       @@friends[tester] = ["Henry", "David", "Peter"]
       @@fb_friends[tester] = [{"name"=> "Henry"}, {"name"=> "David"}, {"name"=> "Peter"}]
+      add_new_player
     end
 
   elsif params["name"] == nil and session[:tester] == nil
@@ -442,7 +443,15 @@ post '/choose_people' do
 end
 
 def are_fb_friends(a, b)
-  return @@fb_friends[a].index{|elem| elem["name"] == b} != nil
+  if @@fb_friends[a] == nil
+    if @@fb_friends[b] == nil
+      return false
+    else
+      return @@fb_friends[b].index{|elem| elem["name"] == a} != nil
+    end
+  else
+    return @@fb_friends[a].index{|elem| elem["name"] == b} != nil
+  end
 end
 
 def try_to_draw_two_fb_friended_options(tester, number)
@@ -917,7 +926,12 @@ post '/choose_guess_people' do
   @categ = params[:categ]
 
   fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
-  @parcel_array = @@librarian.get_parcels_for_guess(10, tester, @categ, @@friends[tester], fb_friend_names)
+  if params["view_all"] != "true"
+    @parcel_array = @@librarian.get_parcels_for_guess(10, tester, @categ, @@friends[tester], fb_friend_names)
+  else
+    # view all
+    @parcel_array = @@librarian.get_parcels_for_guess(nil, tester, @categ, @@friends[tester], fb_friend_names)
+  end
   
   @parcel_array.shuffle
   erb :choose_guess_people
