@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-IP = "10.10.6.170"
+IP = "107.170.232.66"
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
 MAX_INVITATION_CODE = 100000
 NUMBER_INVITATION_CODE = 3
@@ -895,15 +895,18 @@ end
 get '/process_vip' do 
   vips = nil
   begin
-    vips = CSV.read("vips.csv").flatten
+    vips = CSV.read("vips.csv")
   rescue
     puts "ERROR: cannot read vips.csv"
     status 400
     return
   end
 
-  vips.each do |vip|
+  vips.each do |pair|
+    vip  = pair[0]
+    code = pair[1]
     vip.strip!
+    code.strip!
     # checking if all vips are included in names
     unless @@names.include? vip
       puts "ERROR: cannot find %s in names" % vip
@@ -911,7 +914,7 @@ get '/process_vip' do
       return
     end
 
-    @@vip_codes[vip] = {"code"=> generate_vip_code, "times"=> 0} if @@vip_codes[vip] == nil
+    @@vip_codes[vip] = {"code"=> code, "times"=> 0} if @@vip_codes[vip] == nil
     puts "VIP codes:" + @@vip_codes.inspect
   end
 
