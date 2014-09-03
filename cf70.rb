@@ -18,7 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-# IP = "192.168.1.10"
+IP = "10.10.6.170"
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
 MAX_INVITATION_CODE = 100000
 NUMBER_INVITATION_CODE = 3
@@ -122,7 +122,7 @@ def self.initialize_record
   @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
                    "play_others","play_answer","view_rankings","wins", "losses", "threads", 
                    "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names", "choose_categ",
-                   "view_others_report","invite_someone", "add_friends", "invite_codes"]
+                   "view_others_report","invite_someone", "add_friends", "invite_codes", "vip_codes"]
   @@wins = Hash.new
   @@losses = Hash.new
 
@@ -145,7 +145,9 @@ def self.initialize_record
 
   @@friends = Hash.new
   @@fb_friends = Hash.new
+  
   @@invite_codes = Hash.new
+  @@vip_codes = Hash.new
 end
 
 # def self.initialize_independent_urls
@@ -198,8 +200,8 @@ end
 
 configure do
   puts "Configuring..."
-  # URL = "http://%s:%s" % [IP, PORT.to_s]
-  URL = "http://machi.yoursapp.cc"
+  URL = "http://%s:%s" % [IP, PORT.to_s]
+  # URL = "http://machi.yoursapp.cc"
   import_questions
   import_names
   initialize_record
@@ -812,6 +814,37 @@ def view_report(name)
     # @guesser_questions = @@librarian.get_guesser_questions(name)
 end
 
+def generate_vip_code
+  code = generate_invitation_code
+  while @@vip_codes.values.map{|v| v["code"]}.include? code
+    code = generate_invitation_code
+  end
+  return code
+end
+
+get '/process_vip' do 
+  vips = nil
+  begin
+    vips = CSV.read("vips.csv").flatten
+  rescue
+    puts "ERROR: cannot read vips.csv"
+    status 400
+    return
+  end
+
+  vips.each do |vip|
+    vip.strip!
+    # checking if all vips are included in names
+    unless @@names.include? vip
+      puts "ERROR: cannot find %s in names" % vip
+      status 400
+      return
+    end
+
+    @@vip_codes[vip] = {"code"=> generate_vip_code, "times"=> 0} if @@vip_codes[vip] == nil
+    puts "VIP codes:" + @@vip_codes.inspect
+  end
+end
 
 
 post '/choose_guess_categ' do
@@ -890,48 +923,67 @@ get '/enter_code' do
   erb :enter_code
 end
 
+def ensure_fb_friends
+  tester = session[:tester]
+  token  = session[:fb_token]
+
+  @@names << tester unless @@names.include? tester
+  add_new_player
+
+  if @@fb_friends[tester] == nil or @@fb_friends[tester].count == 0
+    Thread.new{
+      graph = Koala::Facebook::API.new(token)
+      @@fb_friends[tester] = graph.get_connections("me", "friends", {"locale"=>"zh_TW"})
+      puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
+    }
+  end
+end
+
 post '/sendCode' do
   puts "code: " + params["code"]
   success = false
   inviter = nil
   code = params["code"]
-  found = @@invite_codes.select{|inviter, codes| codes.map{|v| v[0]}.include? code}
-  # code does not exist
-  if found.count == 0
-    @msg = "Code does not exist"
-  elsif found.count > 1
-    @msg = "Duplicate codes exist"
-  else
+  # firstly, lets see if it is a VIP code
+  found = @@vip_codes.select{|inviter, val| val["code"] == code}
+  if found.count == 1
     inviter = found.keys[0]
-    found.values[0].each do |code_status|
-      if code_status[0] == code
-        # the code has been used before
-        if code_status[1] == true
-          @msg = "The code of which inviter is %s has been used before" % inviter
-        # the code has not been used. Now use it
-        else
-          tester = session[:tester]
-          token  = session[:fb_token]
+    found.values[0]["times"] += 1
+    ensure_fb_friends
+    
+    success = true
+    @msg = "Welcome! %s invited you;D" % inviter
 
-          @@names << tester unless @@names.include? tester
-          add_new_player
+  else # secondly, lets see if it s an invite code
 
-          if @@fb_friends[tester] == nil or @@fb_friends[tester].count == 0
-            Thread.new{
-              graph = Koala::Facebook::API.new(token)
-              @@fb_friends[tester] = graph.get_connections("me", "friends", {"locale"=>"zh_TW"})
-              puts "Received %d FB friends for %s" % [@@fb_friends[tester].count, tester]
-            }
+    found = @@invite_codes.select{|inviter, codes| codes.map{|v| v[0]}.include? code}
+    # code does not exist
+    if found.count == 0
+      @msg = "Code does not exist"
+    elsif found.count > 1
+      @msg = "Duplicate codes exist"
+    else
+      inviter = found.keys[0]
+      found.values[0].each do |code_status|
+        if code_status[0] == code
+          # the code has been used before
+          if code_status[1] == true
+            @msg = "The code of which inviter is %s has been used before" % inviter
+          # the code has not been used. Now use it
+          else
+            code_status[1] = true
+
+            ensure_fb_friends
+
+            success = true
+            @msg = "Welcome! %s invited you;D" % inviter
           end
-
-          code_status[1] = true
-          success = true
-          @msg = "Welcome! %s invited you;D" % inviter
+          break # since we found the code already
         end
-        break # since we found the code already
-      end
-    end    
+      end    
+    end
   end
+
   puts "Verifying code: " + @msg
   if success
     status 200
