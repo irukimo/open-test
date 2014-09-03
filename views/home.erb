@@ -468,19 +468,20 @@
           恭喜！你晉升成為VIP了！
           <br><br><br>
           <% if @vip_code%>
-              <div class="col-xs-4 col-md-2">
-                <div class="ticket">
-                  <br>
+            <div class="col-xs-4 col-md-2">
+              <div class="ticket">
+                <br>
+                <%=@vip_code%>
+                <br><br><br><br><br>
+                <div class="last_line">
                   <%=@vip_code%>
-                  <br><br><br><br><br>
-                  <div class="last_line">
-                    <%=@vip_code%>
-                  </div>
                 </div>
               </div>
+            </div>
           <%end%>
           <br><br><br><br><br><br><br><br><br>
         <b>什麼是VIP入場卷呢？</b><br>
+        
         你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
         <br>
         <b>為什麼這個遊戲要VIP入場卷？</b><br>
