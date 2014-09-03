@@ -209,6 +209,12 @@
       margin-left: 0px;
     }
 
+    #code_display{
+      padding-top: 13px;
+      padding-left: 0px;
+      margin-left: 0px;
+    }
+
     #level_home_display{
       background: #FFFFFF;
       border-radius: 100px;
@@ -242,6 +248,19 @@
       width: 140px;
       text-align: right;
       line-height: 182%;
+    }
+
+    .reprecode{
+      background-image: url('/img/code.png');
+      background-size: 255px 255px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      width: 255px;
+      height: 255px;
+      color:#FFFFFF;
+      line-height: 2850%;
+      text-align: center;
+      font-size: 11pt;
     }
     </style>
 
@@ -286,9 +305,15 @@
         <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
       </center>
     </div>
-    <div id="ticket_display" class="col-xs-2 col-sm-4">
-      <img src="/img/tickethoriz.png" alt="Smiley face" width="60" height="35">
-    </div>
+    <%if @show_vip_code == true%>
+        <div id="code_display" class="col-xs-2 col-sm-4">
+          <img src="/img/code.png" alt="Smiley face" width="60" height="35">
+        </div>
+    <%else%>
+        <div id="ticket_display" class="col-xs-2 col-sm-4">
+          <img src="/img/tickethoriz.png" alt="Smiley face" width="60" height="35">
+        </div>
+    <%end%>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
   </div>
@@ -483,30 +508,19 @@
       <div class="modal-body">
 
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">關閉</span></button>
-          恭喜！你晉升成為VIP了！
-          <br><br><br>
+          <b>恭喜！你晉升成為班代了！<br><br></b>
+          班代好處多多！<br>例如：你拿到了一筆<img src="/img/coinnew.png" alt="Smiley face" width="20" height="20">5000的獎學金！<br>
+          以及，你有專屬的 CODE :
+          <br><br>
           <% if @vip_code%>
-            <div class="col-xs-4 col-md-2">
-              <div class="ticket">
-                <br>
-                <%=@vip_code%>
-                <br><br><br><br><br>
-                <div class="last_line">
+                <div class="reprecode">
                   <%=@vip_code%>
                 </div>
-              </div>
-            </div>
           <%end%>
-          <br><br><br><br><br><br><br><br><br>
-        <b>什麼是VIP入場卷呢？</b><br>
-
-        你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
-        <br>
-        <b>為什麼這個遊戲要VIP入場卷？</b><br>
-        因為這個遊戲的初衷，就是要跟大家的好朋友們玩一個遊戲！所以你身為早期玩家，當然有特權邀請你的朋友囉！<br>
-        <br>
-        <b>我要怎麼使用VIP入場卷？</b><br>
-        告訴你的朋友一張VIP入場卷的號碼，他輸入後就可以進入遊戲啦！請注意，你只有三張入場卷，用完就沒啦！
+          <br>
+        <b>這個 CODE 可以讓新玩家登入，並且可以使用無限多次！</b><br>
+        <b>每一次新玩家用你的 CODE 登入，你都會拿到<img src="/img/coinnew.png" alt="Smiley face" width="20" height="20">500的獎學金哦！</b><br>
+        <b>敬請多多使用！</b>
       </div>
     </div>
   </div>
