@@ -94,12 +94,27 @@
 <center><font size="4pt"> <img src="/img/coinnew.png" alt="Smiley face" width="45" height="45"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> 200</font></center>
 
       </br></br></br>
-      <form class="form-horizontal" role="form" action="home" method="post">
-    <center><button type="submit" class="btn green_button btn-block">OK</button></center>
-  </form>
+                  <div class="col-xs-6 col-md-5">
+                      <form class="form-horizontal" role="form" action="home" method="post">
+                        <center><button type="submit" class="btn grass_green_long_button btn-block">回主選單</button></center>
+                      </form>
+                  </div>
+                  <%if @atGuess == true%>
+                      <div class="col-xs-6 col-md-5">
+                          <form class="form-horizontal" role="form" action="choose_guess_people" method="post">
+                            <center><button type="submit" class="btn green_button btn-block">繼續猜</button></center>
+                          </form>
+                      </div>
+                  <%else%>
+                      <div class="col-xs-6 col-md-5">
+                          <form class="form-horizontal" role="form" action="choose_people" method="post">
+                            <center><button type="submit" class="btn green_button btn-block">繼續比</button></center>
+                          </form>
+                      </div>
+                  <%end%>
 
-        </div>
-  </div>
+          </div>
+    </div>
 
 
     </div><!-- /.container -->

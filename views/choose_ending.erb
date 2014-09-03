@@ -104,9 +104,22 @@
 
 
       </br></br></br></br>
-      <form class="form-horizontal" role="form" action="finish_choose" method="post">
-    <center><button type="submit" class="btn green_button btn-block">OK</button></center>
-  </form>
+              <%if @gonnaLevelUp == true%>
+                  <form class="form-horizontal" role="form" action="level_up" method="post">
+                    <center><button type="submit" class="btn green_button btn-block">下一步</button></center>
+                  </form>
+              <%else%>
+                  <div class="col-xs-6 col-md-5">
+                      <form class="form-horizontal" role="form" action="home" method="post">
+                        <center><button type="submit" class="btn grass_green_long_button btn-block">回主選單</button></center>
+                      </form>
+                  </div>
+                  <div class="col-xs-6 col-md-5">
+                      <form class="form-horizontal" role="form" action="choose_people" method="post">
+                        <center><button type="submit" class="btn green_button btn-block">繼續比</button></center>
+                      </form>
+                  </div>
+              <%end%>
 
         </div>
   </div>

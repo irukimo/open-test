@@ -100,6 +100,7 @@
       width: 50px;
       text-align: right;
       line-height: 182%;
+      cursor: pointer;
 /*      background: #f54360;
       border-radius: 100px;
       margin-top: 7px;
@@ -132,6 +133,7 @@
       width: 50px;
       text-align: right;
       line-height: 182%;
+      cursor: pointer;
     }
 
     #level_display{
@@ -189,6 +191,7 @@
       min-width: 306px;
       max-width: 653px;
       min-height: 270px;
+      cursor: pointer;
       /*padding-left: 10px;*/
       /*padding-right: 10px;*/
     }
@@ -287,6 +290,7 @@
       border-radius: 100px;
       color:#FFFFFF;
       font-size: 20px;
+      cursor: pointer;
     }
     .orange_button{
       background: #ffa23f;
@@ -311,11 +315,11 @@
       font-size: 20px;
     }
 
-.orangecircle:focus, .green_button:focus, .orange_button:focus, .grass_green_button:focus, .orange_shuffle_button:focus{
+.grass_green_long_button:focus, .orangecircle:focus, .green_button:focus, .orange_button:focus, .grass_green_button:focus, .orange_shuffle_button:focus{
    color:#FFFFFF;
     }
     
-    .orange_shuffle_button:hover,.orangecircle:hover, .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
+    .grass_green_long_button:hover,.orange_shuffle_button:hover,.orangecircle:hover, .green_button:hover, .orange_button:hover, .grass_green_button:hover, .pink_button:hover, .blue_button:hover, .blue_ppl_button:hover{
       color:#FFFFFF;
     }
 
@@ -328,6 +332,14 @@
       height:70px;
       line-height: 100%;
       white-space: normal;
+      cursor: pointer;
+    }
+
+    .grass_green_long_button{
+      background: #78c26b;
+      border-radius: 100px;
+      color:#FFFFFF;
+      font-size: 20px;
     }
 
     .pink_button{

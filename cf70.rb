@@ -367,6 +367,8 @@ route :get, :post, '/home' do
     @vip_code = @@vip_codes[tester]["code"]
   end
 
+  session[:categ] = nil
+
   erb :home
 end
 
@@ -394,7 +396,9 @@ post '/choose_categ' do
 end
 
 post '/choose_people' do
-  session[:categ] = params[:categ]
+  if params[:categ]
+      session[:categ] = params[:categ]
+  end
   tester = session[:tester]
   
   categ_record = Array.new
@@ -614,6 +618,10 @@ post '/choose_answer' do
     clear_session
     redirect to('/choose_ending'), 307
   end
+  
+  if session[:categ] == nil
+    session[:categ] = 'F'
+  end
 
   question = sample_questions_in_categ(session[:categ], session[:bundle])
 
@@ -656,15 +664,14 @@ end
 post '/choose_ending' do
   @@coins[session[:tester]] = @@coins[session[:tester]] + 100
   addupXP(100, session[:tester])
+  if session[:xp_to_add]
+    @gonnaLevelUp = true
+  else
+    @gonnaLevelUp = false
+  end
   erb :choose_ending
 end
 
-post '/finish_choose' do
-  if session[:xp_to_add]
-    redirect to('/level_up'), 307
-  end
-  redirect to('/home'), 307
-end
 
 post '/level_up' do
   # @@energy_left[session[:tester]] = ENERGY_CAPACITY
@@ -674,6 +681,12 @@ post '/level_up' do
   @@progress[session[:tester]] = (100*(xp_to_add.to_f/xp_needed.to_f)).floor
   # @@gems[session[:tester]] =  @@gems[session[:tester]] + 1
   @@coins[session[:tester]] += 200
+  if session[:atGuess] and session[:atGuess] == true
+    @atGuess = true
+  else
+    @atGuess = false
+  end
+  session[:atGuess] = nil
   erb :level_up
 end
 
@@ -923,7 +936,15 @@ end
 
 post '/choose_guess_people' do
   tester = session[:tester]
-  @categ = params[:categ]
+  if params[:categ]
+    @categ = params[:categ]
+    session[:categ] = params[:categ]
+  else
+    @categ = session[:categ] 
+  end
+
+  # puts 'categ'
+  # puts @categ
 
   fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
   if params["view_all"] != "true"
@@ -970,6 +991,12 @@ post '/guess' do
   if session[:round] == 4
     redirect to('/result'), 307
   end
+  # puts 'session[:bundle]'
+  # puts session[:bundle]
+  # puts 'session[:round]'
+  # puts session[:round]
+  # puts 'session[:bundle][session[:round]-1]'
+  # puts session[:bundle][session[:round]-1]
   @question = session[:bundle][session[:round]-1]["question"]
   @option0 = session[:bundle][session[:round]-1]["option0"]
   @option1 = session[:bundle][session[:round]-1]["option1"]
@@ -1127,6 +1154,12 @@ post '/result' do
   @@coins[session[:tester]] += @reward
 
   addupXP(@reward*3, session[:tester])
+  if session[:xp_to_add]
+    session[:atGuess] = true
+    @gonnaLevelUp = true
+  else
+    @gonnaLevelUp = false
+  end
     
   if @win >= 2
     @correct = true
@@ -1136,6 +1169,7 @@ post '/result' do
     @correct = false
     @@losses[session[:tester]] += 1
   end
+  clear_session
   erb :result
 end
 
