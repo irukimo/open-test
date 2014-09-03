@@ -691,9 +691,9 @@ def view_report(name)
         @@view_others_report[name] << view_others_report_record
     end
 
-    @my_questions = @@librarian.get_questions_of(name)
+    # @my_questions = @@librarian.get_questions_of(name)
 
-    @my_questions.shuffle!
+    # @my_questions.shuffle!
 
     if params[:toguess]
       @toguess = params[:toguess]
@@ -807,9 +807,9 @@ def view_report(name)
 
     @time_difference = sec_to_units(@@score_buffer[name]["new"]["time"] - @@score_buffer[name]["old"]["time"])
     
-    @contributors = collect_contributors(name)
+    # @contributors = collect_contributors(name)
 
-    @guesser_questions = @@librarian.get_guesser_questions(name)
+    # @guesser_questions = @@librarian.get_guesser_questions(name)
 end
 
 
