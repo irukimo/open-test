@@ -360,6 +360,7 @@ route :get, :post, '/home' do
   # @fromWalkthrough = true
   # end
 
+  @show_vip_code = false
   if @@vip_codes[tester] != nil
     @show_vip_code = true
     @vip_code = @@vip_codes[tester]["code"]
@@ -430,12 +431,54 @@ post '/choose_people' do
   # end
   if params[:addedMore] == "true" and params[:number].to_i > 1
     number = params[:number].to_i
-    @initial_first, @initial_second = @@friends[tester].slice(-number, number).sample(2)
+    @initial_first, @initial_second = try_to_draw_two_fb_friended_options(tester, number)
+    # @initial_first, @initial_second = @@friends[tester].slice(-number, number).sample(2)
   else
-    @initial_first, @initial_second = @@friends[tester].sample(2)
+    @initial_first, @initial_second = try_to_draw_two_fb_friended_options(tester, nil)
+    # @initial_first, @initial_second = @@friends[tester].sample(2)
   end
    
   erb :choose_people
+end
+
+def are_fb_friends(a, b)
+  return @@fb_friends[a].index{|elem| elem["name"] == b} != nil
+end
+
+def try_to_draw_two_fb_friended_options(tester, number)
+  first  = nil
+  second = nil
+  if number != nil
+    @@friends[tester].slice(-number, number).combination(2).to_a.shuffle.each do |pair|
+      # puts "try number %d" % number
+      # puts "%s vs %s" % pair
+      if are_fb_friends(pair[0], pair[1])
+        first, second = pair
+        break  
+      end
+    end
+  end
+
+  if first == nil or second == nil
+    @@friends[tester].combination(2).to_a.shuffle.each do |pair|
+      # puts "not try number"
+      # puts "%s vs %s" % pair
+      if are_fb_friends(pair[0], pair[1])
+        first, second = pair
+        break  
+      end
+    end
+  end
+
+  if first == nil or second == nil
+    if number != nil
+      first, second = @@friends[tester].slice(-number, number).sample(2)
+    else
+      first, second = @@friends[tester].sample(2)
+    end
+  end
+
+  return [first, second]
 end
 
 

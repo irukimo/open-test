@@ -464,7 +464,6 @@
       <div class="modal-body">
 
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">關閉</span></button>
-        <%if @codes%>
           恭喜！你晉升成為VIP了！
           <br><br><br>
           <% if @vip_code%>
@@ -480,7 +479,6 @@
               </div>
           <%end%>
           <br><br><br><br><br><br><br><br><br>
-        <%end%>
         <b>什麼是VIP入場卷呢？</b><br>
         你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
         <br>
@@ -585,7 +583,7 @@
     }
     function ticketbtn(){
       msgbtn.click();
-    }    
+    }
 
 </script>
 
