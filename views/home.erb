@@ -21,7 +21,12 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
- 
+
+    <link rel="stylesheet" type="text/css" href="css/guiders.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/guiders.js"></script>
+
+
     <script type="text/JavaScript">
     //<![CDATA[
     //global variables
@@ -320,6 +325,19 @@
           var newColor1 = "#ff8a90";
           new Pentagon(firstPentagon, '<%=@time_difference%>',oldColor1,newColor1,"body1","chart1","#body1","#chart1");
 
+          <% if @fromLogin == "true" %>
+            guiders.createGuider({
+              attachTo: "#name_display",
+              buttons: [{name: "知道了", onclick: guiders.hideAll}],
+              description: "點擊你的名字或三角圖都會帶你去看個性分析喲！",
+              id: "first",
+              next: "second",
+              position: 7,
+              overlay: true,
+              title: "小老師",
+              width: 200
+            }).show();
+          <% end %>
       </script>
 
 
@@ -481,7 +499,7 @@
           <%end%>
           <br><br><br><br><br><br><br><br><br>
         <b>什麼是VIP入場卷呢？</b><br>
-        
+
         你有朋友想加入遊戲嗎？或者你想要邀請他加入遊戲？那麼，就給他一組VIP入場卷上的號碼吧！這樣他才能進入遊戲哦！<br>
         <br>
         <b>為什麼這個遊戲要VIP入場卷？</b><br>
