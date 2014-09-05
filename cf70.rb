@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
-PORT = 7009
+PORT = 80
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
 
@@ -19,6 +19,8 @@ require './librarian.rb'
 LANG = "CH"
 
 IP = "107.170.232.66"
+REP_SCHOLARSHIP = 5000
+REP_BONUS = 200
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
 MAX_INVITATION_CODE = 100000
 NUMBER_INVITATION_CODE = 3
@@ -200,8 +202,8 @@ end
 
 configure do
   puts "Configuring..."
-  URL = "http://%s:%s" % [IP, PORT.to_s]
-  # URL = "http://machi.yoursapp.cc"
+  # URL = "http://%s:%s" % [IP, PORT.to_s]
+  URL = "http://machi.yoursapp.cc"
   import_questions
   import_names
   initialize_record
@@ -914,7 +916,11 @@ get '/process_vip' do
       return
     end
 
-    @@vip_codes[vip] = {"code"=> code, "times"=> 0} if @@vip_codes[vip] == nil
+    if @@vip_codes[vip] == nil
+      @@vip_codes[vip] = {"code"=> code, "times"=> 0} 
+      @@coins[vip] += REP_SCHOLARSHIP
+      puts "%s received SCHOLARSHIP!" % vip
+    end
     puts "VIP codes:" + @@vip_codes.inspect
   end
 
@@ -1027,6 +1033,7 @@ def ensure_fb_friends
   token  = session[:fb_token]
 
   @@names << tester unless @@names.include? tester
+
   add_new_player
 
   if @@fb_friends[tester] == nil or @@fb_friends[tester].count == 0
@@ -1050,6 +1057,9 @@ post '/sendCode' do
     found.values[0]["times"] += 1
     ensure_fb_friends
     
+    @@coins[inviter] += REP_BONUS
+    puts "%s received REP_BONUS" % inviter
+
     success = true
     @msg = "Welcome! %s invited you;D" % inviter
 
@@ -1115,8 +1125,8 @@ post '/result' do
   # has not displayed before
   # only happen at first time being played
   tester, bundle = @@librarian.get_bundle_by_uuid(session[:uuid])
-  puts "result: "
-  puts bundle
+  # puts "result: "
+  # puts bundle
   bundle.each_with_index do |quiz, index|
     if quiz["done"] == false
       puts quiz["bet"]

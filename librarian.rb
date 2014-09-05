@@ -162,8 +162,8 @@ class Librarian
     # strip away those empty arrays
     categ_confined.select!{|parcel| !parcel.empty? and tester != parcel[3]}
 
-    puts "get_parcels"
-    puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
+    # puts "get_parcels"
+    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
     # option: tester     +10
     # option: friends    +4
@@ -199,8 +199,8 @@ class Librarian
 
       parcel[4] = score
     end
-    puts "with score"
-    puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
+    # puts "with score"
+    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
     if num != nil
       return categ_confined.select{|parcel| parcel[4] > 0 and !has_played?(tester, parcel[0])}.sort{|a,b| b[4]<=>a[4]}.slice(0, num)
