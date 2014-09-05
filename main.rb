@@ -378,7 +378,7 @@ route :get, :post, '/home' do
 end
 
 def display_name(is_anonymous,name,tester)
-  if is_anonymous
+  if is_anonymous == "true" or is_anonymous == true
     fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
     if fb_friend_names.include? name
       return ANONYMOUS_FRIEND_NAME
@@ -638,7 +638,7 @@ post '/choose_answer' do
   puts "played Session " + session[:choose].to_s
   if session[:choose] == 4
     
-    uuid = @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ], (session[:anonymous] == "on"))
+    uuid = @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ], (session[:anonymous] == "on").to_s)
     puts "played over: " + uuid
     clear_session
     redirect to('/choose_ending'), 307
