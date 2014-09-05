@@ -24,7 +24,7 @@ var RadarChart = {
   draw: function(id, d, options){
   var cfg = {
    //radius of the endpoints
-   radius: 7,
+   radius: 11,
    //dunno what for yet
    w: 30,//(isIphone)? 180: 600,
    h: 30,//(isIphone)? 180: 600,
