@@ -12,11 +12,15 @@
     <!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <script src="js/basic_display.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+    <script src="js/bootstrap-switch.min.js"></script>    
 <script>
 
 
@@ -233,7 +237,9 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
         </script>
 
 
+  
   <div class="row">
+
     <div id="red_background" class="col-xs-11 col-md-7">
 
     <div class="col-xs-7 col-sm-7"></div>
@@ -241,9 +247,10 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
      <center><button class="btn orange_button" id="shufflebtn"><span class="glyphicon glyphicon-random"></span> 換問題<img src="/img/coinnew.png" alt="Smiley face" width="33" height="33">30</button></font> 
 
       <div id="timesleftbig">還有<div id="timesleft">3</div>次</div>
+      </center>
     </div>
                   
-     </center>
+     
 
 
 
@@ -277,9 +284,9 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
 </div>
 
 
-                <form id="nextform" role="form" action="choose_answer" method="post">   
-                  <input type="hidden" name="question" value="<%=session[:question]%>"> 
-                  <input type="hidden" name="betting" value="0"> 
+              <form id="nextform" role="form" action="choose_answer" method="post">   
+                <input type="hidden" name="question" value="<%=session[:question]%>"> 
+                <input type="hidden" name="betting" value="0"> 
                 </br></br></br>
                  <div class="col-xs-6 col-md-6">
                   <p><button type="submit" id="option0btn" class="btn grass_green_button btn-block" name="answer" value="<%=session[:option0]%>"><%=session[:option0]%></button></p>
@@ -287,31 +294,17 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
                  <div class="col-xs-6 col-md-6">
                     <p><button type="submit" id="option1btn" class="btn grass_green_button btn-block" name="answer" value="<%=session[:option1]%>"><%=session[:option1]%></button></p>
                 </div>
-                    </form>
-              </br></br></br>
-            
-              
-    <button class="btn pink_button btn-lg btn-block" onclick="invitefrd('<%=@option0_id%>','<%=@option1_id%>')">邀請他們來玩！</button></div>
+                <div style="height:40px;">
+                  具名或匿名？<input type="checkbox" data-size="large" data-on-text="匿名" data-off-text="具名" name="anonymous" <%if session[:anonymous] == 'on'%> checked <%end%>>
+                </div>      
+              </form>
   </div>
 
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        
-        <div id="modalbody">
-        <font size="4pt" color="#767676">Feel free to place your bet on each question!</br></br>
-        You will receive <b>2x</b> of your bet when the next person guesses your answer correctly!</font>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-</div>
 
 <script type="text/javascript">
+
+    $("[name='anonymous']").bootstrapSwitch();
+
 (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
@@ -424,7 +417,5 @@ window.fbAsyncInit = function() {
     <!-- Placed at the end of the document so the pages load faster -->
     
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
   </body>
 </html>

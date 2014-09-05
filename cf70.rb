@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
-PORT = 80
+PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
 
@@ -18,6 +18,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
+ANONYMOUS_NAME = "你的朋友"
 IP = "107.170.232.66"
 REP_SCHOLARSHIP = 5000
 REP_BONUS = 200
@@ -218,6 +219,7 @@ end
 
 
 def clear_session
+    session[:anonymous] = nil
     session[:choose] = nil
     session[:bundle] = nil
     session[:option0] = nil
@@ -582,6 +584,8 @@ route :get, :post, '/view_my_report' do
 end
 
 post '/choose_answer' do
+  session[:anonymous] = 'off' if session[:anonymous] == nil
+
   @@play_answer[session[:tester]] << Time.now
   if session[:choose] == nil
     session[:choose] = 1
@@ -597,6 +601,12 @@ post '/choose_answer' do
   end
   if params[:question]
     session[:question] = params[:question]
+  end
+
+  if params[:anonymous] == 'on'
+    session[:anonymous] = "on"
+  else
+    session[:anonymous] = "off"
   end
 
   if params[:answer] and params[:betting]
@@ -615,7 +625,7 @@ post '/choose_answer' do
   puts "played Session " + session[:choose].to_s
   if session[:choose] == 4
     
-    uuid = @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ])
+    uuid = @@librarian.create_parcel(session[:tester], session[:bundle], session[:categ], (session[:anonymous] == "on"))
     puts "played over: " + uuid
     clear_session
     redirect to('/choose_ending'), 307
@@ -980,7 +990,7 @@ post '/guess' do
 
   # start the guessing
   if params[:uuid]
-    session[:guesswhom],session[:bundle] = @@librarian.get_bundle_by_uuid(params[:uuid])
+    session[:guesswhom],session[:bundle],session[:anonymous] = @@librarian.get_bundle_by_uuid(params[:uuid])
     session[:uuid] = params[:uuid]
     @@librarian.just_played(session[:tester], params[:uuid])
   end
@@ -1010,6 +1020,7 @@ post '/guess' do
   @option0 = session[:bundle][session[:round]-1]["option0"]
   @option1 = session[:bundle][session[:round]-1]["option1"]
   @answer = session[:bundle][session[:round]-1]["answer"]
+  @is_anonymous = session[:anonymous]
   session[:bettingleft] = (@@coins[session[:tester]] < GUESS_MAX_BET)? @@coins[session[:tester]] : GUESS_MAX_BET
   erb :guess
 end

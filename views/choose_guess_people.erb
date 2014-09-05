@@ -135,7 +135,7 @@
 
     <div>
       <%@parcel_array.each do |parcel|%>
-        <% name = parcel[3] %>
+        <% name = parcel[3] ? ANONYMOUS_NAME : parcel[4] %>
         <%quiz = parcel[1][0]%>
         <%puts "uuid: " + parcel[0]%>
           <%btnid = "button" + parcel[0]%>

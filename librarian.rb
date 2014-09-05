@@ -2,7 +2,8 @@
 #                    [uuid, [{qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}, 
 #                            {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx},
 #                            {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}],
-#                     categ
+#                     categ,
+#                     is_anonymous
 #                    ],
 #                   ]
 
@@ -16,7 +17,8 @@
   # parcel = [uuid, [{qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}, 
                   #  {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx},
                   #  {qustion:xx, option0:xx, option1:xx, answer:xx, time:xx}],
-  #           categ
+  #           categ,
+  #           is_anonymous
   #          ]
 
 class Librarian
@@ -132,13 +134,13 @@ class Librarian
   end
 
   # return uuid of the parcel
-  def create_parcel(name, bundle, categ)
+  def create_parcel(name, bundle, categ, is_anonymous)
     uuid = UUIDTools::UUID.random_create.to_s
     bundle.each do |quiz|
       quiz["uuid"]   = UUIDTools::UUID.random_create.to_s
     end
     @bundles[name] = Array.new if @bundles[name] == nil
-    @bundles[name] << [uuid, bundle, categ]
+    @bundles[name] << [uuid, bundle, categ, is_anonymous]
     return uuid
   end
 
@@ -153,17 +155,17 @@ class Librarian
         tmp = parcels
       end
       
-      tmp.each{|parcel| parcel[3] = author}
+      tmp.each{|parcel| parcel[4] = author}
       # puts "tmp"
       # puts tmp.inspect
       categ_confined += tmp
     }
 
     # strip away those empty arrays
-    categ_confined.select!{|parcel| !parcel.empty? and tester != parcel[3]}
+    categ_confined.select!{|parcel| !parcel.empty? and tester != parcel[4]}
 
     # puts "get_parcels"
-    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
+    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[4], score: parcel[5]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
     # option: tester     +10
     # option: friends    +4
@@ -189,23 +191,23 @@ class Librarian
       end
 
       # score author
-      if friends.include? parcel[3]
+      if friends.include? parcel[4]
         score += 2
-      elsif fb_friends.include? parcel[3]
+      elsif fb_friends.include? parcel[4]
         score += 1
-      elsif parcel[3] == tester # no-go
+      elsif parcel[4] == tester # no-go
         score -= 100
       end
 
-      parcel[4] = score
+      parcel[5] = score
     end
     # puts "with score"
-    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[3], score: parcel[4]}}.inspect
+    # puts categ_confined.map{|parcel| {uuid: parcel[0], categ: parcel[2], author: parcel[4], score: parcel[5]}}.inspect
     # parcel => [uuid, bundle, categ, author, score]
     if num != nil
-      return categ_confined.select{|parcel| parcel[4] > 0 and !has_played?(tester, parcel[0])}.sort{|a,b| b[4]<=>a[4]}.slice(0, num)
+      return categ_confined.select{|parcel| parcel[5] > 0 and !has_played?(tester, parcel[0])}.sort{|a,b| b[5]<=>a[5]}.slice(0, num)
     else
-      return categ_confined.select{|parcel| parcel[4] > 0 and !has_played?(tester, parcel[0])}.sort{|a,b| b[4]<=>a[4]}
+      return categ_confined.select{|parcel| parcel[5] > 0 and !has_played?(tester, parcel[0])}.sort{|a,b| b[5]<=>a[5]}
     end
 
   end
@@ -252,7 +254,7 @@ class Librarian
   def get_bundle_by_uuid uuid
     @bundles.each do |name, parcels|
       parcels.each do |parcel|
-        return [name, parcel[1]] if parcel[0] == uuid
+        return [name, parcel[1], parcel[3]] if parcel[0] == uuid
       end
     end
   end
