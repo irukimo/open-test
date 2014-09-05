@@ -18,7 +18,8 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
-ANONYMOUS_NAME = "你的朋友"
+ANONYMOUS_FRIEND_NAME   = "你的朋友"
+ANONYMOUS_STRANGER_NAME = "某人"
 IP = "107.170.232.66"
 REP_SCHOLARSHIP = 5000
 REP_BONUS = 200
@@ -376,6 +377,18 @@ route :get, :post, '/home' do
   erb :home
 end
 
+def display_name(is_anonymous,name,tester)
+  if is_anonymous
+    fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
+    if fb_friend_names.include? name
+      return ANONYMOUS_FRIEND_NAME
+    else
+      return ANONYMOUS_STRANGER_NAME
+    end
+  else
+    return name
+  end
+end
 
 post '/hasLoggedIn' do
   tester = params["name"]

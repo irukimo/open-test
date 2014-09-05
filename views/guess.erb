@@ -271,7 +271,7 @@
         <div class="container my-container">
             <div id="whoquestion" class="col-xs-12 col-sm-12"><font size="5pt" color="#5a76cd">
               <div id="questionid"><b>
-                你猜<%= (@is_anonymous) ? ANONYMOUS_NAME : session[:guesswhom]%>選了誰？
+                你猜<%= display_name(@is_anonymous,session[:guesswhom],session[:tester])%>選了誰？
               </b></div></font>
             </div>
 
