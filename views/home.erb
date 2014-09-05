@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<%@@names.delete(nil)%>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -210,8 +211,8 @@
     }
 
     #code_display{
-      padding-top: 13px;
-      padding-left: 0px;
+      padding-top: 7px;
+      padding-left: 8px;
       margin-left: 0px;
     }
 
@@ -307,7 +308,7 @@
     </div>
     <%if @show_vip_code == true%>
         <div id="code_display" class="col-xs-2 col-sm-4">
-          <img src="/img/code.png" alt="Smiley face" width="60" height="35">
+          <img src="/img/code.png" alt="Smiley face" width="51" height="51">
         </div>
     <%else%>
         <div id="ticket_display" class="col-xs-2 col-sm-4">
