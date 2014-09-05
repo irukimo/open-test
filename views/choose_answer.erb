@@ -69,6 +69,10 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
       font-size: 20pt;
       display : inline-block;
     }
+
+    .nopadding{
+      padding: 0px;
+    }
     .my-container{
           padding-top: 10px;
           padding-bottom: 10px;
@@ -79,6 +83,7 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
       }
       #shufflebtn{
         display : inline-block;
+        font-size: 15px;
       }
       #questionid{
         display : inline-block;
@@ -87,9 +92,7 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
       font-size: 12pt;
       color: #737373;
       padding-left: 10px;
-    }
-    #shufflebtn{
-      display: inline-block;
+      display: none;
     }
     #shufflebtn:visited{
       color:#FFFFFF;
@@ -98,6 +101,7 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
     #timesleft{
       display: inline-block;
       font-size: 15pt;
+      display: none;
     }
     #questionid{
       padding-right: 10px;
@@ -175,6 +179,10 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
     #modalbody{
       text-align: left;
     }
+
+    .anonymous{
+      text-align: right;
+    }
     </style>
 
      <script type="text/JavaScript">
@@ -243,9 +251,21 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
 
     <div id="red_background" class="col-xs-8 col-md-5">
 
-     <center><button class="btn orange_button" id="shufflebtn"><span class="glyphicon glyphicon-random"></span> 換問題<img src="/img/coinnew.png" alt="Smiley face" width="33" height="33">30</button></font> 
+        <div class="col-xs-6 col-md-4 nopadding">
+           <center><button class="btn orange_button" id="shufflebtn"><span class="glyphicon glyphicon-random"></span> 換問題<img src="/img/coinnew.png" alt="Smiley face" width="26" height="26">30</button></font>
+        </div>
+        <div class="col-xs-2 col-md-4 nopadding anonymous"><img src="/img/anon.png" alt="Smiley face" width="35" height="54"></div>
+        <form id="nextform" role="form" action="choose_answer" method="post">   
+        <div class="col-xs-2 col-md-4 nopadding">
+                <div class="switch">
+                  <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox" name="anonymous" <%if session[:anonymous] == 'on'%> checked <%end%>>
+                  <label for="cmn-toggle-1" data-on="Yes" data-off="No"></label>
+                </div>
+        </div>
 
-      <div id="timesleftbig">還有<div id="timesleft">3</div>次</div>
+
+      <div id="timesleftbig"><div id="timesleft">3</div></div>
+      <br><br><br>
       </center>
                   
               <div class="col-xs-3 col-md-4"></div>
@@ -277,7 +297,7 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
 </div>
 
 
-              <form id="nextform" role="form" action="choose_answer" method="post">   
+              
                 <input type="hidden" name="question" value="<%=session[:question]%>"> 
                 <input type="hidden" name="betting" value="0"> 
                 </br></br></br>
@@ -287,14 +307,12 @@ if(("standalone" in window.navigator) && window.navigator.standalone){
                  <div class="col-xs-6 col-md-6">
                     <p><button type="submit" id="option1btn" class="btn grass_green_button btn-block" name="answer" value="<%=session[:option1]%>"><%=session[:option1]%></button></p>
                 </div>
-                <div style="height:40px;">
-                    <div class="switch">
-                      <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox" name="anonymous" <%if session[:anonymous] == 'on'%> checked <%end%>>
-                      <label for="cmn-toggle-1">匿名</label>
-                    </div>
-                </div>
+
               </form>
+
+
   </div>
+
 
 
 <script type="text/javascript">
