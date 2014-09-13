@@ -563,6 +563,14 @@ get '/wtcoin' do
   erb :wtcoin
 end
 
+post '/chat_select' do
+  erb :chat_select
+end
+
+post '/chat_room' do
+  erb :chat_room
+end
+
 get '/view_others_choose_people' do
   fb_friend_names = @@fb_friends[session[:tester]].map{|elem| elem["name"]}
   @others_to_view = @@names & fb_friend_names

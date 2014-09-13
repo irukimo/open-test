@@ -204,53 +204,6 @@
       cursor: pointer;
     }
 
-    #ticket_display{
-      padding-top: 13px;
-      padding-left: 0px;
-      margin-left: 0px;
-    }
-
-    #code_display{
-      padding-top: 7px;
-      padding-left: 8px;
-      margin-left: 0px;
-    }
-
-    #level_home_display{
-      background: #FFFFFF;
-      border-radius: 100px;
-      border-width: 5px;
-      border-color: #ffa23f;
-      border-style: solid;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-bottom: 5px;
-      padding-left: 0px;
-      padding-right: 0px;
-      font-size: 7pt;
-      line-height: 158%;
-      height: 50px;
-      width: 50px;
-    }
-    #coin_home_display{
-      background-image: url('/img/coinsnew.png');
-      background-size: 136px 50px;
-      background-repeat: no-repeat;
-      background-position:center;
-      border-radius: 0px;
-      margin-top: 7px;
-      margin-left: 5px;
-      padding-top: 3px;
-      padding-bottom: 3px;
-      padding-left: 0px;
-      padding-right: 21px;
-      font-size: 18pt;
-      height: 50px;
-      width: 140px;
-      text-align: right;
-      line-height: 182%;
-    }
-
     .reprecode{
       background-image: url('/img/code.png');
       background-size: 255px 255px;
@@ -306,18 +259,27 @@
         <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
       </center>
     </div>
-    <%if @show_vip_code == true%>
-        <div id="code_display" class="col-xs-2 col-sm-4">
-          <img src="/img/code.png" alt="Smiley face" width="51" height="51">
-        </div>
-    <%else%>
-        <div id="ticket_display" class="col-xs-2 col-sm-4">
-          <img src="/img/tickethoriz.png" alt="Smiley face" width="60" height="35">
-        </div>
-    <%end%>
+    <div id="chat_display" class="col-xs-2 col-sm-4" onclick="gotochat()">
+      <div id="chat_dot_display">2
+      </div>
+    </div>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
     <!-- Optional: clear the XS cols if their content doesn't match in height -->
   </div>
+  <form id="chatform" class="form-horizontal" role="form" action="chat_select" method="post"></form>
+         <script type="text/JavaScript">
+        //<![CDATA[
+        new level_progress("level_display","<%=@@progress[session[:tester]]%>");
+        function backtohome(){
+          var homeform = document.forms["homeform"];
+          homeform.submit();
+        }
+        function gotochat(){
+          var homeform = document.forms["chatform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
 
 
   <div class="row">

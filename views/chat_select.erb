@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link rel="stylesheet" type="text/css" href="css/categ.css">
+    <link rel="stylesheet" type="text/css" href="css/chat_select.css">
     <script src="js/basic_display.js"></script>
 
     <style type="text/css">
@@ -35,20 +36,6 @@
       display: inline-block;
     }
 
-    #red_background{
-      border-radius: 5px;
-      height: 100px;
-      margin-top: 7px;
-      margin-left: 7px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      padding-left: 10px;
-      padding-right: 10px;
-      font-size: 12pt;
-      min-width: 306px;
-      max-width: 653px;
-      min-height: 400px;
-    }
 
     #pbtn, #rbtn, #sbtn, #fbtn{
       min-height: 60px;
@@ -93,24 +80,20 @@
       <!-- <img src="/img/home.png" alt="Smiley face" width="35" height="35"> -->
     </center>
     </div>
-    <div id="chat_display" class="col-xs-2 col-sm-4" onclick="gotochat()">
+    <div id="chat_display" class="col-xs-2 col-sm-4">
       <div id="chat_dot_display">2
       </div>
     </div>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
   </div>
 
-  <form id="homeform" class="form-horizontal" role="form" action="home" method="post"></form>
-  <form id="chatform" class="form-horizontal" role="form" action="chat_select" method="post"></form>
+  <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
+      </form>
        <script type="text/JavaScript">
         //<![CDATA[
         new level_progress("level_display","<%=@@progress[session[:tester]]%>");
         function backtohome(){
           var homeform = document.forms["homeform"];
-          homeform.submit();
-        }
-        function gotochat(){
-          var homeform = document.forms["chatform"];
           homeform.submit();
         }
            //]]>
@@ -119,57 +102,57 @@
   <!-- <h1>Records</h1> -->
 
  <div class="row">
-    <div id="red_background" class="col-xs-11 col-md-7">
+    <div id="chat_background" class="col-xs-11 col-md-3">
 
-</br> <div class="row">
-          <div class="col-xs-12 col-md-6">
-            <b><center><font size="5pt">請選擇一個分類</font></center></b>
+      <div class="message_box not_anon">
+        <div class="col-xs-3 col-md-3 profile_container">
+          <div class="profile_pic" style="background-image: 
+         url('/img/wen.jpg')">
+              <div class="blue_dot">
+              </div>
           </div>
+        </div>
+        <div class="col-xs-6 col-md-8 content_box">
+          <div class="content_name">
+            Wen Shaw
+          </div>
+          <div class="content_msg">
+            你為什麼覺得Wen是色狼？
+          </div>  
+        </div>
+
+        <div class="col-xs-2 col-md-2 time_stamp self_anon">
+          <br>
+          <br>
+          <br>
+          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
+        </div>
       </div>
-          </br>
-          <form id="people_form" class="form-horizontal" role="form" action="choose_people" method="post">
-          <div class="row">
-            <div class="col-xs-6 col-md-3">
-              <button id="prof_categ" type="submit" id="pbtn" class="btn btn-block" name="categ" value="P">
-              <div class="col-xs-2 col-md-4"></div>
-              </button>
-            </div>
-            <div class="col-xs-6 col-md-3">
-              <button id="relat_categ" type="submit" id="rbtn" class="btn btn-block" name="categ" value="R">
-              <div class="col-xs-2 col-md-4"></div>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-6 col-md-3">
-               <center>專業</center>
-            </div>
-            <div class="col-xs-6 col-md-3">
-              <center>感情</center>
-            </div>
-          </div>
-        </br>
-          <div class="row">
-            <div class="col-xs-6 col-md-3">
-              <button id="social_categ" type="submit" id="sbtn" class="btn btn-block" name="categ" value="S">
-              </button>
-            </div>
-            <div class="col-xs-6 col-md-3">
-              <button id="fun_categ" type="submit" id="fbtn" class="btn btn-block" name="categ" value="F">
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-6 col-md-3">
-               <center>社交</center>
-            </div>
-            <div class="col-xs-6 col-md-3">
-              <center>好玩</center>
-            </div>
-          </div>
 
-          </form>
 
+      <div class="message_box anon">
+        <div class="col-xs-3 col-md-3 profile_container">
+          <div class="profile_pic">
+              <div class="blue_dot">
+              </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-md-8 content_box">
+          <div class="content_name">
+            匿名(你比了ChiuHo跟Wen)
+          </div>
+          <div class="content_msg">
+            你為什麼覺得Wen是色狼？
+          </div>  
+        </div>
+
+        <div class="col-xs-2 col-md-2 time_stamp">
+          <br>
+          <br>
+          <br>
+          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
+        </div>
+      </div>
 
 
     </div>
