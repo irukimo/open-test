@@ -36,6 +36,14 @@ PLAY_MAX_BET = 250
 GUESS_MAX_BET = 100
 TITLE="麻吉大學"
 
+
+# chatting
+Status_Notification_Connections = Hash.new
+Chat_Notification_Connections   = Hash.new
+Chat_Connections   = Hash.new
+Chat_Notifications = Hash.new
+Chat_History       = Hash.new
+
 set :bind, '0.0.0.0'
 set :port, PORT
 
@@ -84,7 +92,7 @@ end
 def self.import_names
   # @@names = ["John", "Peter", "Rachel Williams", "Daniel", "Sean", "中文 名字"]
   
-  @@names = Array.new
+  
   # CSV.foreach("names.csv") do |row|
   #   @@names << row[0]
   # end
@@ -115,15 +123,19 @@ def self.initialize_record
   # @@score = Array.new(@@names.count){|i|Array.new(@@questions.count,prng.rand(2))}
 
   # @@questions_left = Hash.new
-  @@started_playing = Hash.new
+  # @@started_playing = Hash.new
   # @@threads = Hash.new
-  @@coins = Hash.new
   
+  @@names = Array.new
+  @@names << "Albert"
+  @@names << "Wen"
+
+  @@coins = Hash.new
   @@level = Hash.new
   @@progress = Hash.new
   
   @@unlocked_uuid_index = Hash.new
-  @@data_to_w_r = ["started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
+  @@data_to_w_r = ["score_buffer","logged_in","view_report","shuffle_someone", 
                    "play_others","play_answer","view_rankings","wins", "losses",
                    "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names", "choose_categ",
                    "view_others_report","invite_someone", "add_friends", "invite_codes", "vip_codes"]
@@ -151,6 +163,8 @@ def self.initialize_record
   
   @@invite_codes = Hash.new
   @@vip_codes = Hash.new
+
+  
 end
 
 # def self.initialize_independent_urls
@@ -173,7 +187,7 @@ end
 #   end
 # end
 
-def self.initilize_variables
+def self.initialize_variables
   @@names.each do |name|
     @@coins[name] = INITIAL_COINS
     @@level[name] = 1
@@ -196,6 +210,10 @@ def self.initilize_variables
     @@view_others_report[name] = Array.new
     @@add_friends[name] = Array.new
     @@invite_codes[name] = Array.new
+
+    Chat_Notifications[name] = Hash.new(0)
+    Status_Notification_Connections[name] = Array.new
+    Chat_Notification_Connections[name] = Array.new
   end
 end
 
@@ -206,10 +224,12 @@ configure do
   # URL = "http://%s:%s" % [IP, PORT.to_s]
   URL = "http://machi.yoursapp.cc"
   import_questions
-  import_names
+  # import_names
   initialize_record
-  configure_Twilio
-  initilize_variables
+
+  # configure_Twilio
+  
+  initialize_variables
   # initialize_independent_urls
 
   CATEGORIES = Hash.new
@@ -231,6 +251,14 @@ def clear_session
     session[:xp_to_add] = nil
     session[:skippedquestions] = nil
     session[:bettingleft] = nil
+end
+
+def check_if_array_initialized name, hash
+  hash[name] = Array.new if hash[name] == nil
+end
+
+def check_if_hash_initialized name, hash
+  hash[name] = Hash.new if hash[name] == nil
 end
 
 
@@ -256,6 +284,12 @@ def add_new_player
     if @@view_others_report[name] == nil then @@view_others_report[name] = Array.new end
     if @@invite_codes[name] == nil then @@invite_codes[name] = Array.new end
     if @@add_friends[name] == nil then @@add_friends[name] = Array.new end
+
+    check_if_array_initialized name, Status_Notification_Connections
+    check_if_array_initialized name, Chat_Notification_Connections
+
+    check_if_hash_initialized name, Chat_Notifications
+
     @@librarian.add_player name
   end
 end
@@ -296,6 +330,122 @@ post '/friendNames' do
   @@friends[tester] += selected_friend_names
 end
 
+
+########### CHATTING API ########### 
+get '/choose' do
+  session[:tester] = params[:name] if params[:name]
+  erb :choose
+end
+
+get '/status_notif', :provides => 'text/event-stream' do
+  stream :keep_open do |out|
+    # puts out.inspect
+    puts "open status notif connection"
+    Status_Notification_Connections[session[:tester]] << out
+    out.callback { Status_Notification_Connections.delete(out); }
+  end
+end
+
+get '/chat_notif', :provides => 'text/event-stream' do
+  stream :keep_open do |out|
+    # puts out.inspect
+    puts "open chat notif connection"
+    Chat_Notification_Connections[session[:tester]] << out
+    out.callback { Chat_Notification_Connections.delete(out); }
+  end
+end
+
+get '/chat_stream', :provides => 'text/event-stream' do
+  receiver = session[:receiver]
+  key = [session[:tester], receiver]
+
+  if Chat_Connections[key] and !Chat_Connections[key].closed?
+    puts "user: %s, receiver: %s, found previous connection" % [session[:tester], receiver.to_s]
+  else
+    puts "user: %s, receiver: %s, create new connection" % [session[:tester], receiver.to_s]
+    stream :keep_open do |out|
+      Chat_Connections[key] = out
+      out.callback { Chat_Connections.delete(key); }
+    end
+  end
+
+  return Chat_Connections[key]
+end
+
+def get_unordered_key_between user1, user2
+  return (user1 > user2) ? [user1, user2] : [user2, user1]
+end
+
+def clear_chat_notification sender, receiver
+  Chat_Notifications[sender][receiver] = 0
+end
+
+def send_status_notification receiver
+  Status_Notification_Connections[receiver].each do |out|
+    
+    out << "data: %s\n\n" % Chat_Notifications[receiver].values.inject(0, :+)
+    # out << "data: status\n\n"
+  end
+end
+
+def send_chat_notification receiver, chatter, message, time
+  Chat_Notification_Connections[receiver].each do |out|
+    
+    out << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [chatter, message, time]
+    # out << "data: chat\n\n"
+  end
+end
+
+def send_chat sender, receiver, message, time
+  key = [sender, receiver]
+  if Chat_Connections[key] != nil and !Chat_Connections[key].closed? #online
+    Chat_Connections[key] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [receiver, message, time]
+    return true
+  else
+    return false
+  end
+end
+
+post '/chat' do
+  receiver = session[:receiver]
+  msg      = params[:msg]
+  user     = session[:tester]
+  time     = Time.now
+  
+  unordered_key = get_unordered_key_between(user, receiver)
+  Chat_History[unordered_key] = Array.new if Chat_History[unordered_key] == nil
+  Chat_History[unordered_key] << {"name" => user, "message" => msg, "time" => time }
+
+  # LOVE IS A TWO-WAY STREET
+  [[user, receiver], [receiver, user]].each do |sender, chatter|
+    unless send_chat(sender, chatter, msg, time)
+      # puts "Can't find key: " + key.inspect
+      
+      Chat_Notifications[sender][chatter] += 1
+      
+      puts "going to send status notif"
+      send_status_notification sender
+      
+      puts "going to send chat notif"
+      send_chat_notification sender, chatter, msg, time
+    end
+  end
+
+  204 # response without entity body
+end
+
+
+post '/start_chat' do 
+  session[:receiver] = params[:receiver]
+  clear_chat_notification session[:tester],session[:receiver]
+  
+  unordered_key = get_unordered_key_between(session[:tester],session[:receiver])
+  check_if_array_initialized unordered_key, Chat_History
+  # Chat_History[unordered_key] = Array.new if Chat_History[unordered_key] == nil
+  erb :chat, :locals => { :key => unordered_key, :user => session[:tester]}
+end
+
+
 route :get, :post, '/home' do
   if params["name"]
     puts "name: " + params["name"]
@@ -323,10 +473,10 @@ route :get, :post, '/home' do
     puts "ERROR: fb_friends of %s is empty" % tester
   end
     
-  if @@started_playing[tester] == nil
-    # set_interval(REFILL, tester)
-    @@started_playing[tester] = TRUE
-  end
+  # if @@started_playing[tester] == nil
+  #   # set_interval(REFILL, tester)
+  #   @@started_playing[tester] = TRUE
+  # end
   puts "At home, tester: " + tester
   @@logged_in[tester] << Time.now
 
