@@ -114,17 +114,17 @@ def self.initialize_record
   # prng = Random.new(1234)
   # @@score = Array.new(@@names.count){|i|Array.new(@@questions.count,prng.rand(2))}
 
-  @@questions_left = Hash.new
+  # @@questions_left = Hash.new
   @@started_playing = Hash.new
-  @@threads = Hash.new
+  # @@threads = Hash.new
   @@coins = Hash.new
   
   @@level = Hash.new
   @@progress = Hash.new
   
   @@unlocked_uuid_index = Hash.new
-  @@data_to_w_r = ["questions_left", "started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
-                   "play_others","play_answer","view_rankings","wins", "losses", "threads", 
+  @@data_to_w_r = ["started_playing", "score_buffer","logged_in","view_report","shuffle_someone", 
+                   "play_others","play_answer","view_rankings","wins", "losses",
                    "level", "progress", "unlocked_uuid_index", "coins", "record", "friends", "fb_friends", "names", "choose_categ",
                    "view_others_report","invite_someone", "add_friends", "invite_codes", "vip_codes"]
   @@wins = Hash.new
@@ -133,14 +133,13 @@ def self.initialize_record
   @@view_report = Hash.new
   @@play_others = Hash.new
   @@play_answer = Hash.new
-  @@view_rankings = Hash.new
-  
+  @@view_rankings = Hash.new  
   @@shuffle_someone = Hash.new
   @@invite_someone = Hash.new
   @@logged_in = Hash.new
   @@score_buffer = Hash.new
   @@choose_categ = Hash.new
-  @@view_others_report = Hash.new
+  @@view_others_report = Hash.new 
   @@add_friends = Hash.new
 
   @@record = Array.new 
@@ -785,7 +784,7 @@ def view_report(name)
         view_others_report_record = Array.new
         view_others_report_record << name
         view_others_report_record << Time.now
-        @@view_others_report[name] << view_others_report_record
+        @@view_others_report[session[:tester]] << view_others_report_record
     end
 
     # @my_questions = @@librarian.get_questions_of(name)
