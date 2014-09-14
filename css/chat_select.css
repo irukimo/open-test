@@ -22,11 +22,14 @@
 	border-top-color: #ebebeb;
 }
 
-.not_anon .profile_container{
+.profile_container{
 	padding:0px;
 	height: 56px;
 	width: 56px;
 	border-radius: 100px;
+}
+
+.not_anon .profile_container{
 	background: -webkit-linear-gradient(left top,#b78c8c, #a3659c , #fea758, #e4cfbb); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb);/* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb); /* For Firefox 3.6 to 15 */
@@ -34,10 +37,6 @@
 }
 
 .anon .profile_container{
-	padding:0px;
-	height: 56px;
-	width: 56px;
-	border-radius: 100px;
 	background: -webkit-linear-gradient(left top,#ffffff, #4d4d4d); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(bottom right,#ffffff, #4d4d4d);/* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(bottom right,#ffffff, #4d4d4d); /* For Firefox 3.6 to 15 */

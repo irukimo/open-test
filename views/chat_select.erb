@@ -104,7 +104,7 @@
     <div id="chat_background" class="col-xs-11 col-md-3">
 
       <% @chats.each do |uuid, chat| %>
-        <div class="message_box <%= (chat["anon"] == "true" ? "anon" : "not_anon") %>">
+        <div class="message_box <%= (chat["anon"] == "true" ? "anon" : "not_anon") %>" onclick="gotoChatRoom()">
           <div class="col-xs-3 col-md-3 profile_container">
             <div class="profile_pic" style="background-image: 
            url('/img/wen.jpg')">
@@ -170,9 +170,19 @@
     $("#" + obj["chat_uuid"] + "_msg").html(obj["message"]);
     $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
   };
-
-
 </script>
+
+  <form id="chatroomform" class="form-horizontal" role="form" action="chat_room" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function gotoChatRoom(){
+          var homeform = document.forms["chatroomform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
+
 
 
       <!-- FOOTER -->

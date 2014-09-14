@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link rel="stylesheet" type="text/css" href="css/categ.css">
-    <link rel="stylesheet" type="text/css" href="css/chat_select.css">
+    <link rel="stylesheet" type="text/css" href="css/chat_room.css">
     <script src="js/basic_display.js"></script>
 
     <style type="text/css">
@@ -72,82 +72,150 @@
     <div class="container marketing">
 
   <!-- <h1>Records</h1> -->
-
+<br>
    <div class="row">
-      <div class="col-xs-3 col-md-3">
-        <img src="/img/arrow.png" alt="Smiley face" width="40" height="20">
+      <div class="col-xs-3 col-md-1" onclick="goBack()">
+        <div style="width:60px;height:7px;"></div>
+        <img src="/img/arrow.png" alt="Smiley face" width="60" height="40">
       </div>
-      <div class="col-xs-3 col-md-3 profile_container">
-          <div class="profile_pic" style="background-image: 
-         url('/img/wen.jpg')">
-              <div class="blue_dot">
-              </div>
-          </div>
+      <div class="col-xs-3 col-md-8">
+
+
+        <!-- if he is not anonymous -->
+            <div class="col-xs-3 col-md-9 profile_icon not_anon top_icon">
+                <div class="profile_pic" style="background-image: 
+               url('/img/wen.jpg')">
+                </div>
+            </div>
+        <!-- if he is anonymous -->
+<!--             <div class="col-xs-3 col-md-9 profile_icon anon top_icon">
+                <div class="profile_pic">
+                </div>
+            </div> -->
+
+
+
       </div>
    </div>
 
   <!-- <h1>Records</h1> -->
 
  <div class="row">
-    <div id="chat_background" class="col-xs-11 col-md-3">
+    <div id="room_background" class="col-xs-11 col-md-3">
 
-      <div class="message_box not_anon">
-        <div class="col-xs-3 col-md-3 profile_container">
-          <div class="profile_pic" style="background-image: 
-         url('/img/wen.jpg')">
-              <div class="blue_dot">
-              </div>
-          </div>
+      <center>他比了Wen跟Iru</center>
+      <div class="history_compare">
+        <center>"便秘"</center>
+        <div class="col-xs-6 col-md-6">
+          <center>Wen</center>
         </div>
-        <div class="col-xs-6 col-md-8 content_box">
-          <div class="content_name">
-            Wen Shaw
-          </div>
-          <div class="content_msg">
-            你為什麼覺得Wen是色狼？
-          </div>  
-        </div>
-
-        <div class="col-xs-2 col-md-2 time_stamp">
-          <center><img src="/img/black_anon.png" alt="Smiley face" width="45" height="45">
-          <div style="width:40px; height:3px;"></div>
-          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
-          </center>
+        <div class="col-xs-6 col-md-6">
+          <center>Iru</center>
         </div>
       </div>
 
+      <div class="messages">
 
-      <div class="message_box anon">
-        <div class="col-xs-3 col-md-3 profile_container">
-          <div class="profile_pic">
-              <div class="blue_dot">
+        <div class="row">
+          <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
+                <div class="message_profile_pic" style="background-image: 
+               url('/img/wen.jpg')">
+                </div>
+          </div>
+
+          <div class="col-xs-9 col-md-9 message_box">
+              <div class="message">你的腿好粗</div>
+              <div class="time_stamp">1:35pm</div>
+          </div>
+        </div>
+
+          <!-- my message -->
+          <div class="row">
+              <div class="col-xs-2 col-md-2"></div>
+              <div class="col-xs-9 col-md-9 self_message_box">
+                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
+                  <div class="time_stamp">1:35pm</div>
+              </div>
+              <div class="col-xs-3 col-md-3 message_profile_icon anon">
+                  <div class="message_profile_pic"></div>
               </div>
           </div>
-        </div>
-        <div class="col-xs-6 col-md-8 content_box">
-          <div class="content_name">
-            匿名(你比了ChiuHo跟Wen)
+          <!--  -->
+          <div class="row">
+              <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
+                    <div class="message_profile_pic" style="background-image: 
+                   url('/img/wen.jpg')">
+                    </div>
+              </div>
+              <div class="col-xs-9 col-md-9 message_box">
+                  <div class="message">你的腿好粗</div>
+                  <div class="time_stamp">1:35pm</div>
+              </div>
           </div>
-          <div class="content_msg">
-            你為什麼覺得Wen是色狼？
-          </div>  
-        </div>
 
-        <div class="col-xs-2 col-md-2 time_stamp">
-          <center><div style="width:40px; height:45px;"></div>
-          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
-          </center>
-        </div>
-      </div>
+          <!-- my message -->
+          <div class="row">
+              <div class="col-xs-2 col-md-2"></div>
+              <div class="col-xs-9 col-md-9 self_message_box">
+                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
+                  <div class="time_stamp">1:35pm</div>
+              </div>
+              <div class="col-xs-3 col-md-3 message_profile_icon anon">
+                  <div class="message_profile_pic"></div>
+              </div>
+          </div>
+          <!--  -->
+          <div class="row">
+              <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
+                    <div class="message_profile_pic" style="background-image: 
+                   url('/img/wen.jpg')">
+                    </div>
+              </div>
+              <div class="col-xs-9 col-md-9 message_box">
+                  <div class="message">你的腿好粗</div>
+                  <div class="time_stamp">1:35pm</div>
+              </div>
+          </div>
 
+          <!-- my message -->
+          <div class="row">
+              <div class="col-xs-2 col-md-2"></div>
+              <div class="col-xs-9 col-md-9 self_message_box">
+                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
+                  <div class="time_stamp">1:35pm</div>
+              </div>
+              <div class="col-xs-3 col-md-3 message_profile_icon anon">
+                  <div class="message_profile_pic"></div>
+              </div>
+          </div>
+          <!--  -->
+
+        </div>
+        <!-- messages -->
 
     </div>
 </div>
 
+  <form id="chatselectform" class="form-horizontal" role="form" action="chat_select" method="post">
+      </form>
+       <script type="text/JavaScript">
+        //<![CDATA[
+        function goBack(){
+          var homeform = document.forms["chatselectform"];
+          homeform.submit();
+        }
+           //]]>
+        </script>
 
-
+<br>
+<br>
+<br>
+<br>
 
       <!-- FOOTER -->
+      <div class="footer">
+         Put the message container here
+      </div>
 
     </div><!-- /.container -->
 
