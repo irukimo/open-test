@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link rel="stylesheet" type="text/css" href="css/categ.css">
     <link rel="stylesheet" type="text/css" href="css/chat_room.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="js/basic_display.js"></script>
 
     <style type="text/css">
@@ -114,84 +115,90 @@
         </div>
       </div>
 
-      <div class="messages">
-
-        <div class="row">
-          <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
-                <div class="message_profile_pic" style="background-image: 
-               url('/img/wen.jpg')">
-                </div>
+      <div class="row" id="my_message" style="display:none;">
+          <div class="col-xs-2 col-md-2"></div>
+          <div class="col-xs-9 col-md-9 self_message_box">
+              <div id="message" class="message"></div>
+              <div id="time" class="time_stamp"></div>
           </div>
-
-          <div class="col-xs-9 col-md-9 message_box">
-              <div class="message">你的腿好粗</div>
-              <div class="time_stamp">1:35pm</div>
+          <div class="col-xs-3 col-md-3 message_profile_icon anon">
+              <div class="message_profile_pic"></div>
           </div>
+      </div>
+
+
+      <div class="row" id="your_message" style="display:none;">
+        <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
+              <div class="message_profile_pic" style="background-image: 
+             url('/img/wen.jpg')">
+              </div>
         </div>
 
-          <!-- my message -->
+        <div class="col-xs-9 col-md-9 message_box">
+            <div id="message" class="message"></div>
+            <div id="time" class="time_stamp"></div>
+        </div>
+      </div>
+
+      <div class="messages">
+        <%  time_now = Time.now
+            Chat_History[chat_uuid].each do |chat| 
+              if chat["name"] == session[:tester]
+                time = sec_to_units(time_now - chat["time"])
+        %>
+        
+        <!-- my message -->
           <div class="row">
               <div class="col-xs-2 col-md-2"></div>
               <div class="col-xs-9 col-md-9 self_message_box">
-                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
-                  <div class="time_stamp">1:35pm</div>
+                  <div id="message" class="message"><%=chat["message"]%></div>
+                  <div id="time" class="time_stamp"><%=time%></div>
               </div>
               <div class="col-xs-3 col-md-3 message_profile_icon anon">
                   <div class="message_profile_pic"></div>
-              </div>
-          </div>
-          <!--  -->
-          <div class="row">
-              <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
-                    <div class="message_profile_pic" style="background-image: 
-                   url('/img/wen.jpg')">
-                    </div>
-              </div>
-              <div class="col-xs-9 col-md-9 message_box">
-                  <div class="message">你的腿好粗</div>
-                  <div class="time_stamp">1:35pm</div>
               </div>
           </div>
 
-          <!-- my message -->
+        <%else%>
           <div class="row">
-              <div class="col-xs-2 col-md-2"></div>
-              <div class="col-xs-9 col-md-9 self_message_box">
-                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
-                  <div class="time_stamp">1:35pm</div>
-              </div>
-              <div class="col-xs-3 col-md-3 message_profile_icon anon">
-                  <div class="message_profile_pic"></div>
-              </div>
-          </div>
-          <!--  -->
-          <div class="row">
-              <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
-                    <div class="message_profile_pic" style="background-image: 
-                   url('/img/wen.jpg')">
-                    </div>
-              </div>
-              <div class="col-xs-9 col-md-9 message_box">
-                  <div class="message">你的腿好粗</div>
-                  <div class="time_stamp">1:35pm</div>
-              </div>
+            <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
+                  <div class="message_profile_pic" style="background-image: 
+                 url('/img/wen.jpg')">
+                  </div>
+            </div>
+
+            <div class="col-xs-9 col-md-9 message_box">
+                <div id="message" class="message"><%=chat["message"]%></div>
+                <div id="time" class="time_stamp"><%=time%></div>
+            </div>
           </div>
 
-          <!-- my message -->
-          <div class="row">
-              <div class="col-xs-2 col-md-2"></div>
-              <div class="col-xs-9 col-md-9 self_message_box">
-                  <div class="message">你的腿好粗哇哈哈哈哈哈哈哈受不了</div>
-                  <div class="time_stamp">1:35pm</div>
-              </div>
-              <div class="col-xs-3 col-md-3 message_profile_icon anon">
-                  <div class="message_profile_pic"></div>
-              </div>
-          </div>
-          <!--  -->
+        <%end%>
+        <%end%>
+        
+        
+        <script>
+          // reading
+          var es = new EventSource('/chat_stream');
+          es.onmessage = function(e) { 
+            obj = $.parseJSON(e.data);
+            var snippet;
+            if(obj["name"] == "<%=session[:tester]%>") {
+              snippet = $("#my_message").clone();
+            } else {
+              snippet = $("#your_message").clone();
+            }
+            snippet.find('#message').html(obj["message"]);
+            snippet.find('#time').html(obj["time"]);
+            snippet.css("display", "inline")
+            $('.messages').append(snippet);
+          };
+
+        </script>
 
         </div>
         <!-- messages -->
+        <a id="bottom"></a>
 
     </div>
 </div>
@@ -214,9 +221,22 @@
 
       <!-- FOOTER -->
       <div class="footer">
-         Put the message container here
+         <form>
+          <input id='msg' placeholder='type message here...' />
+        </form>
       </div>
-
+      <script>
+      $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+       // writing
+          $("form").on('submit',function(e) {
+            $.post('/chat', {msg: $('#msg').val()});
+            $('#msg').val(''); $('#msg').focus();
+            
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            
+            e.preventDefault();
+          });
+      </script>
     </div><!-- /.container -->
 
 
@@ -225,7 +245,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
   </body>
 </html>

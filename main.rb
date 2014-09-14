@@ -403,7 +403,8 @@ end
 
 def send_chat chat_uuid, sender, name, message, time
   if Chat_Connections[chat_uuid][sender] != nil and !Chat_Connections[chat_uuid][sender].closed? #online
-    Chat_Connections[chat_uuid][sender] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, time]
+    display_time = sec_to_units(Time.now - time)
+    Chat_Connections[chat_uuid][sender] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, display_time]
     return true
   else
     return false
@@ -516,8 +517,13 @@ post '/chat_room' do
 end
 
 post '/continue_chat' do
-  bundle = nil
-  erb :chat, :locals => { :bundle => bundle, :chat_uuid => params[:uuid]}
+  chat_uuid = params[:uuid]
+
+  puts "chat_uuid: " + chat_uuid
+  tmp, bundle, tmp2 = @@librarian.get_bundle_by_uuid chat_uuid
+  
+  session[:chat_uuid] = chat_uuid
+  erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
 post '/create_chat' do 
@@ -538,7 +544,7 @@ post '/create_chat' do
   session[:receiver]  = author
   #TODO: need guess answers as well
   #TODO: chat_room instead of chat
-  erb :chat, :locals => { :bundle => bundle, :chat_uuid => chat_uuid}
+  erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
 
