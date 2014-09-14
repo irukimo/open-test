@@ -18,6 +18,8 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 
+BG_TRUE  = "true"
+BG_FALSE = "false"
 ANONYMOUS_FRIEND_NAME   = "你的朋友"
 ANONYMOUS_STRANGER_NAME = "某人"
 IP = "107.170.232.66"
@@ -43,6 +45,7 @@ Chat_Notification_Connections   = Hash.new
 Chat_Connections   = Hash.new
 Chat_Notifications = Hash.new
 Chat_History       = Hash.new
+Chat_Lookup        = Hash.new
 
 set :bind, '0.0.0.0'
 set :port, PORT
@@ -211,9 +214,9 @@ def self.initialize_variables
     @@add_friends[name] = Array.new
     @@invite_codes[name] = Array.new
 
-    Chat_Notifications[name] = Hash.new(0)
     Status_Notification_Connections[name] = Array.new
     Chat_Notification_Connections[name] = Array.new
+
   end
 end
 
@@ -278,17 +281,18 @@ def add_new_player
     # if @@use_gems[name] == nil then @@use_gems[name] = Array.new end
     if @@shuffle_someone[name] == nil then @@shuffle_someone[name] = Array.new end
     if @@logged_in[name] == nil then @@logged_in[name] = Array.new end
-    if @@friends[name] == nil then @@friends[name] = Array.new end
-    if @@fb_friends[name] == nil then @@fb_friends[name] = Array.new end
-    if @@choose_categ[name] == nil then @@choose_categ[name] = Array.new end
-    if @@view_others_report[name] == nil then @@view_others_report[name] = Array.new end
-    if @@invite_codes[name] == nil then @@invite_codes[name] = Array.new end
-    if @@add_friends[name] == nil then @@add_friends[name] = Array.new end
-
-    check_if_array_initialized name, Status_Notification_Connections
-    check_if_array_initialized name, Chat_Notification_Connections
-
-    check_if_hash_initialized name, Chat_Notifications
+    
+    [ @@invite_codes, 
+      @@fb_friends, 
+      @@friends, 
+      @@choose_categ, 
+      @@view_others_report, 
+      @@add_friends,
+      Status_Notification_Connections,
+      Chat_Notification_Connections].each do |hash|
+        check_if_array_initialized name, hash
+    end
+    
 
     @@librarian.add_player name
   end
@@ -342,7 +346,7 @@ get '/status_notif', :provides => 'text/event-stream' do
     # puts out.inspect
     puts "open status notif connection"
     Status_Notification_Connections[session[:tester]] << out
-    out.callback { Status_Notification_Connections.delete(out); }
+    out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
   end
 end
 
@@ -351,83 +355,86 @@ get '/chat_notif', :provides => 'text/event-stream' do
     # puts out.inspect
     puts "open chat notif connection"
     Chat_Notification_Connections[session[:tester]] << out
-    out.callback { Chat_Notification_Connections.delete(out); }
+    out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
   end
 end
 
 get '/chat_stream', :provides => 'text/event-stream' do
-  receiver = session[:receiver]
-  key = [session[:tester], receiver]
+  receiver  = session[:receiver]
+  tester    = session[:tester]
+  chat_uuid = session[:chat_uuid]
 
-  if Chat_Connections[key] and !Chat_Connections[key].closed?
-    puts "user: %s, receiver: %s, found previous connection" % [session[:tester], receiver.to_s]
+  if Chat_Connections[chat_uuid][tester] and !Chat_Connections[chat_uuid][tester].closed?
+    puts "user: %s, receiver: %s, found previous connection" % [tester, receiver.to_s]
   else
-    puts "user: %s, receiver: %s, create new connection" % [session[:tester], receiver.to_s]
+    puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
     stream :keep_open do |out|
-      Chat_Connections[key] = out
-      out.callback { Chat_Connections.delete(key); }
+      Chat_Connections[chat_uuid][tester] = out
+      out.callback { Chat_Connections[chat_uuid][tester] = nil; }
     end
   end
 
-  return Chat_Connections[key]
+  return Chat_Connections[chat_uuid][tester]
 end
 
 def get_unordered_key_between user1, user2
   return (user1 > user2) ? [user1, user2] : [user2, user1]
 end
 
-def clear_chat_notification sender, receiver
-  Chat_Notifications[sender][receiver] = 0
-end
+# def clear_chat_notification sender, receiver
+#   Chat_Notifications[sender][receiver] = 0
+# end
 
 def send_status_notification receiver
   Status_Notification_Connections[receiver].each do |out|
     
-    out << "data: %s\n\n" % Chat_Notifications[receiver].values.inject(0, :+)
+    out << "data: %s\n\n" % calculate_num_unread_for(receiver)
     # out << "data: status\n\n"
   end
 end
 
-def send_chat_notification receiver, chatter, message, time
+def send_chat_notification chat_uuid, receiver, message, time
   Chat_Notification_Connections[receiver].each do |out|
-    
-    out << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [chatter, message, time]
+    display_time = sec_to_units(Time.now - time)
+    out << "data: {\"chat_uuid\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [chat_uuid, message, display_time]
     # out << "data: chat\n\n"
   end
 end
 
-def send_chat sender, receiver, message, time
-  key = [sender, receiver]
-  if Chat_Connections[key] != nil and !Chat_Connections[key].closed? #online
-    Chat_Connections[key] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [receiver, message, time]
+def send_chat chat_uuid, sender, name, message, time
+  if Chat_Connections[chat_uuid][sender] != nil and !Chat_Connections[chat_uuid][sender].closed? #online
+    Chat_Connections[chat_uuid][sender] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, time]
     return true
   else
     return false
   end
 end
 
+# 1) send message through Chat_Connection
+# 2) if fails, increment chat notification number through Chat_Notification using chat_uuid and user_name
+# 4) Send out status/chat notification
 post '/chat' do
-  receiver = session[:receiver]
-  msg      = params[:msg]
-  user     = session[:tester]
-  time     = Time.now
+  receiver  = session[:receiver]
+  tester    = session[:tester]
+  chat_uuid = session[:chat_uuid]
+  msg       = params[:msg]
+  time      = Time.now
   
-  unordered_key = get_unordered_key_between(user, receiver)
-  Chat_History[unordered_key] = Array.new if Chat_History[unordered_key] == nil
-  Chat_History[unordered_key] << {"name" => user, "message" => msg, "time" => time }
+  Chat_History[chat_uuid] << {"name" => tester, "message" => msg, "time" => time }
 
   # LOVE IS A TWO-WAY STREET
-  [[user, receiver], [receiver, user]].each do |sender, chatter|
-    unless send_chat(sender, chatter, msg, time)
+  #TODO: we don't need chatter here
+  [[tester, receiver], [receiver, tester]].each do |sender, chatter|
+    unless send_chat(chat_uuid, sender, tester, msg, time)
       # puts "Can't find key: " + key.inspect
       
-      Chat_Notifications[sender][chatter] += 1
+      Chat_Notifications[chat_uuid][sender] += 1
       
       puts "going to send status notif"
       send_status_notification sender
       
       puts "going to send chat notif"
-      send_chat_notification sender, chatter, msg, time
+      send_chat_notification chat_uuid, sender, msg, time
     end
   end
 
@@ -435,14 +442,103 @@ post '/chat' do
 end
 
 
-post '/start_chat' do 
-  session[:receiver] = params[:receiver]
-  clear_chat_notification session[:tester],session[:receiver]
+# 1) look up user_name in Chat_Lookup for chat_uuid, chatter/author, anonymity
+# 2) pull the last record of Chat_History for chat_uuid's
+# 3) check unread message in Chat_Notification
+# 4) establish and store SSE in Chat_Notification_Connections
+# 5) establish and store SSE in Status_Notification_Connections
+# 6) calculate number of unread in Status_Notification_Connections
+
+def calculate_num_unread_for name
+  num_unread = 0
+  uuids = Chat_Lookup.select{|uuid, data| data["chatter"] == name or data["author"] == name}.keys
   
-  unordered_key = get_unordered_key_between(session[:tester],session[:receiver])
-  check_if_array_initialized unordered_key, Chat_History
-  # Chat_History[unordered_key] = Array.new if Chat_History[unordered_key] == nil
-  erb :chat, :locals => { :key => unordered_key, :user => session[:tester]}
+  uuids.each do |uuid|
+    if Chat_Notifications[uuid][name] > 0
+      num_unread += Chat_Notifications[uuid][name]
+    end
+  end
+  return num_unread
+end
+
+post '/chat_select' do
+  tester = session[:tester]
+
+  @chats = Chat_Lookup.select{|uuid, data| data["chatter"] == tester or data["author"] == tester}
+  @num_unread = 0
+  @chats.keys.each do |uuid|
+    if Chat_History[uuid].last != nil
+      @chats[uuid]["last_message"]      = Chat_History[uuid].last["message"]
+      Chat_History[uuid].last["time"]   = Time.parse(Chat_History[uuid].last["time"]) if Chat_History[uuid].last["time"].class != Time
+      @chats[uuid]["last_message_time"] = sec_to_units(Time.now - Chat_History[uuid].last["time"])
+    else
+      @chats[uuid]["last_message"]      = ""
+      @chats[uuid]["last_message_time"] = sec_to_units(0)
+    end
+
+    if Chat_Notifications[uuid][tester] > 0
+      @num_unread += Chat_Notifications[uuid][tester]
+      @chats[uuid]["unread"] = BG_TRUE
+    else
+      @chats[uuid]["unread"] = BG_FALSE
+    end
+  end
+
+  #TODO: still, the first and the fourth ones might be confusing
+  @chats.each do |uuid, hash|
+    if hash["anonymous_author"] == BG_TRUE
+      if tester == hash["author"]
+        hash["display_name"] = hash["chatter"]    
+        hash["anon"] = "false"
+      else
+        options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
+        hash["display_name"] = "匿名(他比了%s和%s)" % options
+        hash["anon"] = "true"
+      end
+    else
+      if tester == hash["author"]
+        options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
+        hash["display_name"] = "匿名(你比了%s和%s)" % options
+        hash["anon"] = "true"
+      else
+        hash["display_name"] = hash["author"]
+        hash["anon"] = "false"
+      end
+    end
+    
+  end
+
+  erb :chat_select
+end
+
+# post '/chat_room' do
+#   erb :chat_room
+# end
+
+post '/continue_chat' do
+  bundle = nil
+  erb :chat, :locals => { :bundle => bundle, :chat_uuid => params[:uuid]}
+end
+
+post '/create_chat' do 
+  bundle_uuid = params[:bundle_uuid]
+  author, bundle, anonymity = @@librarian.get_bundle_by_uuid(bundle_uuid)
+  puts "author: " + author.to_s
+  chat_uuid = UUIDTools::UUID.random_create.to_s
+  Chat_Connections[chat_uuid] = Hash.new
+  Chat_Notifications[chat_uuid] = {author => 0, session[:tester] => 0}
+  Chat_History[chat_uuid] = Array.new
+  Chat_Lookup[chat_uuid]  = {"author"      => author, 
+                             "chatter"     => session[:tester], 
+                             "bundle_uuid" => bundle_uuid, 
+                             "anonymous_author" => (anonymity ? "true" : "false")}
+
+  puts "chat_uuid: " + chat_uuid
+  session[:chat_uuid] = chat_uuid
+  session[:receiver]  = author
+  #TODO: need guess answers as well
+  #TODO: chat_room instead of chat
+  erb :chat, :locals => { :bundle => bundle, :chat_uuid => chat_uuid}
 end
 
 
@@ -522,6 +618,8 @@ route :get, :post, '/home' do
   end
 
   session[:categ] = nil
+
+  @num_unread = calculate_num_unread_for(tester)
 
   erb :home
 end
@@ -711,14 +809,6 @@ get '/wtprofile' do
 end
 get '/wtcoin' do
   erb :wtcoin
-end
-
-post '/chat_select' do
-  erb :chat_select
-end
-
-post '/chat_room' do
-  erb :chat_room
 end
 
 get '/view_others_choose_people' do
@@ -1306,8 +1396,7 @@ post '/result' do
   # has not displayed before
   # only happen at first time being played
   tester, bundle = @@librarian.get_bundle_by_uuid(session[:uuid])
-  # puts "result: "
-  # puts bundle
+  
   bundle.each_with_index do |quiz, index|
     if quiz["done"] == false
       puts quiz["bet"]
@@ -1363,8 +1452,11 @@ post '/result' do
     @correct = false
     @@losses[session[:tester]] += 1
   end
+
+  bundle_uuid = session[:uuid]
   clear_session
-  erb :result
+
+  erb :result, :locals => { :bundle_uuid => bundle_uuid }
 end
 
 

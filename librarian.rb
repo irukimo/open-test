@@ -250,6 +250,15 @@ class Librarian
     return my_questions
   end
 
+  def get_options_by_uuid uuid
+    @bundles.each do |name, parcels|
+      parcels.each do |parcel|
+        return [parcel[1][0]["option0"], parcel[1][0]["option1"]] if parcel[0] == uuid
+      end
+    end
+    return nil
+  end
+
   # return the name and the matched bundle
   def get_bundle_by_uuid uuid
     @bundles.each do |name, parcels|
@@ -257,6 +266,7 @@ class Librarian
         return [name, parcel[1], parcel[3]] if parcel[0] == uuid
       end
     end
+    return nil
   end
 
   def get_relevant_quizzes name

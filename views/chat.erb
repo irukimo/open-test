@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Chat with Sinatra</title>
+    <meta charset="utf-8" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  </head>
+  <body>
+
+<pre id='chat'>
+  <% 
+     Chat_History[chat_uuid].each do |msg|%>
+  <%=msg%>
+  <%end%>
+
+</pre>
+<form>
+  <input id='msg' placeholder='type message here...' />
+</form>
+
+<script>
+  // reading
+  var es = new EventSource('/chat_stream');
+  es.onmessage = function(e) { $('#chat').append(e.data + "\n") };
+
+  // writing
+  $("form").on('submit',function(e) {
+    $.post('/chat', {msg: $('#msg').val()});
+    $('#msg').val(''); $('#msg').focus();
+    e.preventDefault();
+  });
+</script>
+
+<form action='/chat_select' method='get'>
+    <!-- <input type="hidden" name="user" value="<%=session[:user]%>"/> -->
+    <input class="orange-flat-button" type='submit' value="Back"/>
+</form>
+
+</body>
+</html>

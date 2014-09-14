@@ -10,8 +10,8 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="js/RadarChart.js"></script>
     <script src="js/WTPentagon.js"></script>
-    <script src="js/basic_display.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/basic_display.js"></script>
     <title><%=TITLE%></title>
 
     <!-- Bootstrap core CSS -->
@@ -229,6 +229,7 @@
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
     <div class="container marketing">
+    
 
      <script type="text/JavaScript">
     //<![CDATA[
@@ -260,7 +261,7 @@
       </center>
     </div>
     <div id="chat_display" class="col-xs-2 col-sm-4" onclick="gotochat()">
-      <div id="chat_dot_display">2
+      <div id="chat_dot_display"><%=@num_unread%>
       </div>
     </div>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>

@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="css/homepage.css">
     <link rel="stylesheet" type="text/css" href="css/categ.css">
     <link rel="stylesheet" type="text/css" href="css/chat_select.css">
-    <script src="js/basic_display.js"></script>
+    
 
     <style type="text/css">
     #timesleftbig{
@@ -81,8 +81,7 @@
     </center>
     </div>
     <div id="chat_display" class="col-xs-2 col-sm-4">
-      <div id="chat_dot_display">2
-      </div>
+    <div id="chat_dot_display"><%=@num_unread%></div>
     </div>
     <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
   </div>
@@ -104,31 +103,35 @@
  <div class="row">
     <div id="chat_background" class="col-xs-11 col-md-3">
 
-      <div class="message_box not_anon">
-        <div class="col-xs-3 col-md-3 profile_container">
-          <div class="profile_pic" style="background-image: 
-         url('/img/wen.jpg')">
-              <div class="blue_dot">
-              </div>
+      <% @chats.each do |uuid, chat| %>
+        <div class="message_box <%= (chat["anon"] == "true" ? "anon" : "not_anon") %>">
+          <div class="col-xs-3 col-md-3 profile_container">
+            <div class="profile_pic" style="background-image: 
+           url('/img/wen.jpg')">
+                <!-- <div class="blue_dot">
+                </div> -->
+            </div>
+          </div>
+          <div class="col-xs-6 col-md-8 content_box">
+            <div class="content_name">
+              <%=chat["display_name"]%>
+            </div>
+            <div class="content_msg" id="<%=uuid%>_msg">
+              <%=chat["last_message"]%>
+            </div>  
+          </div>
+
+          <div class="col-xs-2 col-md-2 time_stamp self_anon">
+            <br>
+            <br>
+            <br>
+            <font size="2pt" color="#9d9d9d">
+              <span id="<%=uuid%>_time"><%=chat["last_message_time"]%></span>
+            </font>
           </div>
         </div>
-        <div class="col-xs-6 col-md-8 content_box">
-          <div class="content_name">
-            Wen Shaw
-          </div>
-          <div class="content_msg">
-            你為什麼覺得Wen是色狼？
-          </div>  
-        </div>
 
-        <div class="col-xs-2 col-md-2 time_stamp self_anon">
-          <br>
-          <br>
-          <br>
-          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
-        </div>
-      </div>
-
+      <% end %>
 
       <div class="message_box anon">
         <div class="col-xs-3 col-md-3 profile_container">
@@ -158,7 +161,18 @@
     </div>
 </div>
 
+<script>
+  var es = new EventSource('/chat_notif');
+  es.onmessage = function(e) {
+    // console.log(e);
+    console.log("chat: " + e.data);
+    obj = $.parseJSON(e.data);
+    $("#" + obj["chat_uuid"] + "_msg").html(obj["message"]);
+    $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
+  };
 
+
+</script>
 
 
       <!-- FOOTER -->
@@ -173,5 +187,6 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>    
+    <script src="js/basic_display.js"></script>
   </body>
 </html>
