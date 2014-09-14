@@ -464,7 +464,7 @@ end
 
 post '/chat_select' do
   tester = session[:tester]
-
+  session[:chat_uuid] = nil
   @chats = Chat_Lookup.select{|uuid, data| data["chatter"] == tester or data["author"] == tester}
   @num_unread = 0
   @chats.keys.each do |uuid|
@@ -512,21 +512,23 @@ post '/chat_select' do
   erb :chat_select
 end
 
-post '/chat_room' do
-  erb :chat_room
-end
+# post '/chat_room' do
+#   erb :chat_room
+# end
 
 post '/continue_chat' do
   chat_uuid = params[:uuid]
 
   puts "chat_uuid: " + chat_uuid
-  tmp, bundle, tmp2 = @@librarian.get_bundle_by_uuid chat_uuid
+  author, bundle, tmp = @@librarian.get_bundle_by_uuid chat_uuid
   
+  puts "bundle: " + bundle.inspect
   session[:chat_uuid] = chat_uuid
+  session[:receiver]  = author
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
-post '/create_chat' do 
+post '/create_chat' do
   bundle_uuid = params[:bundle_uuid]
   author, bundle, anonymity = @@librarian.get_bundle_by_uuid(bundle_uuid)
   puts "author: " + author.to_s
@@ -540,6 +542,7 @@ post '/create_chat' do
                              "anonymous_author" => (anonymity ? "true" : "false")}
 
   puts "chat_uuid: " + chat_uuid
+  puts "bundle: " + bundle.inspect
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = author
   #TODO: need guess answers as well

@@ -45,6 +45,11 @@
       color: #FFFFFF;
       text-align: left;
     }
+
+    .carousel-control.left, .carousel-control.right{ 
+      background: none !important; 
+      filter: progid:none !important; 
+    }
     </style>
 
 
@@ -75,7 +80,7 @@
   <!-- <h1>Records</h1> -->
 <br>
    <div class="row">
-      <div class="col-xs-3 col-md-1 goBack" onclick="goBack()">
+      <div class="col-xs-3 col-md-1" onclick="goBack()">
         <div style="width:60px;height:7px;"></div>
         <img src="/img/arrow.png" alt="Smiley face" width="60" height="40">
       </div>
@@ -101,20 +106,59 @@
 
   <!-- <h1>Records</h1> -->
 
- <div class="row">
+  <div class="row">
     <div id="room_background" class="col-xs-11 col-md-3">
 
-      <center>他比了Wen跟Iru</center>
-      <div class="history_compare">
-        <center>"便秘"</center>
-        <div class="col-xs-6 col-md-6">
-          <center>Wen</center>
-        </div>
-        <div class="col-xs-6 col-md-6">
-          <center>Iru</center>
+    <div id="question_bundle" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#question_bundle" data-slide-to="0" class="active"></li>
+      <li data-target="#question_bundle" data-slide-to="1"></li>
+      <li data-target="#question_bundle" data-slide-to="2"></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <center>他比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center>
+    <div class="carousel-inner">
+      <% has_active = false 
+         bundle.each do |hash| 
+          unless has_active
+      %>
+          <div class="item active">
+        <% has_active = true
+           else %>
+          <div class="item">
+        <% end %>
+        <div class="history_compare">
+          <center><%=hash["question"]%></center>
+          <div class="col-xs-6 col-md-6">
+            <center><%=hash["option0"]%></center>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <center><%=hash["option1"]%></center>
+          </div>
         </div>
       </div>
+      <% end %>
+      <div class="item">
+        
+        
+      </div>
+      
+    </div>
 
+    <!-- Controls -->
+    <a class="left carousel-control" href="#question_bundle" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#question_bundle" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+
+      
+      
+      <!-- template of my message -->
       <div class="row" id="my_message" style="display:none;">
           <div class="col-xs-2 col-md-2"></div>
           <div class="col-xs-9 col-md-9 self_message_box">
@@ -126,7 +170,7 @@
           </div>
       </div>
 
-
+      <!-- template of your message -->
       <div class="row" id="your_message" style="display:none;">
         <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
               <div class="message_profile_pic" style="background-image: 
@@ -143,8 +187,8 @@
       <div class="messages">
         <%  time_now = Time.now
             Chat_History[chat_uuid].each do |chat| 
+              time = sec_to_units(time_now - chat["time"])
               if chat["name"] == session[:tester]
-                time = sec_to_units(time_now - chat["time"])
         %>
         
         <!-- my message -->
@@ -192,6 +236,7 @@
             snippet.find('#time').html(obj["time"]);
             snippet.css("display", "inline")
             $('.messages').append(snippet);
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
           };
 
         </script>
@@ -225,8 +270,8 @@
           <input id='msg' placeholder='type message here...' />
         </form>
       </div>
-      <script>
-      $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+      <script>  
+      // $("html, body").animate({ scrollTop: $(document).height() }, "slow");
        // writing
           $("form").on('submit',function(e) {
             $.post('/chat', {msg: $('#msg').val()});
