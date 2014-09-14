@@ -1,0 +1,29 @@
+  <div class="row">
+    <div id="level_home_display" class="col-xs-4 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
+    <div id="medal_home_display" class="col-xs-3 col-sm-4" onclick="medalClicked()"><center>
+        <!-- <img src="/img/trophie.png" alt="Smiley face" width="43" height="43"> -->
+      </center>
+    </div>
+    <div id="chat_display" class="col-xs-2 col-sm-4" onclick="gotochat()">
+      <div id="chat_dot_display"><%=@num_unread%>
+      </div>
+    </div>
+    <div id="coin_home_display" class="col-xs-3 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
+    <!-- Optional: clear the XS cols if their content doesn't match in height -->
+    </div>
+  <form id="chatform" class="form-horizontal" role="form" action="chat_select" method="post"></form>
+  
+
+   <script type="text/JavaScript">
+  //<![CDATA[
+  new level_progress("level_home_display","<%=@@progress[session[:tester]]%>");
+  function backtohome(){
+    var homeform = document.forms["homeform"];
+    homeform.submit();
+  }
+  function gotochat(){
+    var homeform = document.forms["chatform"];
+    homeform.submit();
+  }
+     //]]>
+  </script>

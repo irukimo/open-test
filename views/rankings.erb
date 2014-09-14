@@ -12,6 +12,7 @@
     <!-- Bootstrap core CSS -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
@@ -56,27 +57,7 @@
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
     <div class="container marketing">
-      <div class="row">
-    <div id="level_display" class="col-xs-5 col-sm-3" onclick="levelClicked()"><center>等級<br><font size="5pt"><%=@@level[session[:tester]]%></font> </center></div>
-    <!-- Optional: clear the XS cols if their content doesn't match in height -->
-    <div id="home_display" class="col-xs-2 col-sm-2" onclick="backtohome()"><center>
-      <!-- <img src="/img/home.png" alt="Smiley face" width="35" height="35"> -->
-    </center>
-    </div>
-    <div id="coin_display" class="col-xs-4 col-sm-2" onclick="coinClicked()"><%= @@coins[session[:tester]] %></div>
-  </div>
-
-  <form id="homeform" class="form-horizontal" role="form" action="home" method="post">
-      </form>
-       <script type="text/JavaScript">
-        //<![CDATA[
-        new level_progress("level_display","<%=@@progress[session[:tester]]%>");
-        function backtohome(){
-          var homeform = document.forms["homeform"];
-          homeform.submit();
-        }
-           //]]>
-        </script>
+<%= erb(:my_other_icons, :layout => false) %>
 
 
  <div class="row">

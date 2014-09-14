@@ -511,9 +511,9 @@ post '/chat_select' do
   erb :chat_select
 end
 
-# post '/chat_room' do
-#   erb :chat_room
-# end
+post '/chat_room' do
+  erb :chat_room
+end
 
 post '/continue_chat' do
   bundle = nil
