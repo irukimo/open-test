@@ -496,22 +496,22 @@
 
     if(<%=@fromLogin%> == true){
       if(<%=@show_vip_code%> == true) {
-        setTimeout(function(){
-          $("#vipBtn").click();}, 0);
+        // setTimeout(function(){
+        //   $("#vipBtn").click();}, 0);
       } else {
-        setTimeout(function(){
-          msgbtn.click();},0);
+        // setTimeout(function(){
+        //   msgbtn.click();},0);
       }
     }
 
     if(<%=@show_vip_code%> == true) {
       $("#code_display").on("click", function(){
-        $("#vipBtn").click();
+        // $("#vipBtn").click();
       });
 
     } else {
       $("#ticket_display").on("click", function(){
-        msgbtn.click();
+        // msgbtn.click();
       });
     }
 

@@ -7,12 +7,14 @@ PORT = 7009
 require "addressable/uri"
 require 'sinatra'
 require "sinatra/multi_route"
+require 'sinatra/streaming'
 require 'json'
 require 'csv'
 require 'uuidtools'
 require 'twilio-ruby'
 require 'time'
 require 'koala'
+require 'eventmachine'
 require './librarian.rb'
 
 # CH or EN
@@ -22,7 +24,7 @@ BG_TRUE  = "true"
 BG_FALSE = "false"
 ANONYMOUS_FRIEND_NAME   = "你的朋友"
 ANONYMOUS_STRANGER_NAME = "某人"
-IP = "107.170.232.66"
+IP = "192.168.2.237"
 REP_SCHOLARSHIP = 5000
 REP_BONUS = 200
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
@@ -224,8 +226,8 @@ end
 
 configure do
   puts "Configuring..."
-  # URL = "http://%s:%s" % [IP, PORT.to_s]
-  URL = "http://machi.yoursapp.cc"
+  URL = "http://%s:%s" % [IP, PORT.to_s]
+  # URL = "http://machi.yoursapp.cc"
   import_questions
   # import_names
   initialize_record
@@ -238,6 +240,20 @@ configure do
   CATEGORIES = Hash.new
   extract_categ
   
+  module EventMachine
+ 
+    class Connection
+      def close_connection after_writing = false
+        begin
+          EventMachine::close_connection @signature, after_writing
+        rescue
+          puts "ERROR in EM"
+        end
+      end
+    end
+  end
+
+    
 end
 
 
@@ -342,33 +358,32 @@ get '/choose' do
 end
 
 get '/status_notif', :provides => 'text/event-stream' do
-  begin
     stream :keep_open do |out|
       # puts out.inspect
       puts "open status notif connection"
-      Status_Notification_Connections[session[:tester]] << out
-      out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
+      if Status_Notification_Connections[session[:tester]] != nil
+        Status_Notification_Connections[session[:tester]] << out 
+        out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
+      end
     end
-  rescue
-    puts "ERROR in status_notif"
-  end
+  
 end
 
 get '/chat_notif', :provides => 'text/event-stream' do
-  begin 
+  
     stream :keep_open do |out|
       # puts out.inspect
       puts "open chat notif connection"
-      Chat_Notification_Connections[session[:tester]] << out
-      out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
+      if Status_Notification_Connections[session[:tester]] != nil
+        Chat_Notification_Connections[session[:tester]] << out
+        out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
+      end
     end
-  rescue
-    puts "ERROR in chat_notif"
-  end
+  
 end
 
 get '/chat_stream', :provides => 'text/event-stream' do
-  begin 
+
     receiver  = session[:receiver]
     tester    = session[:tester]
     chat_uuid = session[:chat_uuid]
@@ -384,9 +399,7 @@ get '/chat_stream', :provides => 'text/event-stream' do
     end
 
     return Chat_Connections[chat_uuid][tester]
-  rescue
-    puts "ERROR in chat_stream"
-  end
+
 end
 
 def get_unordered_key_between user1, user2
@@ -433,6 +446,7 @@ post '/chat' do
   msg       = params[:msg]
   time      = Time.now
   
+  check_if_array_initialized chat_uuid, Chat_History
   Chat_History[chat_uuid] << {"name" => tester, "message" => msg, "time" => time }
 
   # LOVE IS A TWO-WAY STREET
@@ -462,6 +476,12 @@ end
 # 5) establish and store SSE in Status_Notification_Connections
 # 6) calculate number of unread in Status_Notification_Connections
 
+get '/chat_dot' do
+  num = calculate_num_unread_for session[:tester]
+  status 200
+  body num.to_s
+end
+
 def calculate_num_unread_for name
   num_unread = 0
   uuids = Chat_Lookup.select{|uuid, data| data["chatter"] == name or data["author"] == name}.keys
@@ -478,7 +498,6 @@ post '/chat_select' do
   tester = session[:tester]
   session[:chat_uuid] = nil
   @chats = Chat_Lookup.select{|uuid, data| data["chatter"] == tester or data["author"] == tester}
-  @num_unread = 0
   @chats.keys.each do |uuid|
     if Chat_History[uuid].last != nil
       @chats[uuid]["last_message"]      = Chat_History[uuid].last["message"]
@@ -490,7 +509,6 @@ post '/chat_select' do
     end
 
     if Chat_Notifications[uuid][tester] > 0
-      @num_unread += Chat_Notifications[uuid][tester]
       @chats[uuid]["unread"] = BG_TRUE
     else
       @chats[uuid]["unread"] = BG_FALSE
@@ -573,7 +591,6 @@ post '/create_chat' do
      (!@is_author and anonymity == BG_FALSE)
     @anon = true
   end
-  @display_name = display_friend_name @anon, session[:tester], session[:receiver]
 
   clear_chat_notification chat_uuid, session[:tester]
   puts "chat_uuid: " + chat_uuid
@@ -581,6 +598,7 @@ post '/create_chat' do
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = author
 
+  @display_name = display_friend_name @anon, session[:tester], session[:receiver]
   #TODO: need guess answers as well
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
@@ -663,8 +681,6 @@ route :get, :post, '/home' do
 
   session[:categ] = nil
 
-  @num_unread = calculate_num_unread_for(tester)
-
   erb :home
 end
 
@@ -701,6 +717,7 @@ post '/hasLoggedIn' do
   session[:tester]   = tester
   session[:fb_token] = params["token"]
   puts "token: " + params["token"]
+  ensure_fb_friends
 
   if @@logged_in[tester] == nil or @@logged_in[tester].count == 0
     status 200
@@ -1393,7 +1410,7 @@ post '/sendCode' do
     success = true
     @msg = "Welcome! %s invited you;D" % inviter
 
-  else # secondly, lets see if it s an invite code
+  else # secondly, lets see if it is an invite code
 
     found = @@invite_codes.select{|inviter, codes| codes.map{|v| v[0]}.include? code}
     # code does not exist
