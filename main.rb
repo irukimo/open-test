@@ -781,7 +781,7 @@ post '/choose_people' do
     @initial_first, @initial_second = try_to_draw_two_fb_friended_options(tester, nil)
     # @initial_first, @initial_second = @@friends[tester].sample(2)
   end
-   
+  session[:atGuess] = nil
   erb :choose_people
 end
 
