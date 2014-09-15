@@ -104,20 +104,22 @@
    </div>
 
   <!-- <h1>Records</h1> -->
-<br><br>
+<br>
  <div class="row">
     <div id="room_background" class="col-xs-11 col-md-3">
 
     <div id="question_bundle" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
+    <font color="#be0d0d">
     <ol class="carousel-indicators">
       <li data-target="#question_bundle" data-slide-to="0" class="active"></li>
       <li data-target="#question_bundle" data-slide-to="1"></li>
       <li data-target="#question_bundle" data-slide-to="2"></li>
     </ol>
+  </font>
 
     <!-- Wrapper for slides -->
-    <center><%= @is_author ? "你" : "他"%>比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center>
+    <!-- <center><%= @is_author ? "你" : "他"%>比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center> -->
     <div class="carousel-inner">
       <% has_active = false 
          bundle.each do |hash| 
@@ -129,12 +131,25 @@
           <div class="item">
         <% end %>
         <div class="history_compare">
-          <center><%=hash["question"]%></center>
-          <div class="col-xs-6 col-md-6">
-            <center><%=hash["option0"]%></center>
+          <div class="row">
+              <center><div class="history_question"><%=hash["question"]%></div></center>
+              <div class="col-xs-6 col-md-6">
+                <center><%=hash["option0"]%></center>
+              </div>
+              <div class="col-xs-6 col-md-6">
+                <center><%=hash["option1"]%></center>
+              </div>
           </div>
-          <div class="col-xs-6 col-md-6">
-            <center><%=hash["option1"]%></center>
+          <div class="row">
+              <div class="col-xs-6 col-md-6">
+                <center>
+                  <div class="chosen_person">他</div>
+                  <div class="chosen_person">你</div>
+                </center>
+              </div>
+              <div class="col-xs-6 col-md-6">
+                <center><div class="chosen_person">你</div></center>
+              </div>
           </div>
         </div>
       </div>

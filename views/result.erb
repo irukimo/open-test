@@ -37,6 +37,46 @@
       max-width: 653px;
       min-height: 400px;
     }
+
+    .message_btn{
+      display: inline-block;
+      border-radius: 100px;
+      border-style: solid;
+      border-width: 2px;
+      border-color: gray;
+      height:70px;
+      width: 70px;
+      line-height: 220%;
+      position: relative;
+      bottom: 18px;
+    }
+
+    .knock{
+      display: inline-block;
+      font-size: 20pt;
+      margin-bottom: 10px;
+      line-height: 200%;
+    }
+
+    .message_btn.not_anon{
+      background-color: #FFFFFF;
+      background-image: url('/img/black_anon.png');
+      background-size: 50px 50px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      background-position: 8px -3px;
+      /*color:gray;*/
+    }
+
+    .message_btn.anon{
+      background-color: #000000;
+      background-image: url('/img/whiteanon.png');
+      background-size: 50px 50px;
+      background-repeat: no-repeat;
+      background-position:absolute;
+      background-position: 8px -3px;
+      color:white;
+    }
   </style>
 
     <script>
@@ -69,10 +109,27 @@
             </br>
 
 
-                <b><center><font size="5pt"><%if @correct%>恭喜！贏了！！<%else%>輸了...<%end%></font></center></b>
+                <b><center><font size="5pt"><%if @correct%><font color="#18cc00">恭喜！贏了！</font><%else%><font color="#dd0000">輸了...</font><%end%></font></center></b>
+                <center><font size="4pt" color="gray">答對<%=@win%>題</font></center>
               </br>
-                <center><font size="4pt" color="gray">答對了<%=@win%>題</font></center>
-              </br>
+              
+              <center><div>
+              <form action='/create_chat' method='post'>
+                <input type="hidden" name="bundle_uuid" value="<%=bundle_uuid%>"/>
+                <%if @is_anonymous == "true" or @is_anonymous == true%><br>
+                    <div class="knock">敲一下這位<%= display_name(@is_anonymous,session[:guesswhom],session[:tester])%></div>
+                    <button class="message_btn not_anon" type="submit"><br>訊息</button>
+                      <!-- <input type='submit' name="receiver" value="GO CHAT"/> -->
+                <%else%>
+                    <div class="knock">匿名敲一下<%= display_name(@is_anonymous,session[:guesswhom],session[:tester])%></div>
+                    <button class="message_btn anon" type="submit"><br>匿訊</button>
+                        <!-- <input type='submit' name="receiver" value="GO CHAT"/> -->      
+                <%end%>
+              </form>
+              </div></center>
+
+              <br>
+
                 <center><font size="5pt"> <img src="/img/coinnew.png" alt="Smiley face" width="45" height="45"> <font size="3pt"><span class="glyphicon glyphicon-remove"></font> <%=@reward%></font></center>
               </br>
                 <div class="row">
@@ -111,10 +168,8 @@
         </div>
   </div>
 
-  <form action='/create_chat' method='post'>
-    <input type="hidden" name="bundle_uuid" value="<%=bundle_uuid%>"/>
-    <input type='submit' name="receiver" value="GO CHAT"/>
-  </form>
+
+
 
     </div><!-- /.container -->
 

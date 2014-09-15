@@ -717,6 +717,7 @@ post '/choose_categ' do
 end
 
 post '/choose_people' do
+  clear_session
   if params[:categ]
       session[:categ] = params[:categ]
   end
@@ -1324,6 +1325,7 @@ post '/guess' do
     end
   end
 
+  
   if session[:round] == 4
     redirect to('/result'), 307
   end
@@ -1511,8 +1513,7 @@ post '/result' do
   end
 
   bundle_uuid = session[:uuid]
-  clear_session
-
+  @is_anonymous = session[:anonymous]
   erb :result, :locals => { :bundle_uuid => bundle_uuid }
 end
 
