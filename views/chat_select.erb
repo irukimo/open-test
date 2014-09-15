@@ -86,8 +86,9 @@
           <div class="col-xs-3 col-md-3 profile_container">
             <div class="profile_pic" style="background-image: 
            url('/img/wen.jpg')">
-                <!-- <div class="blue_dot">
-                </div> -->
+                <% if chat["unread"] == BG_TRUE %>
+                  <div class="blue_dot"></div>
+                  <% end %>
             </div>
           </div>
           <div class="col-xs-6 col-md-8 content_box">
@@ -99,7 +100,7 @@
             </div>  
           </div>
 
-          <div class="col-xs-2 col-md-2 time_stamp self_anon">
+          <div class="col-xs-2 col-md-2 time_stamp<%= (chat["anon"] == "true" ? "" : " self_anon") %>">
             <br>
             <br>
             <br>

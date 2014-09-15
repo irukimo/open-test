@@ -140,10 +140,6 @@
         </div>
       </div>
       <% end %>
-      <div class="item">
-        
-        
-      </div>
       
     </div>
 
@@ -165,17 +161,18 @@
               <div id="message" class="message"></div>
               <div id="time" class="time_stamp"></div>
           </div>
-          <div class="col-xs-3 col-md-3 message_profile_icon anon">
+          <div class="col-xs-3 col-md-3 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
               <div class="message_profile_pic"></div>
           </div>
       </div>
 
       <!-- template of your message -->
       <div class="row" id="your_message" style="display:none;">
-        <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
-              <div class="message_profile_pic" style="background-image: 
+        <div class="col-xs-3 col-md-9 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
+            <div class="message_profile_pic"></div>
+              <!-- <div class="message_profile_pic" style="background-image: 
              url('/img/wen.jpg')">
-              </div>
+              </div> -->
         </div>
 
         <div class="col-xs-9 col-md-9 message_box">
@@ -198,17 +195,19 @@
                   <div id="message" class="message"><%=chat["message"]%></div>
                   <div id="time" class="time_stamp"><%=time%></div>
               </div>
-              <div class="col-xs-3 col-md-3 message_profile_icon anon">
+              <div class="col-xs-3 col-md-3 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
                   <div class="message_profile_pic"></div>
               </div>
           </div>
 
         <%else%>
+          <!-- your message -->
           <div class="row">
-            <div class="col-xs-3 col-md-9 message_profile_icon not_anon">
-                  <div class="message_profile_pic" style="background-image: 
+            <div class="col-xs-3 col-md-9 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
+              <div class="message_profile_pic"></div>
+                 <!--  <div class="message_profile_pic" style="background-image: 
                  url('/img/wen.jpg')">
-                  </div>
+                  </div> -->
             </div>
 
             <div class="col-xs-9 col-md-9 message_box">

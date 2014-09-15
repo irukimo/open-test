@@ -342,48 +342,60 @@ get '/choose' do
 end
 
 get '/status_notif', :provides => 'text/event-stream' do
-  stream :keep_open do |out|
-    # puts out.inspect
-    puts "open status notif connection"
-    Status_Notification_Connections[session[:tester]] << out
-    out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
+  begin
+    stream :keep_open do |out|
+      # puts out.inspect
+      puts "open status notif connection"
+      Status_Notification_Connections[session[:tester]] << out
+      out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
+    end
+  rescue
+    puts "ERROR in status_notif"
   end
 end
 
 get '/chat_notif', :provides => 'text/event-stream' do
-  stream :keep_open do |out|
-    # puts out.inspect
-    puts "open chat notif connection"
-    Chat_Notification_Connections[session[:tester]] << out
-    out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
+  begin 
+    stream :keep_open do |out|
+      # puts out.inspect
+      puts "open chat notif connection"
+      Chat_Notification_Connections[session[:tester]] << out
+      out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
+    end
+  rescue
+    puts "ERROR in chat_notif"
   end
 end
 
 get '/chat_stream', :provides => 'text/event-stream' do
-  receiver  = session[:receiver]
-  tester    = session[:tester]
-  chat_uuid = session[:chat_uuid]
+  begin 
+    receiver  = session[:receiver]
+    tester    = session[:tester]
+    chat_uuid = session[:chat_uuid]
 
-  if Chat_Connections[chat_uuid][tester] and !Chat_Connections[chat_uuid][tester].closed?
-    puts "user: %s, receiver: %s, found previous connection" % [tester, receiver.to_s]
-  else
-    puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
-    stream :keep_open do |out|
-      Chat_Connections[chat_uuid][tester] = out
-      out.callback { Chat_Connections[chat_uuid][tester] = nil; }
+    if Chat_Connections[chat_uuid][tester] and !Chat_Connections[chat_uuid][tester].closed?
+      puts "user: %s, receiver: %s, found previous connection" % [tester, receiver.to_s]
+    else
+      puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
+      stream :keep_open do |out|
+        Chat_Connections[chat_uuid][tester] = out
+        out.callback { Chat_Connections[chat_uuid][tester] = nil; }
+      end
     end
-  end
 
-  return Chat_Connections[chat_uuid][tester]
+    return Chat_Connections[chat_uuid][tester]
+  rescue
+    puts "ERROR in chat_stream"
+  end
 end
 
 def get_unordered_key_between user1, user2
   return (user1 > user2) ? [user1, user2] : [user2, user1]
 end
 
-# def clear_chat_notification sender, receiver
-#   Chat_Notifications[sender][receiver] = 0
-# end
+def clear_chat_notification chat_uuid, receiver
+  Chat_Notifications[chat_uuid][receiver] = 0
+end
 
 def send_status_notification receiver
   Status_Notification_Connections[receiver].each do |out|
@@ -455,9 +467,9 @@ def calculate_num_unread_for name
   uuids = Chat_Lookup.select{|uuid, data| data["chatter"] == name or data["author"] == name}.keys
   
   uuids.each do |uuid|
-    if Chat_Notifications[uuid][name] > 0
+    # if Chat_Notifications[uuid][name] > 0
       num_unread += Chat_Notifications[uuid][name]
-    end
+    # end
   end
   return num_unread
 end
@@ -489,7 +501,7 @@ post '/chat_select' do
   @chats.each do |uuid, hash|
     if hash["anonymous_author"] == BG_TRUE
       if tester == hash["author"]
-        hash["display_name"] = hash["chatter"]    
+        hash["display_name"] = hash["chatter"]
         hash["anon"] = "false"
       else
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
@@ -520,11 +532,21 @@ post '/continue_chat' do
   chat_uuid = params[:uuid]
 
   puts "chat_uuid: " + chat_uuid
-  author, bundle, tmp = @@librarian.get_bundle_by_uuid chat_uuid
+  chat_record = Chat_Lookup[chat_uuid]
+  bundle_uuid = chat_record["bundle_uuid"]
+  author, bundle, anonymity = @@librarian.get_bundle_by_uuid bundle_uuid
   
   puts "bundle: " + bundle.inspect
+  puts "anon: " + anonymity
+  @anon = false
+  if (author == session[:tester] and anonymity == BG_TRUE) or 
+     (author != session[:tester] and anonymity == BG_FALSE)
+    @anon = true
+  end
+
+  clear_chat_notification chat_uuid, session[:tester]
   session[:chat_uuid] = chat_uuid
-  session[:receiver]  = author
+  session[:receiver]  = (chat_record["author"] == session[:tester]) ? chat_record["chatter"] : chat_record["author"]
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
@@ -541,8 +563,14 @@ post '/create_chat' do
                              "bundle_uuid" => bundle_uuid, 
                              "anonymous_author" => (anonymity ? "true" : "false")}
 
+  @anon = false
+  if (author == session[:tester] and anonymity == BG_TRUE) or 
+     (author != session[:tester] and anonymity == BG_FALSE)
+    @anon = true
+  end
+  clear_chat_notification chat_uuid, session[:tester]
   puts "chat_uuid: " + chat_uuid
-  puts "bundle: " + bundle.inspect
+  # puts "bundle: " + bundle.inspect
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = author
   #TODO: need guess answers as well
