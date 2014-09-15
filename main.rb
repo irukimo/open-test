@@ -536,8 +536,8 @@ post '/continue_chat' do
   bundle_uuid = chat_record["bundle_uuid"]
   author, bundle, anonymity = @@librarian.get_bundle_by_uuid bundle_uuid
   
-  puts "bundle: " + bundle.inspect
-  puts "anon: " + anonymity
+  # puts "bundle: " + bundle.inspect
+  # puts "anon: " + anonymity
   @anon = false
   if (author == session[:tester] and anonymity == BG_TRUE) or 
      (author != session[:tester] and anonymity == BG_FALSE)
@@ -547,6 +547,9 @@ post '/continue_chat' do
   clear_chat_notification chat_uuid, session[:tester]
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = (chat_record["author"] == session[:tester]) ? chat_record["chatter"] : chat_record["author"]
+
+  @display_name = display_name(!@anon, session[:tester], session[:receiver])
+
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
@@ -561,7 +564,7 @@ post '/create_chat' do
   Chat_Lookup[chat_uuid]  = {"author"      => author, 
                              "chatter"     => session[:tester], 
                              "bundle_uuid" => bundle_uuid, 
-                             "anonymous_author" => (anonymity ? "true" : "false")}
+                             "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
 
   @anon = false
   if (author == session[:tester] and anonymity == BG_TRUE) or 
@@ -662,7 +665,7 @@ route :get, :post, '/home' do
 end
 
 def display_name(is_anonymous,name,tester)
-  if is_anonymous == "true" or is_anonymous == true
+  if is_anonymous == "true" or is_anonymous == "on" or is_anonymous == true
     fb_friend_names = @@fb_friends[tester].map{|elem| elem["name"]}
     if fb_friend_names.include? name
       return ANONYMOUS_FRIEND_NAME
