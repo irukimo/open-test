@@ -117,7 +117,7 @@
     </ol>
 
     <!-- Wrapper for slides -->
-    <center>他比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center>
+    <center><%= @is_author ? "你" : "他"%>比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center>
     <div class="carousel-inner">
       <% has_active = false 
          bundle.each do |hash| 

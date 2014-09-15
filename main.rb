@@ -539,8 +539,9 @@ post '/continue_chat' do
   # puts "bundle: " + bundle.inspect
   # puts "anon: " + anonymity
   @anon = false
-  if (author == session[:tester] and anonymity == BG_TRUE) or 
-     (author != session[:tester] and anonymity == BG_FALSE)
+  @is_author = (author == session[:tester])
+  if (@is_author  and anonymity == BG_TRUE) or 
+     (!@is_author and anonymity == BG_FALSE)
     @anon = true
   end
 
@@ -548,8 +549,8 @@ post '/continue_chat' do
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = (chat_record["author"] == session[:tester]) ? chat_record["chatter"] : chat_record["author"]
 
-  @display_name = display_name(!@anon, session[:tester], session[:receiver])
-
+  @display_name = display_friend_name @anon, session[:tester], session[:receiver]
+  # chat_room needs @display_name, @is_author, @anon, bundle, chat_uuid
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
@@ -567,17 +568,20 @@ post '/create_chat' do
                              "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
 
   @anon = false
-  if (author == session[:tester] and anonymity == BG_TRUE) or 
-     (author != session[:tester] and anonymity == BG_FALSE)
+  @is_author = (author == session[:tester])
+  if (@is_author  and anonymity == BG_TRUE) or 
+     (!@is_author and anonymity == BG_FALSE)
     @anon = true
   end
+  @display_name = display_friend_name @anon, session[:tester], session[:receiver]
+
   clear_chat_notification chat_uuid, session[:tester]
   puts "chat_uuid: " + chat_uuid
   # puts "bundle: " + bundle.inspect
   session[:chat_uuid] = chat_uuid
   session[:receiver]  = author
+
   #TODO: need guess answers as well
-  #TODO: chat_room instead of chat
   erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
 end
 
@@ -662,6 +666,19 @@ route :get, :post, '/home' do
   @num_unread = calculate_num_unread_for(tester)
 
   erb :home
+end
+
+def display_friend_name(is_anonymous, tester, friend)
+  unless is_anonymous == "true" or is_anonymous == "on" or is_anonymous == true
+    fb_friend_names = @@fb_friends[friend].map{|elem| elem["name"]}
+    if fb_friend_names.include? tester
+      return ANONYMOUS_FRIEND_NAME
+    else
+      return ANONYMOUS_STRANGER_NAME
+    end
+  else
+    return friend
+  end
 end
 
 def display_name(is_anonymous,name,tester)

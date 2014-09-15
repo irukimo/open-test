@@ -16,6 +16,7 @@ $(document).ready(function() {
 
   var ses = new EventSource('/status_notif');
   ses.onmessage = function(e) {
+    console.log("status: " + e.data);
     if( $("#chat_dot_display").html() != "0") {
       $("#chat_dot_display").css("opacity", 1).html(e.data);
     } else {
