@@ -86,9 +86,7 @@
           <div class="col-xs-3 col-md-3 profile_container">
             <div class="profile_pic" style="background-image: 
            url('/img/wen.jpg')">
-                <% if chat["unread"] == BG_TRUE %>
-                  <div class="blue_dot"></div>
-                  <% end %>
+                  <div class="blue_dot" id="<%=uuid%>_dot" <% if chat["unread"] == BG_FALSE %> style="display:none;"<% end %>></div>
             </div>
           </div>
           <div class="col-xs-6 col-md-8 content_box">
@@ -111,43 +109,17 @@
         </div>
 
       <% end %>
-
-      <div class="message_box anon" onclick="gotoChatRoom()">
-        <div class="col-xs-3 col-md-3 profile_container">
-          <div class="profile_pic">
-              <div class="blue_dot">
-              </div>
-          </div>
-        </div>
-        <div class="col-xs-6 col-md-8 content_box">
-          <div class="content_name">
-            匿名(你比了ChiuHo跟Wen)
-          </div>
-          <div class="content_msg">
-            你為什麼覺得Wen是色狼？
-          </div>  
-        </div>
-
-        <div class="col-xs-2 col-md-2 time_stamp">
-          <br>
-          <br>
-          <br>
-          <font size="2pt" color="#9d9d9d">兩分鐘前</font>
-        </div>
-      </div>
-
-
     </div>
 </div>
 
 <script>
   var es = new EventSource('/chat_notif');
   es.onmessage = function(e) {
-    // console.log(e);
     console.log("chat: " + e.data);
     obj = $.parseJSON(e.data);
     $("#" + obj["chat_uuid"] + "_msg").html(obj["message"]);
     $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
+    $("#" + obj["chat_uuid"] + "_dot").css("display", "");
   };
 </script>
 
