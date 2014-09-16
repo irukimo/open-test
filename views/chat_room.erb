@@ -83,17 +83,23 @@
    <div class="row header">
       <div class="col-xs-3 col-md-1 goBack" onclick="goBack()"></div>
       <div class="col-xs-9 col-md-9">
+        <% 
+           your_id  = @is_author ? chat_record["author_id"] : chat_record["guesser_id"]
+           his_id   = @is_author ? chat_record["guesser_id"] : chat_record["author_id"]
+
+           if @anon 
+             css_style = "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')"
+        %>
         <!-- if he is not anonymous -->
             <div class="col-xs-12 col-md-12 profile_icon not_anon top_icon">
-                <div class="profile_pic" style="background-image: 
-               url('/img/wen.jpg')">
-                </div>
+                <div class="profile_pic" style="<%=css_style%>"></div>
             </div>
+          <% else %>
         <!-- if he is anonymous -->
-<!--             <div class="col-xs-3 col-md-9 profile_icon anon top_icon">
-                <div class="profile_pic">
-                </div>
-            </div> -->
+            <div class="col-xs-3 col-md-9 profile_icon anon top_icon">
+                <div class="profile_pic"></div>
+            </div>
+          <% end %>
           <div class="name"><%=@display_name%></div>
       </div>
       <br><br><br>
@@ -121,6 +127,8 @@
     <!-- <center><%= @is_author ? "你" : "他"%>比了<%=bundle[0]["option0"]%>跟<%=bundle[0]["option1"]%></center> -->
     <div class="carousel-inner">
       <% has_active = false 
+         guesser_answers = chat_record["guesser_answers"]
+         
          bundle.each_with_index do |hash, index| 
           unless has_active
       %>
@@ -151,22 +159,27 @@
                     <div class="col-xs-4 col-md-4"></div>
                 <%end%>
 
-                  <% if (!@is_author and guesser_answers[index] == hash["option0"]) or
+                  <%  ## you chose option0
+                      if (!@is_author and guesser_answers[index] == hash["option0"]) or
                         (@is_author and hash["answer"] == hash["option0"])
+                      css_style = @anon ? "" : "background-image:url('//graph.facebook.com/#{your_id}/picture?type=square')"
                    %>
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-                      <div class="message_profile_pic">
+
+                      <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (@is_author) %>
                           <div class="questionmaster"></div>
                         <%end%>
                       </div>
                   </div>
                   <% end %>
-                  <% if (@is_author and guesser_answers[index] == hash["option0"]) or
+                  <%  ## he/she chose option0
+                      if (@is_author and guesser_answers[index] == hash["option0"]) or
                         (!@is_author and hash["answer"] == hash["option0"])
+                      css_style = @anon ? "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')" : ""
                   %>
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-                      <div class="message_profile_pic">
+                      <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (!@is_author) %>
                           <div class="questionmaster"></div>
                         <%end%>
@@ -185,24 +198,29 @@
                     <div class="col-xs-4 col-md-4"></div>
                 <%end%>
 
-                  <% if (!@is_author and guesser_answers[index] == hash["option1"]) or
+                  <% ## you chose option1
+                     if (!@is_author and guesser_answers[index] == hash["option1"]) or
                         (@is_author and hash["answer"] == hash["option1"])
+                        css_style = @anon ? "" : "background-image:url('//graph.facebook.com/#{your_id}/picture?type=square')"
                    %>
                    <!-- me -->
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-                      <div class="message_profile_pic">
+
+                      <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (@is_author) %>
                           <div class="questionmaster"></div>
                         <%end%>
                       </div>
                   </div>
                   <% end %>
-                  <% if (@is_author and guesser_answers[index] == hash["option1"]) or
+                  <% ## he chose option1
+                     if (@is_author and guesser_answers[index] == hash["option1"]) or
                         (!@is_author and hash["answer"] == hash["option1"])
+                        css_style = @anon ? "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')" : ""
                   %>
                   <!-- him -->
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-                      <div class="message_profile_pic">
+                      <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (!@is_author) %>
                           <div class="questionmaster"></div>
                         <%end%>
@@ -230,7 +248,12 @@
   </div>
 
       
-      
+      <% your_css_style = @anon ? "" : 
+                                  "background-image:url('//graph.facebook.com/#{your_id}/picture?type=square')"
+                                  
+         his_css_style  = @anon ? "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')" : 
+                                  "" 
+      %>
       <!-- template of my message -->
       <div class="row" id="my_message" style="display:none;">
           <div class="col-xs-2 col-md-2"></div>
@@ -238,15 +261,16 @@
               <div id="message" class="message"></div>
               <div id="time" class="time_stamp"></div>
           </div>
+
           <div class="col-xs-3 col-md-3 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-              <div class="message_profile_pic"></div>
+              <div class="message_profile_pic" style="<%=your_css_style%>"></div>
           </div>
       </div>
 
       <!-- template of your message -->
       <div class="row" id="your_message" style="display:none;">
         <div class="col-xs-3 col-md-9 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-            <div class="message_profile_pic"></div>
+            <div class="message_profile_pic" style="<%=his_css_style%>"></div>
               <!-- <div class="message_profile_pic" style="background-image: 
              url('/img/wen.jpg')">
               </div> -->
@@ -273,7 +297,7 @@
                   <div id="time" class="time_stamp"><%=time%></div>
               </div>
               <div class="col-xs-3 col-md-3 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-                  <div class="message_profile_pic"></div>
+                  <div class="message_profile_pic" style="<%=your_css_style%>"></div>
               </div>
           </div>
 
@@ -281,7 +305,7 @@
           <!-- your message -->
           <div class="row">
             <div class="col-xs-3 col-md-9 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-              <div class="message_profile_pic"></div>
+              <div class="message_profile_pic" style="<%=his_css_style%>"></div>
                  <!--  <div class="message_profile_pic" style="background-image: 
                  url('/img/wen.jpg')">
                   </div> -->

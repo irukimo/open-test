@@ -590,7 +590,7 @@ post '/continue_chat' do
 
   @display_name = display_friend_name @anon, session[:tester], session[:receiver]
   # chat_room needs @display_name, @is_author, @anon, bundle, chat_uuid
-  erb :chat_room, :locals => { :bundle => bundle, :guesser_answers => chat_record["guesser_answers"], :chat_uuid => chat_uuid }
+  erb :chat_room, :locals => { :bundle => bundle, :chat_record => chat_record, :chat_uuid => chat_uuid }
 end
 
 post '/create_chat' do
@@ -615,9 +615,9 @@ post '/create_chat' do
   Chat_Notifications[chat_uuid] = {author => 0, session[:tester] => 0}
   Chat_History[chat_uuid] = Array.new
   Chat_Lookup[chat_uuid]  = {"author"          => author, 
-                             "author_id"       => get_id_for_FB_name author,
+                             "author_id"       => get_id_for_FB_name(author),
                              "chatter"         => session[:tester], 
-                             "chatter_id"      => get_id_for_FB_name chatter,
+                             "chatter_id"      => get_id_for_FB_name(session[:tester]),
                              "bundle_uuid"     => bundle_uuid, 
                              "guesser_answers" => guesser_answers,
                              "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
@@ -637,7 +637,7 @@ post '/create_chat' do
 
   @display_name = display_friend_name @anon, session[:tester], session[:receiver]
   #TODO: need guess answers as well
-  erb :chat_room, :locals => { :bundle => bundle, :guesser_answers => guesser_answers, :chat_uuid => chat_uuid }
+  erb :chat_room, :locals => { :bundle => bundle, :chat_record => Chat_Lookup[chat_uuid], :chat_uuid => chat_uuid }
 end
 
 
