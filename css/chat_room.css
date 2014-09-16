@@ -55,6 +55,20 @@
 	border-radius: 100px;
 }
 
+.questionmaster{
+	background-image: url('/img/questionmaster.png');
+	background-size: 26px 26px;
+	background-repeat: no-repeat;
+	background-position:absolute;
+	display: inline-block;
+	/*float: bottom;*/
+	height:26px;
+	width:26px;
+	position: relative;
+	bottom:17px;
+	right:10px;
+}
+
 .message_profile_icon{
 	padding:0px;
 	height: 40px;

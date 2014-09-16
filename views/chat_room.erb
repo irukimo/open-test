@@ -155,14 +155,22 @@
                         (@is_author and hash["answer"] == hash["option0"])
                    %>
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-                      <div class="message_profile_pic"></div>
+                      <div class="message_profile_pic">
+                        <%if (@is_author) %>
+                          <div class="questionmaster"></div>
+                        <%end%>
+                      </div>
                   </div>
                   <% end %>
                   <% if (@is_author and guesser_answers[index] == hash["option0"]) or
                         (!@is_author and hash["answer"] == hash["option0"])
                   %>
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-                      <div class="message_profile_pic"></div>
+                      <div class="message_profile_pic">
+                        <%if (!@is_author) %>
+                          <div class="questionmaster"></div>
+                        <%end%>
+                      </div>
                   </div>
                   <% end %>
 
@@ -180,15 +188,25 @@
                   <% if (!@is_author and guesser_answers[index] == hash["option1"]) or
                         (@is_author and hash["answer"] == hash["option1"])
                    %>
+                   <!-- me -->
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
-                      <div class="message_profile_pic"></div>
+                      <div class="message_profile_pic">
+                        <%if (@is_author) %>
+                          <div class="questionmaster"></div>
+                        <%end%>
+                      </div>
                   </div>
                   <% end %>
                   <% if (@is_author and guesser_answers[index] == hash["option1"]) or
                         (!@is_author and hash["answer"] == hash["option1"])
                   %>
+                  <!-- him -->
                   <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
-                      <div class="message_profile_pic"></div>
+                      <div class="message_profile_pic">
+                        <%if (!@is_author) %>
+                          <div class="questionmaster"></div>
+                        <%end%>
+                      </div>
                   </div>
                   <% end %>
 
