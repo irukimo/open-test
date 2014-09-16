@@ -505,6 +505,16 @@ def calculate_num_unread_for name
   return num_unread
 end
 
+def get_id_for_FB_name name
+  fb_names = @@fb_friends.values.flatten(1)
+  index = fb_names.index{|frd| frd["name"] == name}
+  if index == nil
+    return nil
+  else
+    return fb_names[index]["id"]
+  end
+end
+
 post '/chat_select' do
   tester = session[:tester]
   session[:chat_uuid] = nil
@@ -531,6 +541,7 @@ post '/chat_select' do
     if hash["anonymous_author"] == BG_TRUE
       if tester == hash["author"]
         hash["display_name"] = hash["chatter"]
+        hash["fb_id"] = get_id_for_FB_name hash["chatter"]
         hash["anon"] = "false"
       else
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
@@ -544,6 +555,7 @@ post '/chat_select' do
         hash["anon"] = "true"
       else
         hash["display_name"] = hash["author"]
+        hash["fb_id"] = get_id_for_FB_name hash["author"]
         hash["anon"] = "false"
       end
     end
@@ -603,7 +615,9 @@ post '/create_chat' do
   Chat_Notifications[chat_uuid] = {author => 0, session[:tester] => 0}
   Chat_History[chat_uuid] = Array.new
   Chat_Lookup[chat_uuid]  = {"author"          => author, 
+                             "author_id"       => get_id_for_FB_name author,
                              "chatter"         => session[:tester], 
+                             "chatter_id"      => get_id_for_FB_name chatter,
                              "bundle_uuid"     => bundle_uuid, 
                              "guesser_answers" => guesser_answers,
                              "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
