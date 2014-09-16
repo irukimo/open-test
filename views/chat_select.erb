@@ -87,7 +87,6 @@
         css_style = "background-image:url('//graph.facebook.com/#{id}/picture?type=square')"%>
         <div class="message_box <%= (chat["anon"] == "true" ? "anon" : "not_anon") %>" onclick="gotoChatRoom('<%=uuid%>')">
 
-          
           <div class="col-xs-3 col-md-3 profile_container">
             <div class="profile_pic" style="<%=(chat["anon"] != "true") ? css_style : ""%>" >
                   <div class="blue_dot" id="<%=uuid%>_dot" <% if chat["unread"] == BG_FALSE %> style="display:none;"<% end %>></div>

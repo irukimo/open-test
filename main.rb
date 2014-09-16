@@ -431,7 +431,7 @@ end
 
 def send_chat_notification chat_uuid, receiver, message, time
   Chat_Notification_Connections[receiver].each do |out|
-    display_time = sec_to_units(Time.now - time)
+    display_time = display_time time
     out << "data: {\"chat_uuid\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [chat_uuid, message, display_time]
     # out << "data: chat\n\n"
   end
@@ -439,7 +439,7 @@ end
 
 def send_chat chat_uuid, sender, name, message, time
   if Chat_Connections[chat_uuid][sender] != nil and !Chat_Connections[chat_uuid][sender].closed? #online
-    display_time = sec_to_units(Time.now - time)
+    display_time = display_time time
     Chat_Connections[chat_uuid][sender] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, display_time]
     return true
   else
@@ -523,10 +523,10 @@ post '/chat_select' do
     if Chat_History[uuid].last != nil
       @chats[uuid]["last_message"]      = Chat_History[uuid].last["message"]
       Chat_History[uuid].last["time"]   = Time.parse(Chat_History[uuid].last["time"]) if Chat_History[uuid].last["time"].class != Time
-      @chats[uuid]["last_message_time"] = sec_to_units(Time.now - Chat_History[uuid].last["time"])
+      @chats[uuid]["last_message_time"] = display_time Chat_History[uuid].last["time"]
     else
       @chats[uuid]["last_message"]      = ""
-      @chats[uuid]["last_message_time"] = sec_to_units(0)
+      @chats[uuid]["last_message_time"] = display_time Time.now
     end
 
     if Chat_Notifications[uuid][tester] > 0
@@ -1108,6 +1108,19 @@ def normalize_score scores
     end
   end
   return res
+end
+
+def display_time time
+  time_now = Time.now
+  if time_now.strftime("%Y%m%d") == time.strftime("%Y%m%d") # same day
+    return time.strftime("%l:%S%p") 
+  else
+    if LANG == "CH" 
+      return time.strftime("%m月%d日")
+    else
+      return time.strftime("%m/%d")
+    end
+  end
 end
 
 #  tan(0.25 * PI)/30 = m => m = 0.033

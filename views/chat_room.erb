@@ -285,7 +285,7 @@
       <div class="messages">
         <%  time_now = Time.now
             Chat_History[chat_uuid].each do |chat| 
-              time = sec_to_units(time_now - chat["time"])
+              time = display_time chat["time"]
               if chat["name"] == session[:tester]
         %>
         
