@@ -1,15 +1,25 @@
 .not_anon{
-	background: -webkit-linear-gradient(left top,#b78c8c, #a3659c , #fea758, #e4cfbb); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb);/* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb); /* Standard syntax (must be last) */
+	background: #7DBf6b;
+	/*background: -webkit-linear-gradient(left top,#b78c8c, #a3659c , #fea758, #e4cfbb); */
+	/* For Safari 5.1 to 6.0 */
+    /*background: -o-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb);*/
+    /* For Opera 11.1 to 12.0 */
+    /*background: -moz-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb); */
+    /* For Firefox 3.6 to 15 */
+    /*background: linear-gradient(to bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb); */
+    /* Standard syntax (must be last) */
 }
 
 .anon{
-	background: -webkit-linear-gradient(left top,#ffffff, #4d4d4d); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right,#ffffff, #4d4d4d);/* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right,#ffffff, #4d4d4d); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right,#ffffff, #4d4d4d); /* Standard syntax (must be last) */
+	background: black;
+	/*background: -webkit-linear-gradient(left top,#ffffff, #4d4d4d); */
+	/* For Safari 5.1 to 6.0 */
+    /*background: -o-linear-gradient(bottom right,#ffffff, #4d4d4d);*/
+    /* For Opera 11.1 to 12.0 */
+    /*background: -moz-linear-gradient(bottom right,#ffffff, #4d4d4d); */
+    /* For Firefox 3.6 to 15 */
+    /*background: linear-gradient(to bottom right,#ffffff, #4d4d4d); */
+    /* Standard syntax (must be last) */
 }
 
 .not_anon .profile_pic{
@@ -92,19 +102,62 @@
 	/*padding-top: 20px;*/
 /*	border-style: solid;
 	border-width: 2px;*/
-	background-color: #838383;
+	background-color: white;
 	color:white;
 	height: 220px;
-	width: 320px;
+	width: 300px;
 	line-height: 140%;
 	padding-top: 20px;
+/*	border-bottom-color: black;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;*/
+}
+
+.history_compare:after {
+	content: '';
+        position: absolute;
+        width: 50%;
+        left: 25%;
+        bottom: -20px;
+        border-bottom: 1px solid #666;
+}
+
+.line{
+	width: 260px;
+	height: 1px;
+	background-color: black;
+	margin-left: 30px;
+}
+
+.carousel-indicators{
+   padding-bottom: 0px;
+   margin-bottom: 0px;
+}
+
+.carousel-indicators li {
+  border-color: black;
+}
+.carousel-indicators .active {
+  background-color: black;
+}
+
+.carousel-control{
+	color:black;
+}
+
+.carousel-control:focus{
+	color:black;
+}
+
+.carousel-control:hover{
+	color:black;
 }
 
 #room_background{
   border-radius: 5px;
   padding-bottom: 5px;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 5px;
+  padding-right: 7px;
   margin-right: 0px;
   margin-left: 0px;
   font-size: 12pt;
@@ -118,9 +171,9 @@
 }
 
 .header {
-    border-bottom-style: solid;
-    border-bottom-color: #838383;
-    border-bottom-width: 2px;
+/*    border-bottom-style: solid;
+    border-bottom-color: black;
+    border-bottom-width: 1px;*/
     background-color: #FFFFFF;
     top:0;
     position:fixed;
@@ -140,7 +193,13 @@
 }
 
 .history_question{
-	padding: 20px;
+	padding: 10px;
+	font-size: 20pt;
+	color:#f27507;
+}
+
+.history_option{
+	color:#1fbfa2;
 }
 
 .name{
@@ -166,25 +225,43 @@
 	margin:0px;
 	line-height: 50%;
 	color: #ababab;
-	font-size: 10pt;
+	font-size: 9pt;
 }
 
 .message_box{
 	padding-top: 3px;
-	padding-left: 2px;
+	padding-left: 5px;
 	padding-right: 2px;
-}
-
-.message{
-	line-height: 150%;
+	position: relative;
+	width: 212px;
+	top:11px;
+	height:100%;
+	min-height: 100% !important;
+	display:block;
 }
 
 .self_message_box{
 	padding-left: 0px;
-	padding-right: 0px;
-	width: 215px;
+	padding-right: 5px;
+	width: 212px;
 	text-align: right;
+	position: relative;
+	top:15px;
+	height:100%;
+	min-height: 100% !important;
+	display:block;
 }
+
+.message{
+	line-height: 150%;
+	height:100%;
+	overflow: auto;
+	min-height: 100% !important;
+	display:block;
+	word-wrap: break-word;
+}
+
+
 
 .row{
 	margin: 0px;
@@ -202,6 +279,13 @@
 
 .goBack{
 	padding:0px;
+	background-image: url('/img/greenarrow.png');
+	background-size: 40px 30px;
+	background-repeat: no-repeat;
+	background-position:absolute;
+	background-position: 10px 15px;
+	width: 80px;
+	height: 50px;
 }
 
 

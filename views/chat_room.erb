@@ -81,13 +81,8 @@
   <!-- <h1>Records</h1> -->
 <br>
    <div class="row header">
-      <div class="col-xs-3 col-md-1 goBack" onclick="goBack()">
-        <div style="width:60px;height:7px;"></div>
-        <img src="/img/arrow.png" alt="Smiley face" width="60" height="40">
-      </div>
+      <div class="col-xs-3 col-md-1 goBack" onclick="goBack()"></div>
       <div class="col-xs-9 col-md-9">
-
-
         <!-- if he is not anonymous -->
             <div class="col-xs-12 col-md-12 profile_icon not_anon top_icon">
                 <div class="profile_pic" style="background-image: 
@@ -100,9 +95,12 @@
                 </div>
             </div> -->
           <div class="name"><%=@display_name%></div>
-
       </div>
+      <br><br><br>
+      <div class="line"></div>
    </div>
+
+   
 
   <!-- <h1>Records</h1> -->
 <br>
@@ -133,42 +131,67 @@
         <% end %>
         <div class="history_compare">
           <div class="row">
-              <center><div class="history_question"><%=hash["question"]%></div></center>
-              <div class="col-xs-6 col-md-6">
+              <center><div class="history_question">「<%=hash["question"]%>」</div></center>
+              <div class="col-xs-6 col-md-6 history_option">
                 <center><%=hash["option0"]%></center>
               </div>
-              <div class="col-xs-6 col-md-6">
+              <div class="col-xs-6 col-md-6 history_option">
                 <center><%=hash["option1"]%></center>
               </div>
           </div>
           <div class="row">
               <div class="col-xs-6 col-md-6">
-                <center>
+
+                <%if ((!@is_author and guesser_answers[index] == hash["option0"]) or
+                        (@is_author and hash["answer"] == hash["option0"])) and
+                      ((@is_author and guesser_answers[index] == hash["option0"]) or
+                        (!@is_author and hash["answer"] == hash["option0"]))%>
+                    <div class="col-xs-1 col-md-1"></div>
+                <%else%>
+                    <div class="col-xs-4 col-md-4"></div>
+                <%end%>
+
                   <% if (!@is_author and guesser_answers[index] == hash["option0"]) or
                         (@is_author and hash["answer"] == hash["option0"])
                    %>
-                  <div class="chosen_person">你</div>
+                  <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
+                      <div class="message_profile_pic"></div>
+                  </div>
                   <% end %>
                   <% if (@is_author and guesser_answers[index] == hash["option0"]) or
                         (!@is_author and hash["answer"] == hash["option0"])
                   %>
-                  <div class="chosen_person">他</div>
+                  <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
+                      <div class="message_profile_pic"></div>
+                  </div>
                   <% end %>
-                </center>
+
               </div>
               <div class="col-xs-6 col-md-6">
-                <center>
+                <%if ((!@is_author and guesser_answers[index] == hash["option1"]) or
+                        (@is_author and hash["answer"] == hash["option1"])) and
+                      ((@is_author and guesser_answers[index] == hash["option1"]) or
+                        (!@is_author and hash["answer"] == hash["option1"]))%>
+                    <div class="col-xs-1 col-md-1"></div>
+                <%else%>
+                    <div class="col-xs-4 col-md-4"></div>
+                <%end%>
+
                   <% if (!@is_author and guesser_answers[index] == hash["option1"]) or
                         (@is_author and hash["answer"] == hash["option1"])
                    %>
-                  <div class="chosen_person">你</div>
+                  <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "anon" : "not_anon"%>">
+                      <div class="message_profile_pic"></div>
+                  </div>
                   <% end %>
                   <% if (@is_author and guesser_answers[index] == hash["option1"]) or
                         (!@is_author and hash["answer"] == hash["option1"])
                   %>
-                  <div class="chosen_person">他</div>
+                  <div class="col-xs-2 col-md-2 message_profile_icon <%= @anon ? "not_anon" : "anon"%>">
+                      <div class="message_profile_pic"></div>
+                  </div>
                   <% end %>
-                </center>
+
               </div>
           </div>
         </div>
@@ -176,6 +199,8 @@
       <% end %>
       
     </div>
+
+    <div class="line"></div>
 
     <!-- Controls -->
     <a class="left carousel-control" href="#question_bundle" role="button" data-slide="prev">
