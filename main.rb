@@ -1555,6 +1555,7 @@ post '/result' do
 
   bundle_uuid   = session[:uuid]
   @is_anonymous = session[:anonymous]
+  @guesswhom = session[:guesswhom]
 
   session[:correctness_for_chat] = session[:correct_history]
   clear_session
