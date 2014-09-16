@@ -3,7 +3,7 @@
 PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
-
+# require 'timer'
 require "addressable/uri"
 require 'sinatra'
 require "sinatra/multi_route"
@@ -402,6 +402,17 @@ get '/chat_stream', :provides => 'text/event-stream' do
 
 end
 
+# def send_heartbeat_periodically
+#   Thread.new {
+#     timers = Timers::Group.new
+#     timers.every(10) {
+#       Chat_Connections
+#       Status_Notification_Connections
+#       Chat_Notification_Connections
+#     }
+#   }
+# end
+
 def get_unordered_key_between user1, user2
   return (user1 > user2) ? [user1, user2] : [user2, user1]
 end
@@ -554,8 +565,6 @@ post '/continue_chat' do
   bundle_uuid = chat_record["bundle_uuid"]
   author, bundle, anonymity = @@librarian.get_bundle_by_uuid bundle_uuid
   
-  # puts "bundle: " + bundle.inspect
-  # puts "anon: " + anonymity
   @anon = false
   @is_author = (author == session[:tester])
   if (@is_author  and anonymity == BG_TRUE) or 
@@ -569,20 +578,34 @@ post '/continue_chat' do
 
   @display_name = display_friend_name @anon, session[:tester], session[:receiver]
   # chat_room needs @display_name, @is_author, @anon, bundle, chat_uuid
-  erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
+  erb :chat_room, :locals => { :bundle => bundle, :guesser_answers => chat_record["guesser_answers"], :chat_uuid => chat_uuid }
 end
 
 post '/create_chat' do
   bundle_uuid = params[:bundle_uuid]
+  puts session[:correctness_for_chat].inspect
+
   author, bundle, anonymity = @@librarian.get_bundle_by_uuid(bundle_uuid)
   puts "author: " + author.to_s
+
+  guesser_answers = Array.new
+  bundle.each_with_index do |hash, index|
+    if session[:correctness_for_chat][index] == "true"
+      guesser_answers[index] = hash["answer"]
+    else
+      guesser_answers[index] = (hash["answer"] == hash["option0"]) ? hash["option1"] : hash["option0"]
+    end
+  end
+  session[:correctness_for_chat] = nil
+
   chat_uuid = UUIDTools::UUID.random_create.to_s
   Chat_Connections[chat_uuid] = Hash.new
   Chat_Notifications[chat_uuid] = {author => 0, session[:tester] => 0}
   Chat_History[chat_uuid] = Array.new
-  Chat_Lookup[chat_uuid]  = {"author"      => author, 
-                             "chatter"     => session[:tester], 
-                             "bundle_uuid" => bundle_uuid, 
+  Chat_Lookup[chat_uuid]  = {"author"          => author, 
+                             "chatter"         => session[:tester], 
+                             "bundle_uuid"     => bundle_uuid, 
+                             "guesser_answers" => guesser_answers,
                              "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
 
   @anon = false
@@ -600,7 +623,7 @@ post '/create_chat' do
 
   @display_name = display_friend_name @anon, session[:tester], session[:receiver]
   #TODO: need guess answers as well
-  erb :chat_room, :locals => { :bundle => bundle, :chat_uuid => chat_uuid }
+  erb :chat_room, :locals => { :bundle => bundle, :guesser_answers => guesser_answers, :chat_uuid => chat_uuid }
 end
 
 
@@ -1501,6 +1524,7 @@ post '/result' do
        @win += 1
     end
   end
+
   if @win == 0
     @reward = 10
   elsif @win == 1
@@ -1529,8 +1553,11 @@ post '/result' do
     @@losses[session[:tester]] += 1
   end
 
-  bundle_uuid = session[:uuid]
+  bundle_uuid   = session[:uuid]
   @is_anonymous = session[:anonymous]
+
+  session[:correctness_for_chat] = session[:correct_history]
+  clear_session
   erb :result, :locals => { :bundle_uuid => bundle_uuid }
 end
 
