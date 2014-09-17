@@ -19,6 +19,7 @@ require './librarian.rb'
 
 # CH or EN
 LANG = "CH"
+TIME_ZONE = "+08:00"
 
 BG_TRUE  = "true"
 BG_FALSE = "false"
@@ -352,11 +353,6 @@ end
 
 
 ########### CHATTING API ########### 
-get '/choose' do
-  session[:tester] = params[:name] if params[:name]
-  erb :choose
-end
-
 get '/status_notif', :provides => 'text/event-stream' do
     stream :keep_open do |out|
       # puts out.inspect
@@ -388,18 +384,12 @@ get '/chat_stream', :provides => 'text/event-stream' do
     tester    = session[:tester]
     chat_uuid = session[:chat_uuid]
 
-    if Chat_Connections[chat_uuid][tester] and !Chat_Connections[chat_uuid][tester].closed?
-      puts "user: %s, receiver: %s, found previous connection" % [tester, receiver.to_s]
-    else
-      puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
-      stream :keep_open do |out|
-        Chat_Connections[chat_uuid][tester] = out
-        out.callback { Chat_Connections[chat_uuid][tester] = nil; }
-      end
+    Chat_Connections[chat_uuid][tester] = Array.new if Chat_Connections[chat_uuid][tester] == nil
+    puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
+    stream :keep_open do |out|
+      Chat_Connections[chat_uuid][tester] << out
+      out.callback { Chat_Connections[chat_uuid][tester].delete(out); }
     end
-
-    return Chat_Connections[chat_uuid][tester]
-
 end
 
 # def send_heartbeat_periodically
@@ -438,13 +428,17 @@ def send_chat_notification chat_uuid, receiver, message, time
 end
 
 def send_chat chat_uuid, sender, name, message, time
-  if Chat_Connections[chat_uuid][sender] != nil and !Chat_Connections[chat_uuid][sender].closed? #online
-    display_time = display_time time
-    Chat_Connections[chat_uuid][sender] << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, display_time]
-    return true
-  else
-    return false
+  has_sent = false
+  if Chat_Connections[chat_uuid][sender] != nil 
+    Chat_Connections[chat_uuid][sender].each do |out|
+      if !out.closed? #online
+        display_time = display_time time
+        out << "data: {\"name\": \"%s\", \"message\":\"%s\", \"time\":\"%s\" }\n\n" % [name, message, display_time]
+        has_sent = true
+      end
+    end
   end
+  return has_sent
 end
 
 # 1) send message through Chat_Connection
@@ -564,10 +558,6 @@ post '/chat_select' do
 
   erb :chat_select
 end
-
-# post '/chat_room' do
-#   erb :chat_room
-# end
 
 post '/continue_chat' do
   chat_uuid = params[:uuid]
@@ -1113,7 +1103,7 @@ end
 def display_time time
   time_now = Time.now
   if time_now.strftime("%Y%m%d") == time.strftime("%Y%m%d") # same day
-    return time.strftime("%l:%S%p") 
+    return time.getlocal(TIME_ZONE).strftime("%l:%M%p")
   else
     if LANG == "CH" 
       return time.strftime("%m月%d日")
