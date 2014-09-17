@@ -67,9 +67,14 @@
   ga('create', 'UA-52817227-4', 'auto');
   ga('send', 'pageview');
 
-  $(document).ready(function() {
-     $("html, body").animate({ scrollTop: $(document).height() }, 1);
-  });
+  // $(document).ready(function() {
+  //    $("html, body").animate({ scrollTop: $(document).height() }, 1);
+  // });
+    function firstScroll(chatnum){
+      if(chatnum > 0){
+        $("html, body").animate({ scrollTop: $(document).height() }, 1);
+      }
+    }
     </script>
 
   </head>
@@ -347,6 +352,9 @@
       </form>
        <script type="text/JavaScript">
         //<![CDATA[
+        
+        firstScroll(<%=Chat_History[chat_uuid].count%>);
+
         function goBack(){
           var homeform = document.forms["chatselectform"];
           homeform.submit();
