@@ -66,6 +66,10 @@
 
   ga('create', 'UA-52817227-4', 'auto');
   ga('send', 'pageview');
+
+  $(document).ready(function() {
+     $("html, body").animate({ scrollTop: $(document).height() }, 1);
+  });
     </script>
 
   </head>
@@ -351,13 +355,14 @@
 
 <br>
 <br>
+<br>
 
       <!-- FOOTER -->
       <div id="footer">
         <center>
         <form id="msgForm">
-          <input style="height:35px; width:235px;" id='msg' placeholder='在這輸入訊息...' />
-          <input id="msgBtn" type="submit" class='btn btn-default' value="傳送">
+          <input id='msg' placeholder='在這輸入訊息...' />
+          <input id="msgBtn" type="submit" class='btn' value="傳送">
         </form>
         </center>
       </div>

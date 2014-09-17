@@ -230,10 +230,12 @@
     /*_position:absolute;
     _top:expression(eval(document.documentElement.scrollTop+
         (document.documentElement.clientHeight-this.offsetHeight)));*/
-    height:35px;
+    height:40px;
     width: 320px;
     background-color: #FFFFFF;
+    padding-bottom: 10px;
 }
+
 .time_stamp{
 	padding:0px;
 	margin:0px;
@@ -325,6 +327,28 @@
 	padding-top: 20px;
 	width:310px; 
 	height:200px;
+}
+
+#msg{
+	height:40px; 
+	width:240px;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+	padding-left: 5px;
+	border-color: #1fbfa2;
+	border-style: solid;
+	-webkit-appearance: none;
+	border-radius: 5px;
+}
+
+#msgBtn{
+	height:40px; 
+	width:70px;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+	font-size: 15pt;
+	background-color: #1fbfa2;
+	color:white;
 }
 
 
