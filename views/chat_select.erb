@@ -60,17 +60,28 @@
   ga('create', 'UA-52817227-4', 'auto');
   ga('send', 'pageview');
 
-  function parseMsg(msg){
-    if(msg.length > 20){
-       var submsg = msg.substring(0, 14);
+  var china = new RegExp("[\u4E00-\u9FFF|\u2FF0-\u2FFF|\u31C0-\u31EF|\u3200-\u9FBF|\uF900-\uFAFF]");
+
+  function parseWithLimit(msg,limit){
+    if(msg.length > limit){
+       var submsg = msg.substring(0, limit-1);
        return submsg + "...";
     } else{
        return msg;
     }
   }
 
+  function parseMsg(msg, limit){
+    if(china.test(msg)){
+        return parseWithLimit(msg, 11);
+    } else{
+        return parseWithLimit(msg, 20);
+    }
+  }
+
+
   function putMsg(containerID, msg){
-    var newmsg = parseMsg(msg);
+    var newmsg = parseMsg(msg)
     $("#" + containerID).html(newmsg);
   }
 
@@ -146,19 +157,6 @@
     $("#" + obj["chat_uuid"] + "_dot").css("display", "");
   };
 
-  function putMsg(containerID, msg){
-    var newmsg = parseMsg(msg);
-    $("#" + containerID).html(newmsg);
-  }
-
-  function parseMsg(msg){
-    if(msg.length > 15){
-       var submsg = msg.substring(0, 14);
-       return submsg + "...";
-    } else{
-       return msg;
-    }
-  }
 </script>
 
   <form id="chatroomform" class="form-horizontal" role="form" action="continue_chat" method="post">
