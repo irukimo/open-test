@@ -67,12 +67,9 @@
   ga('create', 'UA-52817227-4', 'auto');
   ga('send', 'pageview');
 
-  function firstScroll(chatnum){
-     if(chatnum > 0){
-        $("html, body").animate({ scrollTop: $(document).height() }, 1);
-     }
-  }
-
+  $(document).ready(function() {
+     $("html, body").animate({ scrollTop: $(document).height() }, 1);
+  });
     </script>
 
   </head>
@@ -94,8 +91,8 @@
       <div class="col-xs-3 col-md-1 goBack" onclick="goBack()"></div>
       <div class="col-xs-9 col-md-9">
         <% 
-           your_id  = @is_author ? chat_record["author_id"] : chat_record["guesser_id"]
-           his_id   = @is_author ? chat_record["guesser_id"] : chat_record["author_id"]
+           your_id  = @is_author ? chat_record["author_id"] : chat_record["chatter_id"]
+           his_id   = @is_author ? chat_record["chatter_id"] : chat_record["author_id"]
 
            if @anon 
              css_style = "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')"
@@ -349,9 +346,6 @@
       </form>
        <script type="text/JavaScript">
         //<![CDATA[
-
-        firstScroll(<%=Chat_History[chat_uuid].count%>);
-
         function goBack(){
           var homeform = document.forms["chatselectform"];
           homeform.submit();
