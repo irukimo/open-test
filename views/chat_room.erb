@@ -368,20 +368,34 @@
       <div class="footer">
          <form>
           <input style="height:35px; width:235px;" id='msg' placeholder='在這輸入訊息...' />
-          <input type="submit" class='btn btn-default' value="傳送">
+          <input id="msgBtn" type="submit" class='btn btn-default' value="傳送">
         </form>
       </div>
       <script>  
       // $("html, body").animate({ scrollTop: $(document).height() }, "slow");
        // writing
-          $("form").on('submit',function(e) {
-            $.post('/chat', {msg: $('#msg').val()});
-            $('#msg').val(''); $('#msg').focus();
-            
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-            
-            e.preventDefault();
-          });
+       if($('#msg').val() == "") { 
+          $('#msgBtn').prop("disabled",true);
+        }
+
+        $('#msg').on('input', function() { 
+            if($('#msg').val() == "") { 
+            $('#msgBtn').prop("disabled",true);
+          } else {
+            $('#msgBtn').prop("disabled",false);
+          }
+        });
+        
+
+        $("form").on('submit',function(e) {
+          e.preventDefault();
+
+          if($('#msg').val() == "") {return; }
+          $.post('/chat', {msg: $('#msg').val()});
+          $('#msg').val(''); $('#msg').focus();
+          
+          $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+        });
       </script>
     </div><!-- /.container -->
 
