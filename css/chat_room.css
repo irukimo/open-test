@@ -1,5 +1,5 @@
 .not_anon{
-	background: #7DBf6b;
+	background: #f27507;
 	/*background: -webkit-linear-gradient(left top,#b78c8c, #a3659c , #fea758, #e4cfbb); */
 	/* For Safari 5.1 to 6.0 */
     /*background: -o-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb);*/
@@ -209,7 +209,7 @@
 .history_question{
 	padding: 10px;
 	font-size: 20pt;
-	color:#f27507;
+	color:#7dbf6b;
 }
 
 .history_option{

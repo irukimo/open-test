@@ -547,13 +547,13 @@ post '/chat_select' do
         hash["anon"] = "false"
       else
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
-        hash["display_name"] = "匿名(他比了%s和%s)" % options
+        hash["display_name"] = "匿名 - %s vs %s" % options
         hash["anon"] = "true"
       end
     else
       if tester == hash["author"]
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
-        hash["display_name"] = "匿名(你比了%s和%s)" % options
+        hash["display_name"] = "匿名 - %s vs %s" % options
         hash["anon"] = "true"
       else
         hash["display_name"] = hash["author"]

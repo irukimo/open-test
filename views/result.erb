@@ -117,11 +117,19 @@
               <form action='/create_chat' method='post'>
                 <input type="hidden" name="bundle_uuid" value="<%=bundle_uuid%>"/>
                 <%if @is_anonymous == "true" or @is_anonymous == true%><br>
-                    <div class="knock">敲一下這位<%= display_name(@is_anonymous,@guesswhom,session[:tester])%></div>
+                    <%if @correct%>
+                        <div class="knock">跟<%= display_name(@is_anonymous,@guesswhom,session[:tester])%>討論一下吧!</div>
+                    <%else%>
+                        <div class="knock">問<%= display_name(@is_anonymous,@guesswhom,session[:tester])%>為什麼!?</div>
+                    <%end%>
                     <button class="message_btn not_anon" type="submit"><br>訊息</button>
                       <!-- <input type='submit' name="receiver" value="GO CHAT"/> -->
                 <%else%>
-                    <div class="knock">匿名敲一下<%= display_name(@is_anonymous,@guesswhom,session[:tester])%></div>
+                    <%if @correct%>
+                        <div class="knock">匿名跟<%= display_name(@is_anonymous,@guesswhom,session[:tester])%>討論一下吧!</div>
+                    <%else%>
+                        <div class="knock">匿名問<%= display_name(@is_anonymous,@guesswhom,session[:tester])%>為什麼!?</div>
+                    <%end%>
                     <button class="message_btn anon" type="submit"><br>匿訊</button>
                         <!-- <input type='submit' name="receiver" value="GO CHAT"/> -->      
                 <%end%>

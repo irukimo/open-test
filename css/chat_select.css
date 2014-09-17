@@ -18,7 +18,7 @@
 	padding-left: 5px;
 	height:90px;
 	border-top-style: solid;
-	border-top-width: 2px;
+	border-top-width: 1px;
 	border-top-color: #ebebeb;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .not_anon .profile_container{
-	background: #7DBf6b;
+	background: #f27507;
 	/*background: -webkit-linear-gradient(left top,#b78c8c, #a3659c , #fea758, #e4cfbb); */
 	/* For Safari 5.1 to 6.0 */
     /*background: -o-linear-gradient(bottom right,#b78c8c, #a3659c , #fea758, #e4cfbb);*/
@@ -42,7 +42,7 @@
 }
 
 .anon .profile_container{
-	background: #acacac;
+	background: black;
 	/*background: -webkit-linear-gradient(left top,#ffffff, #4d4d4d); */
 	/* For Safari 5.1 to 6.0 */
     /*background: -o-linear-gradient(bottom right,#ffffff, #4d4d4d);*/
@@ -66,8 +66,8 @@
 }
 
 .anon .profile_pic{
-	background-color: black;
-	background-image: url('/img/grayanon.png');
+	background-color: white;
+	background-image: url('/img/black_anon.png');
 	margin:4px;
 	margin-bottom: 30px;
 	height: 48px;
@@ -94,7 +94,7 @@
 }
 
 .anon{
-	background-color: #000000;
+	background-color: #777777;
 }
 .not_anon{
 	background-color: #FFFFFF;
@@ -109,7 +109,7 @@
 }
 
 .not_anon .content_name{
-	color:#fea758;
+	color:#f27507;
 }
 
 .not_anon .content_msg{
