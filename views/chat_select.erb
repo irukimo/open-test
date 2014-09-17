@@ -57,6 +57,22 @@
 
   ga('create', 'UA-52817227-4', 'auto');
   ga('send', 'pageview');
+
+  function parseMsg(msg){
+    if(msg.length > 20){
+       var submsg = msg.substring(0, 14);
+       return submsg + "...";
+    } else{
+       return msg;
+    }
+  }
+
+  function putMsg(containerID, msg){
+    var newmsg = parseMsg(msg);
+    $("#" + containerID).html(newmsg);
+  }
+
+
     </script>
 
   </head>
@@ -97,7 +113,9 @@
               <%=chat["display_name"]%>
             </div>
             <div class="content_msg" id="<%=uuid%>_msg">
-              <%=chat["last_message"]%>
+                  <script>
+                      putMsg("<%=uuid%>_msg", "<%=chat["last_message"]%>");
+                  </script>
             </div>  
           </div>
 
@@ -120,10 +138,25 @@
   es.onmessage = function(e) {
     console.log("chat: " + e.data);
     obj = $.parseJSON(e.data);
-    $("#" + obj["chat_uuid"] + "_msg").html(obj["message"]);
+    var newmsg = parseMsg(obj["message"]);
+    $("#" + obj["chat_uuid"] + "_msg").html(newmsg);
     $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
     $("#" + obj["chat_uuid"] + "_dot").css("display", "");
   };
+
+  function putMsg(containerID, msg){
+    var newmsg = parseMsg(msg);
+    $("#" + containerID).html(newmsg);
+  }
+
+  function parseMsg(msg){
+    if(msg.length > 15){
+       var submsg = msg.substring(0, 14);
+       return submsg + "...";
+    } else{
+       return msg;
+    }
+  }
 </script>
 
   <form id="chatroomform" class="form-horizontal" role="form" action="continue_chat" method="post">

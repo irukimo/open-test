@@ -142,7 +142,7 @@
         <% end %>
         <div class="history_compare">
           <div class="row">
-              <center><div class="history_question">「<%=hash["question"]%>」</div></center>
+              <center><div class="history_question"><%=hash["question"]%></div></center>
               <div class="col-xs-6 col-md-6 history_option">
                 <center><%=hash["option0"]%></center>
               </div>
@@ -257,6 +257,13 @@
          his_css_style  = @anon ? "background-image:url('//graph.facebook.com/#{his_id}/picture?type=square')" : 
                                   "" 
       %>
+      <div class="explainmsg">
+        <div class="mark"></div>
+        <div class="welcomemsg">
+            歡迎來到私人訊息區～上面是你們玩過的問題。先比的人有帶問題帽！<br>
+            在這個視窗裡，你是<%= @anon ? "匿名" : "實名"%>的，對方是<%= @anon ? "實名" : "匿名"%>的哦！
+        </div>
+      </div>
       <!-- template of my message -->
       <div class="row" id="my_message" style="display:none;">
           <div class="col-xs-2 col-md-2"></div>
@@ -342,8 +349,6 @@
            //]]>
         </script>
 
-<br>
-<br>
 <br>
 <br>
 
