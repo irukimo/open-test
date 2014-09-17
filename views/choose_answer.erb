@@ -360,7 +360,7 @@ window.fbAsyncInit = function() {
                     var myform = document.forms["nextform"];
                     var shufflebtn = document.getElementById("shufflebtn");
                     var questionele = document.getElementById("questionid");
-                    var coinele =  document.getElementById("coin_display");
+                    var coinele =  document.getElementById("coin_home_display");
 
                     var timesleftele = document.getElementById("timesleft");
                     var costPerShuffle = 30;
@@ -391,7 +391,7 @@ window.fbAsyncInit = function() {
                                 return;
                              }
                              if (this.status == 200) {
-                                questionele.innerHTML = "Q："+this.responseText;
+                                questionele.innerHTML = this.responseText;
                                 myform.question.value = questionele.innerHTML;
                                 console.log(questionele.innerHTML);
                                 return;
