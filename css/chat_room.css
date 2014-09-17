@@ -237,11 +237,16 @@
 }
 
 .time_stamp{
-	padding:0px;
+	padding-top: 2px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
 	margin:0px;
 	line-height: 50%;
 	color: #ababab;
 	font-size: 9pt;
+	margin-bottom: 10px;
+
 }
 
 .message_box{
@@ -269,7 +274,7 @@
 }
 
 .message{
-	line-height: 150%;
+	line-height: 130%;
 	height:100%;
 	overflow: auto;
 	min-height: 100% !important;
