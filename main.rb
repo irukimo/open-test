@@ -53,7 +53,9 @@ Chat_Lookup        = Hash.new
 set :bind, '0.0.0.0'
 set :port, PORT
 
-enable :sessions
+use Rack::Session::Cookie, :key => 'rack.session',
+                           :path => '/',
+                           :secret => 'your_secret'
 
 # def set_interval(delay, name)
 #   @@last_time_modified[name] = Time.now
