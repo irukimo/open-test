@@ -537,7 +537,7 @@ post '/chat_select' do
     if hash["anonymous_author"] == BG_TRUE
       if tester == hash["author"]
         hash["display_name"] = hash["chatter"]
-        hash["fb_id"] = get_id_for_FB_name hash["chatter"]
+        hash["fb_id"] = hash["chatter_id"]
         hash["anon"] = "false"
       else
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
@@ -551,7 +551,7 @@ post '/chat_select' do
         hash["anon"] = "true"
       else
         hash["display_name"] = hash["author"]
-        hash["fb_id"] = get_id_for_FB_name hash["author"]
+        hash["fb_id"] = hash["author_id"]
         hash["anon"] = "false"
       end
     end
@@ -612,7 +612,7 @@ post '/create_chat' do
                              "chatter_id"      => get_id_for_FB_name(session[:tester]),
                              "bundle_uuid"     => bundle_uuid, 
                              "guesser_answers" => guesser_answers,
-                             "anonymous_author" => ( (anonymity == 'on') ? "true" : "false")}
+                             "anonymous_author" => ( (anonymity == 'on' or anonymity == 'true' or anonymity == true) ? BG_TRUE : BG_FALSE)}
 
   @anon = false
   @is_author = (author == session[:tester])
