@@ -494,9 +494,9 @@ def calculate_num_unread_for name
   uuids = Chat_Lookup.select{|uuid, data| data["chatter"] == name or data["author"] == name}.keys
   
   uuids.each do |uuid|
-    # if Chat_Notifications[uuid][name] > 0
-      num_unread += Chat_Notifications[uuid][name]
-    # end
+    if Chat_Notifications[uuid][name] > 0
+      num_unread += 1
+    end
   end
   return num_unread
 end
@@ -505,8 +505,10 @@ def get_id_for_FB_name name
   fb_names = @@fb_friends.values.flatten(1)
   index = fb_names.index{|frd| frd["name"] == name}
   if index == nil
+    puts "ERROR: cannot find FB ID for #{name}"
     return nil
   else
+    puts "Found FB ID #{fb_names[index]["id"]} for #{name}"
     return fb_names[index]["id"]
   end
 end
@@ -537,7 +539,11 @@ post '/chat_select' do
     if hash["anonymous_author"] == BG_TRUE
       if tester == hash["author"]
         hash["display_name"] = hash["chatter"]
-        hash["fb_id"] = hash["chatter_id"]
+        if hash["chatter_id"] == nil
+        hash["fb_id"] = get_id_for_FB_name(hash["chatter_id"])
+        else
+          hash["fb_id"] = hash["chatter_id"]
+        end
         hash["anon"] = "false"
       else
         options = @@librarian.get_options_by_uuid hash["bundle_uuid"]
@@ -551,7 +557,12 @@ post '/chat_select' do
         hash["anon"] = "true"
       else
         hash["display_name"] = hash["author"]
-        hash["fb_id"] = hash["author_id"]
+        if hash["author_id"] == nil
+        hash["fb_id"] = get_id_for_FB_name(hash["author_id"])
+        else
+          hash["fb_id"] = hash["author_id"]
+        end
+        # hash["fb_id"] = hash["author_id"]
         hash["anon"] = "false"
       end
     end
