@@ -223,13 +223,13 @@
 	margin-left: 60px;
 }
 
-.footer {
+#footer {
     bottom:0;
     position:fixed;
     z-index:150;
-    _position:absolute;
+    /*_position:absolute;
     _top:expression(eval(document.documentElement.scrollTop+
-        (document.documentElement.clientHeight-this.offsetHeight)));
+        (document.documentElement.clientHeight-this.offsetHeight)));*/
     height:35px;
     width: 320px;
     background-color: #FFFFFF;

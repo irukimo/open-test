@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0, height=device-height, maximum-scale=1.0, target-densityDpi=device-dpi">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -320,26 +323,6 @@
         <%end%>
         <%end%>
         
-        
-        <script>
-          // reading
-          var es = new EventSource('/chat_stream');
-          es.onmessage = function(e) { 
-            obj = $.parseJSON(e.data);
-            var snippet;
-            if(obj["name"] == "<%=session[:tester]%>") {
-              snippet = $("#my_message").clone();
-            } else {
-              snippet = $("#your_message").clone();
-            }
-            snippet.find('#message').html(obj["message"]);
-            snippet.find('#time').html(obj["time"]);
-            snippet.css("display", "inline")
-            $('.messages').append(snippet);
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-          };
-
-        </script>
 
         </div>
         <!-- messages -->
@@ -365,7 +348,7 @@
 <br>
 
       <!-- FOOTER -->
-      <div class="footer">
+      <div id="footer">
          <form>
           <input style="height:35px; width:235px;" id='msg' placeholder='在這輸入訊息...' />
           <input id="msgBtn" type="submit" class='btn btn-default' value="傳送">
@@ -396,6 +379,49 @@
           
           $("html, body").animate({ scrollTop: $(document).height() }, "slow");
         });
+
+                  // reading
+          var es = new EventSource('/chat_stream');
+          es.onmessage = function(e) { 
+            obj = $.parseJSON(e.data);
+            var snippet;
+            if(obj["name"] == "<%=session[:tester]%>") {
+              snippet = $("#my_message").clone();
+            } else {
+              snippet = $("#your_message").clone();
+            }
+            snippet.find('#message').html(obj["message"]);
+            snippet.find('#time').html(obj["time"]);
+            snippet.css("display", "inline")
+            $('.messages').append(snippet);
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+          };
+
+          $( "#msg" ).focus(function() {
+            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            $("#footer").css("position", "relative"); 
+            // alert( "Handler for .focus() called." );
+          });
+
+          $( "#msg" ).blur(function() {
+            $("#footer").css("position", "fixed"); 
+            // alert( "Handler for .focus() called." );
+          });
+
+          // var footer = $("#footer");
+          // footer.css({ "top": footer.position().top, "bottom": "auto"});
+
+// if(navigator.platform == 'iPad' || navigator.platform == 'iPhone' || navigator.platform == 'iPod') 
+// { 
+//      $("#footer").css("position", "static"); 
+// };
+
+
+          // if($(event.target).hasClass("inputtextfield")){
+          //   $('#footer').css("position","relative");
+          //   $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+          // }
+          // document.addEventListener('focusout', function(e) { $('#footer').css("position","fixed");});
       </script>
     </div><!-- /.container -->
 
