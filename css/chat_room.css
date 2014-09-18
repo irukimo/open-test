@@ -69,6 +69,34 @@
 	right:10px;
 }
 
+.correct{
+	background-image: url('/img/check.png');
+	background-size: 26px 26px;
+	background-repeat: no-repeat;
+	background-position:absolute;
+	display: inline-block;
+	/*float: bottom;*/
+	height:26px;
+	width:26px;
+	position: relative;
+	bottom:14px;
+	right:10px;
+}
+
+.wrong{
+	background-image: url('/img/cross.png');
+	background-size: 26px 24px;
+	background-repeat: no-repeat;
+	background-position:absolute;
+	display: inline-block;
+	/*float: bottom;*/
+	height:26px;
+	width:26px;
+	position: relative;
+	bottom:14px;
+	right:10px;
+}
+
 .message_profile_icon{
 	padding:0px;
 	height: 40px;

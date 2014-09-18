@@ -181,6 +181,12 @@
                       <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (@is_author) %>
                           <div class="questionmaster"></div>
+                        <%else%>
+                          <%if guesser_answers[index] == hash["answer"]%>
+                             <div class="correct"></div>
+                          <%else%>
+                             <div class="wrong"></div>
+                          <%end%>
                         <%end%>
                       </div>
                   </div>
@@ -194,6 +200,12 @@
                       <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (!@is_author) %>
                           <div class="questionmaster"></div>
+                        <%else%>
+                          <%if guesser_answers[index] == hash["answer"]%>
+                             <div class="correct"></div>
+                          <%else%>
+                             <div class="wrong"></div>
+                          <%end%>
                         <%end%>
                       </div>
                   </div>
@@ -221,6 +233,12 @@
                       <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (@is_author) %>
                           <div class="questionmaster"></div>
+                        <%else%>
+                          <%if guesser_answers[index] == hash["answer"]%>
+                             <div class="correct"></div>
+                          <%else%>
+                             <div class="wrong"></div>
+                          <%end%>
                         <%end%>
                       </div>
                   </div>
@@ -235,6 +253,12 @@
                       <div class="message_profile_pic" style="<%=css_style%>">
                         <%if (!@is_author) %>
                           <div class="questionmaster"></div>
+                        <%else%>
+                          <%if guesser_answers[index] == hash["answer"]%>
+                             <div class="correct"></div>
+                          <%else%>
+                             <div class="wrong"></div>
+                          <%end%>
                         <%end%>
                       </div>
                   </div>
@@ -430,11 +454,13 @@
           $( "#msg" ).focus(function() {
             $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             $("#footer").css("position", "relative"); 
+            $(".header").css("position", "relative"); 
             // alert( "Handler for .focus() called." );
           });
 
           $( "#msg" ).blur(function() {
             $("#footer").css("position", "fixed"); 
+            $(".header").css("position", "fixed"); 
             // alert( "Handler for .focus() called." );
           });
 
