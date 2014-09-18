@@ -111,6 +111,16 @@ def self.import_questions
   @@questions.shuffle!
 end
 
+def self.import_questions_v1
+  @@categories_v1 = Hash.new
+  
+  CSV.foreach("questions_v1.csv") do |row|
+    # question, value, categ, dim, att
+    @@categories_v1[row[0]] = {"value"=>row[1].to_i, "categ"=>row[2], "dim"=>row[3], "att"=>row[4]}
+  end
+
+end
+
 # run after import_questions
 def self.extract_categ
   categories = @@categories.values.map{|hash| hash["categ"]}.uniq
@@ -254,9 +264,10 @@ end
 
 configure do
   puts "Configuring..."
-  URL = "http://%s:%s" % [IP, PORT.to_s]
-  # URL = "http://machi.yoursapp.cc"
+  # URL = "http://%s:%s" % [IP, PORT.to_s]
+  URL = "http://machi.yoursapp.cc"
   import_questions
+  import_questions_v1
   # import_names
   initialize_record
 
@@ -1241,14 +1252,23 @@ def view_report(name)
     end
 
     relevants.each do |quiz|
-      next if @@categories[quiz["question"]] == nil
+      the_categories = nil
+      if @@categories[quiz["question"]] != nil 
+        the_categories = @@categories
+        
+      elsif @@categories_v1[quiz["question"]] != nil
+        the_categories = @@categories_v1
 
-      category  = @@categories[quiz["question"]]["categ"]
+      else
+        next
+      end
+
+      category  = the_categories[quiz["question"]]["categ"]
       next if category == "F"
 
-      value     = @@categories[quiz["question"]]["value"]
-      dim       = @@categories[quiz["question"]]["dim"]
-      # att       = @@categories[quiz["question"]]["att"]
+      value     = the_categories[quiz["question"]]["value"]
+      dim       = the_categories[quiz["question"]]["dim"]
+      # att       = the_categories[quiz["question"]]["att"]
 
       another_option = (quiz["option1"] == name) ? quiz["option0"] : quiz["option1"]
       if quiz["answer"] == name      
