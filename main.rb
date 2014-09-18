@@ -25,7 +25,7 @@ BG_TRUE  = "true"
 BG_FALSE = "false"
 ANONYMOUS_FRIEND_NAME   = "你的朋友"
 ANONYMOUS_STRANGER_NAME = "某人"
-IP = "192.168.2.237"
+IP = "107.170.232.66"
 REP_SCHOLARSHIP = 5000
 REP_BONUS = 200
 # number of digits of invitation code will be the number of digits of MAX_INVITATION_CODE - 1
@@ -49,6 +49,16 @@ Chat_Connections   = Hash.new
 Chat_Notifications = Hash.new
 Chat_History       = Hash.new
 Chat_Lookup        = Hash.new
+
+
+Chat_Data = [
+  # "Status_Notification_Connections",
+  # "Chat_Notification_Connections",
+  # "Chat_Connections",
+  "Chat_Notifications", 
+  "Chat_History",
+  "Chat_Lookup"
+  ]
 
 set :bind, '0.0.0.0'
 set :port, PORT
@@ -375,25 +385,22 @@ get '/status_notif', :provides => 'text/event-stream' do
     stream :keep_open do |out|
       # puts out.inspect
       puts "open status notif connection"
-      if Status_Notification_Connections[session[:tester]] != nil
-        Status_Notification_Connections[session[:tester]] << out 
-        out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
-      end
+      Status_Notification_Connections[session[:tester]] = Array.new if Status_Notification_Connections[session[:tester]] == nil
+      Status_Notification_Connections[session[:tester]] << out 
+      out.callback { Status_Notification_Connections[session[:tester]].delete(out); }
     end
   
 end
 
 get '/chat_notif', :provides => 'text/event-stream' do
   
-    stream :keep_open do |out|
-      # puts out.inspect
-      puts "open chat notif connection"
-      if Status_Notification_Connections[session[:tester]] != nil
-        Chat_Notification_Connections[session[:tester]] << out
-        out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
-      end
-    end
-  
+  stream :keep_open do |out|
+    # puts out.inspect
+    puts "open chat notif connection"
+    Status_Notification_Connections[session[:tester]] = Array.new if Status_Notification_Connections[session[:tester]] == nil
+    Chat_Notification_Connections[session[:tester]] << out
+    out.callback { Chat_Notification_Connections[session[:tester]].delete(out); }
+  end
 end
 
 get '/chat_stream', :provides => 'text/event-stream' do
@@ -402,6 +409,7 @@ get '/chat_stream', :provides => 'text/event-stream' do
   tester    = session[:tester]
   chat_uuid = session[:chat_uuid]
 
+  Chat_Connections[chat_uuid] = Hash.new if Chat_Connections[chat_uuid] == nil
   Chat_Connections[chat_uuid][tester] = Array.new if Chat_Connections[chat_uuid][tester] == nil
   puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
   stream :keep_open do |out|
@@ -1121,6 +1129,9 @@ def normalize_score scores
 end
 
 def display_time time
+  if time.class != Time
+    time = Time.parse(time)
+  end
   time_now = Time.now
   if time_now.strftime("%Y%m%d") == time.strftime("%Y%m%d") # same day
     return time.getlocal(TIME_ZONE).strftime("%l:%M%p")
@@ -1807,6 +1818,13 @@ get "/record_all_data" do
       file.write(eval("@@" + name).to_json)
     end
   end
+
+  Chat_Data.each do |name|
+    File.open("record/" + name + ".txt", 'w') do |file|
+      file.write(eval(name).to_json)
+    end
+  end
+
   @@librarian.record_all_data
   status 200
   body ''
@@ -1820,6 +1838,15 @@ get "/read_all_data" do
       eval(code)
     end
   end
+
+  Chat_Data.each do |name|
+    File.open("record/" + name + ".txt", 'r') do |file|
+      temp = file.read
+      code = name + "=" + "JSON.parse(temp)"
+      eval(code)
+    end
+  end
+
   @@librarian.read_all_data
   status 200
   body ''
