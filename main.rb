@@ -3,6 +3,7 @@
 PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
+
 require 'timers'
 require "addressable/uri"
 require 'sinatra'
@@ -20,7 +21,7 @@ require './librarian.rb'
 # CH or EN
 LANG = "CH"
 TIME_ZONE = "+08:00"
-
+HEARTBEAT_INTERVAL = 15 #secs
 BG_TRUE  = "true"
 BG_FALSE = "false"
 ANONYMOUS_FRIEND_NAME   = "你的朋友"
@@ -65,7 +66,7 @@ set :port, PORT
 
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
-                           :secret => 'your_secret'
+                           :secret => '855112ff6a69bd8085e8c2b2d142d025'
 
 # def set_interval(delay, name)
 #   @@last_time_modified[name] = Time.now
@@ -83,11 +84,11 @@ use Rack::Session::Cookie, :key => 'rack.session',
 def self.send_heartbeat_periodically
   Thread.new {
     timers = Timers::Group.new
-    timers.every(15) {
+    timers.every(HEARTBEAT_INTERVAL) {
       Chat_Connections.each_value do |chat|
         chat.each_value do |channel|
           channel.each do |out|
-            out << "data: {\"time\":\"heartbeat\"}\n\n"
+            out << "data: {\"time\":\"heartbeat\"}\n\n" unless out.closed?
           end
         end
       end
@@ -161,9 +162,7 @@ def self.initialize_record
   # @@threads = Hash.new
   
   @@names = Array.new
-  @@names << "Albert"
-  @@names << "Wen"
-
+  
   @@coins = Hash.new
   @@level = Hash.new
   @@progress = Hash.new
