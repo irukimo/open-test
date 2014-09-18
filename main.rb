@@ -3,7 +3,7 @@
 PORT = 7009
 ### DO NOT CHANGE ANYTHING ABOVE THIS LINE
 
-# require 'timer'
+require 'timers'
 require "addressable/uri"
 require 'sinatra'
 require "sinatra/multi_route"
@@ -69,6 +69,22 @@ use Rack::Session::Cookie, :key => 'rack.session',
 #     end
 #   end
 # end
+
+def self.send_heartbeat_periodically
+  Thread.new {
+    timers = Timers::Group.new
+    timers.every(15) {
+      Chat_Connections.each_value do |chat|
+        chat.each_value do |channel|
+          channel.each do |out|
+            out << "data: {\"time\":\"heartbeat\"}\n\n"
+          end
+        end
+      end
+    }
+    loop {timers.wait}
+  }
+end
 
 def self.import_questions
   
@@ -256,7 +272,7 @@ configure do
     end
   end
 
-    
+  send_heartbeat_periodically
 end
 
 
@@ -382,28 +398,19 @@ end
 
 get '/chat_stream', :provides => 'text/event-stream' do
 
-    receiver  = session[:receiver]
-    tester    = session[:tester]
-    chat_uuid = session[:chat_uuid]
+  receiver  = session[:receiver]
+  tester    = session[:tester]
+  chat_uuid = session[:chat_uuid]
 
-    Chat_Connections[chat_uuid][tester] = Array.new if Chat_Connections[chat_uuid][tester] == nil
-    puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
-    stream :keep_open do |out|
-      Chat_Connections[chat_uuid][tester] << out
-      out.callback { Chat_Connections[chat_uuid][tester].delete(out); }
-    end
+  Chat_Connections[chat_uuid][tester] = Array.new if Chat_Connections[chat_uuid][tester] == nil
+  puts "user: %s, receiver: %s, create new connection" % [tester, receiver.to_s]
+  stream :keep_open do |out|
+    Chat_Connections[chat_uuid][tester] << out
+    out.callback { Chat_Connections[chat_uuid][tester].delete(out); }
+  end
 end
 
-# def send_heartbeat_periodically
-#   Thread.new {
-#     timers = Timers::Group.new
-#     timers.every(10) {
-#       Chat_Connections
-#       Status_Notification_Connections
-#       Chat_Notification_Connections
-#     }
-#   }
-# end
+
 
 def get_unordered_key_between user1, user2
   return (user1 > user2) ? [user1, user2] : [user2, user1]

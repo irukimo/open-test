@@ -149,16 +149,18 @@
 <img style="display:none;" src="/img/greenarrow.png">
 <img style="display:none;" src="/img/watermark.png">
 <script>
-  var es = new EventSource('/chat_notif');
-  es.onmessage = function(e) {
-    console.log("chat: " + e.data);
-    obj = $.parseJSON(e.data);
-    var newmsg = parseMsg(obj["message"]);
-    $("#" + obj["chat_uuid"] + "_msg").html(newmsg);
-    $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
-    $("#" + obj["chat_uuid"] + "_dot").css("display", "");
-  };
-
+  $(document).ready(function() {
+    var es = new EventSource('/chat_notif');
+    es.onmessage = function(e) {
+      console.log("chat: " + e.data);
+      obj = $.parseJSON(e.data);
+      var newmsg = parseMsg(obj["message"]);
+      $("#" + obj["chat_uuid"] + "_msg").html(newmsg);
+      $("#" + obj["chat_uuid"] + "_time").html(obj["time"]);
+      $("#" + obj["chat_uuid"] + "_dot").css("display", "");
+    };
+  });
+  
 </script>
 
   <form id="chatroomform" class="form-horizontal" role="form" action="continue_chat" method="post">

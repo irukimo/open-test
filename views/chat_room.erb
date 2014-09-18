@@ -410,17 +410,21 @@
           var es = new EventSource('/chat_stream');
           es.onmessage = function(e) { 
             obj = $.parseJSON(e.data);
-            var snippet;
-            if(obj["name"] == "<%=session[:tester]%>") {
-              snippet = $("#my_message").clone();
+            if (obj["time"] == "heartbeat") {
+              return;
             } else {
-              snippet = $("#your_message").clone();
+              var snippet;
+              if(obj["name"] == "<%=session[:tester]%>") {
+                snippet = $("#my_message").clone();
+              } else {
+                snippet = $("#your_message").clone();
+              }
+              snippet.find('#message').html(obj["message"]);
+              snippet.find('#time').html(obj["time"]);
+              snippet.css("display", "inline")
+              $('.messages').append(snippet);
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             }
-            snippet.find('#message').html(obj["message"]);
-            snippet.find('#time').html(obj["time"]);
-            snippet.css("display", "inline")
-            $('.messages').append(snippet);
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
           };
 
           $( "#msg" ).focus(function() {
